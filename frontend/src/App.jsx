@@ -10,6 +10,10 @@ function App() {
       </header>
       <main>
         <p>Welcome to my app!</p>
+        <div>
+          {/* Add your app content here */}
+          
+        </div>
       </main>
       <footer>
         <p>© 2024 My App. All rights reserved.</p>

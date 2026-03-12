@@ -1,22 +1,17 @@
 import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
-    roomNumber:{
-        type: Number,
-        required: true
-    },
 
     image: {
         type: String,
         // required: true
     },
-
-    descrption: {
+    title: {
         type: String,
-        // required: true
+        required: true
     },
 
-    roomsType: {
+    descrption: {
         type: String,
         // required: true
     },
@@ -31,9 +26,9 @@ const roomSchema = new mongoose.Schema({
         // required: true
     },
 
-    contactNumber: {
-        type: Number,
-        // required: true
+    isAvailable: {
+        type: Boolean,
+        required: true
     }
 
 }, {timestamps: true});

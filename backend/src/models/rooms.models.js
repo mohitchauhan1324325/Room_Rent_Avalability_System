@@ -8,17 +8,17 @@ const roomSchema = new mongoose.Schema({
 
     image: {
         type: String,
-        required: true
+        // required: true
     },
 
     descrption: {
         type: String,
-        required: true
+        // required: true
     },
 
     roomsType: {
         type: String,
-        required: true
+        // required: true
     },
 
     price: {
@@ -28,12 +28,12 @@ const roomSchema = new mongoose.Schema({
 
     location: {
         type: String,
-        required: true
+        // required: true
     },
 
     contactNumber: {
         type: Number,
-        required: true
+        // required: true
     }
 
 }, {timestamps: true});

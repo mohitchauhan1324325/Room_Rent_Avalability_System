@@ -2,36 +2,23 @@ import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
 
-    image: {
-        type: String,
-        // required: true
-    },
-    title: {
-        type: String,
-        required: true
-    },
+    title: String,
+    description: String,
+    price: Number,
+    location: String,
+    capacity: Number,
 
-    description: {
-        type: String,
-        // required: true
-    },
-
-    price: {
-        type: Number,
-        required: true
-    },
-
-    location: {
-        type: String,
-        // required: true
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
 
     isAvailable: {
         type: Boolean,
-        required: true
+        default: true
     }
 
-}, {timestamps: true});
+}, { timestamps: true });
 
 const Room = mongoose.model("Room", roomSchema);
 

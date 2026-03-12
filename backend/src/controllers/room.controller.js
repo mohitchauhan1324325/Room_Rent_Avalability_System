@@ -34,7 +34,18 @@ export const getRoomById = async (req, res) => {
     }
 };
 
-export const deleteRoom = async (req, res) => {
+export const deleteAllRooms = async (req, res) => {
+    try {
+        const room = await Room.deleteMany({});
+
+        res.json({ message: "All rooms are deleted successfully" });
+    }
+    catch (error) {
+        res.statu(500).json({ message: error.message });
+    }
+};
+
+export const deleteRoomById = async (req, res) => {
     try {
         const room = await Room.findByIdAndDelete(req.params.id);
 
@@ -48,3 +59,4 @@ export const deleteRoom = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+

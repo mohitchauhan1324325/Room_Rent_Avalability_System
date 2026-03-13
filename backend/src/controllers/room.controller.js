@@ -28,6 +28,10 @@ export const getRoomById = async (req, res) => {
             return res.status(400).json({ message: "Room not found" });
         }
 
+        if(!room.isAvailable) {
+            return res.json({ message: "Room already rented" });
+        }
+
         res.json(room);
     }
     catch (error) {
@@ -64,6 +68,10 @@ export const deleteRoomById = async (req, res) => {
 export const roomRent = async (req, res) => {
     try {
         const booking = await Booking.create(req.body);
+
+        await Room.findByIdAndUpdate(
+            req.body.roomId, {isAvailable: false}
+        );
 
         res.status(200).json(booking);
 

@@ -1,4 +1,5 @@
 import Room from "../models/rooms.models.js";
+import { Booking } from "../models/booking.models.js";
 
 export const addRoom = async (req, res) => {
     try {
@@ -60,3 +61,24 @@ export const deleteRoomById = async (req, res) => {
     }
 };
 
+export const roomRent = async (req, res) => {
+    try {
+        const booking = await Booking.create(req.body);
+
+        res.status(200).json(booking);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const bookRooms = async (req, res) => {
+    try {
+        const room = await Booking.find();
+
+        res.status(200).json(room);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { addRoom, deleteRoomById, getRoomById, getRooms, deleteAllRooms } from "../controllers/room.controller.js";
+import { addRoom, deleteRoomById, getRoomById, getRooms, deleteAllRooms, roomRent, bookRooms } from "../controllers/room.controller.js";
 
 const router = express.Router();
 
@@ -9,5 +9,7 @@ router.get("/rooms", getRooms);
 router.get("/rooms/:id", getRoomById);
 router.delete("/rooms/:id", deleteRoomById);
 router.delete("/rooms", deleteAllRooms);
+router.post("/room-rent", roomRent);
+router.get("/room-rent", bookRooms);
 
 export default router;

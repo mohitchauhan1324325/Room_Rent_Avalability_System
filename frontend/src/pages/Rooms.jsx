@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 function Rooms () {
 
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/rooms')
+    api.get("/api/rooms")
       .then((res) => {
         setRooms(res.data);
       })

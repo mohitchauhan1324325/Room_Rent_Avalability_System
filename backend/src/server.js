@@ -6,11 +6,13 @@ import dotenv from "dotenv"
 import dbConnect from "./db/dbConnect.js"
 import roomRoutes from "./routes/room.routes.js"
 import { PORT } from "./constants.js"
+import cors from "cors"
 
 dotenv.config()
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 dbConnect()

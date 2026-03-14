@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import './App.css'
+import Rooms from './pages/Rooms'
 
 function App() {
 
@@ -11,7 +11,7 @@ function App() {
       <main>
         <p>Welcome to my app!</p>
         <div>
-          {/* Add your app content here */}
+          { <Rooms /> }
           
         </div>
       </main>

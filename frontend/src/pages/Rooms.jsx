@@ -1,35 +1,32 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-function Rooms() {
+function Rooms () {
 
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/rooms")
+    axios.get('/api/rooms')
       .then((res) => {
-        setRooms(res.data)
+        setRooms(res.data);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
       })
   }, []);
 
   return (
     <div>
-      {rooms.map((room) => (
-        <div key={room._id}>
-          <h3>{room.title}</h3>
-          <p>Price: {room.price}</p>
-
-          {room.isAvailable ? (
-            <button>Rent Room</button>
-          ) : (
-            <p>Occupied</p>
-          )}
-
-        </div>
-      ))}
+      {
+        rooms.map((room) => (
+          <div key={room._id}>
+            <h3>{room.title}</h3>
+            <p>Price: {room.price}</p>
+            {
+              room.isAvailable ? ( <button>Rent Room</button> ) : ( <p>Occupied</p> )
+            }
+          </div>
+        ))}
     </div>
   );
 }

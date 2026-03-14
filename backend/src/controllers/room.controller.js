@@ -28,7 +28,7 @@ export const getRoomById = async (req, res) => {
             return res.status(400).json({ message: "Room not found" });
         }
 
-        if(!room.isAvailable) {
+        if (!room.isAvailable) {
             return res.json({ message: "Room already rented" });
         }
 
@@ -70,7 +70,7 @@ export const roomRent = async (req, res) => {
         const booking = await Booking.create(req.body);
 
         await Room.findByIdAndUpdate(
-            req.body.roomId, {isAvailable: false}
+            booking.roomId, { isAvailable: false }
         );
 
         res.status(200).json(booking);
@@ -89,4 +89,27 @@ export const bookRooms = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+}
+
+export const cancelBooking = async (req, res) => {
+    try {
+
+        const booking = await Booking.findById(req.params.id);
+
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found" });
+        }
+
+        const a = await Room.findByIdAndUpdate(
+            booking.roomId, { isAvailable: true }
+        )
+
+        const b = await Booking.findByIdAndDelete(booking.id);
+        
+        res.status(200).json({ message: "Booking cancelled successfully" });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+
 }

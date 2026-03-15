@@ -1,11 +1,16 @@
 .userCard {
-     border: 2px solid rgb(190, 188, 188);
     margin: 20px;
     padding: 20px;
     width: 200px;
-    background-color: #cbeef3;
-    color: #F49CBB;
+    background: hsla(10, 82%, 65%, 1);
     border-radius: 5px;
-    background: linear-gradient(90deg, hsla(152, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%);
+
+background: linear-gradient(90deg, hsla(10, 82%, 65%, 1) 0%, hsla(290, 79%, 13%, 1) 100%);
+
+background: -moz-linear-gradient(90deg, hsla(10, 82%, 65%, 1) 0%, hsla(290, 79%, 13%, 1) 100%);
+
+background: -webkit-linear-gradient(90deg, hsla(10, 82%, 65%, 1) 0%, hsla(290, 79%, 13%, 1) 100%);
+
+filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#EF745C", endColorstr="#34073D", GradientType=1 );
 }
 

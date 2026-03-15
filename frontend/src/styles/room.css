@@ -3,6 +3,7 @@
     text-align: center;
     display: flex;
     gap: 20px;
+    background-color: #93A3B1;
 }
 
 .roomCard {
@@ -10,8 +11,7 @@
     margin: 20px;
     padding: 20px;
     width: 200px;
+    background-color: #DD2D4A;
+    color: #CBEEF3;
 }
 
-.roomCard h3{
-    color: green;
-}

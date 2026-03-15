@@ -3,8 +3,6 @@
     margin: 20px;
     padding: 20px;
     width: 200px;
-}
-
-h3 {
-    color: cyan;
+    background-color: #cbeef3;
+    color: #F49CBB;
 }

@@ -1,0 +1,13 @@
+.app {
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    gap: 20px;
+}
+
+.roomCard {
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+    width: 200px;
+}

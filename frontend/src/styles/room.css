@@ -11,3 +11,7 @@
     padding: 20px;
     width: 200px;
 }
+
+.roomCard h3{
+    color: green;
+}

@@ -1,8 +1,11 @@
 .userCard {
-     border: 2px solid black;
+     border: 2px solid rgb(190, 188, 188);
     margin: 20px;
     padding: 20px;
     width: 200px;
     background-color: #cbeef3;
     color: #F49CBB;
+    border-radius: 5px;
+    background: linear-gradient(90deg, hsla(152, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%);
 }
+

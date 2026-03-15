@@ -8,13 +8,9 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
 
-    tenantName: {
-        type: String,
-        required: true
-    },
-
-    phone: {
-        type: Number,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
 
@@ -23,6 +19,6 @@ const bookingSchema = new mongoose.Schema({
         required: true
     }
 
-}, {timestamps: true});
+}, { timestamps: true });
 
 export const Booking = mongoose.model("Booking", bookingSchema);

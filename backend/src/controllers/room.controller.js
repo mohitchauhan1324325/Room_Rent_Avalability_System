@@ -1,5 +1,6 @@
 import Room from "../models/rooms.models.js";
 import { Booking } from "../models/booking.models.js";
+import { User } from "../models/user.models.js";
 
 export const addRoom = async (req, res) => {
     try {
@@ -67,18 +68,33 @@ export const deleteRoomById = async (req, res) => {
 
 export const roomRent = async (req, res) => {
     try {
-        const booking = await Booking.create(req.body);
 
-        await Room.findByIdAndUpdate(
-            booking.roomId, { isAvailable: false }
-        );
+        const { tenantName, phone, role, roomId, moveInDate } = req.body;
 
-        res.status(200).json(booking);
+        const user = await User.create({
+            name: tenantName,
+            phone,
+            role
+        });
+
+        const booking = await Booking.create({
+            roomId,
+            user: user._id,
+            moveInDate
+        });
+
+        await Room.findByIdAndUpdate(roomId, { isAvailable: false });
+
+        res.status(200).json({
+            message: "Room booked successfully",
+            user,
+            booking
+        });
 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
 
 export const bookRooms = async (req, res) => {
     try {
@@ -89,7 +105,7 @@ export const bookRooms = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
 
 export const cancelBooking = async (req, res) => {
     try {
@@ -102,7 +118,7 @@ export const cancelBooking = async (req, res) => {
 
         const a = await Room.findByIdAndUpdate(
             booking.roomId, { isAvailable: true }
-        )
+        );
 
         const b = await Booking.findByIdAndDelete(booking.id);
         
@@ -112,4 +128,18 @@ export const cancelBooking = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 
-}
+};
+
+export const getBookings = async (req, res) => {
+  try {
+
+    const bookings = await Booking
+      .find()
+      .populate("user");   // 👈 here
+
+    res.status(200).json(bookings);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

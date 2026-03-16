@@ -43,7 +43,7 @@ function Rooms () {
         {
           users.map((user) => (
             <div className="userCard" key={user._id}>
-              <h3>User</h3>
+              <h3>Users</h3>
               <p>{user.user.name}</p>
               <p>{user.user.role}</p>
             </div>

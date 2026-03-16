@@ -36,7 +36,7 @@ function Rooms () {
             <h3>{room.title}</h3>
             <p>Price: {room.price}</p>
             {
-              room.isAvailable ? ( <button>Rent Room</button> ) : ( <p>Occupied</p> )
+              room.isAvailable ? ( <button /*onClick={}*/ >Rent Room</button> ) : ( <p>Occupied</p> )
             }
           </div>
         ))}
@@ -45,7 +45,6 @@ function Rooms () {
             <div className="userCard" key={user._id}>
               <h3>Users</h3>
               <p>{user.user.name}</p>
-              <p>{user.user.role}</p>
             </div>
           ))
         }

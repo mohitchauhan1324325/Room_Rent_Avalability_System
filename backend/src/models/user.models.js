@@ -13,12 +13,7 @@ const userSchema = new mongoose.Schema({
     //     unique: true
     // },
     // password: String,
-    phone: Number,
-    role: {
-        type: String,
-        enum: ["landlord", "tenant"],
-        required: true
-    }
+    phone: Number
 });
 
 export const User = mongoose.model("User", userSchema);

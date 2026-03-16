@@ -73,8 +73,7 @@ export const roomRent = async (req, res) => {
 
         const user = await User.create({
             name: tenantName,
-            phone,
-            role
+            phone
         });
 
         const booking = await Booking.create({

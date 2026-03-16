@@ -61,7 +61,7 @@ export const deleteRoomById = async (req, res) => {
 
         res.json({ message: "Room deleted successfully" })
     }
-    catch (error) {
+    catch (error) { 
         res.status(500).json({ message: error.message });
     }
 };
@@ -69,7 +69,15 @@ export const deleteRoomById = async (req, res) => {
 export const roomRent = async (req, res) => {
     try {
 
-        const { tenantName, phone, role, roomId, moveInDate } = req.body;
+        const { tenantName, phone, roomId, moveInDate } = req.body;
+
+        const room = await Room.findById(roomId);
+
+        if(!room.isAvailable){
+            return res.status(400).json({
+                message: "Room already booked"
+            });
+        }
 
         const user = await User.create({
             name: tenantName,

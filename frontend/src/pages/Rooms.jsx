@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import api from "../utils/api";
 import "../styles/room.css";
 import "../styles/users.css";
+import { useNavigate } from "react-router-dom"
 
-function Rooms () {
+function Rooms() {
+
+  const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
@@ -20,13 +23,13 @@ function Rooms () {
 
   useEffect(() => {
     api.get("/api/users")
-    .then((res) => {
-      setUsers(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }, []); 
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, []);
 
   return (
     <div className="app">
@@ -36,20 +39,20 @@ function Rooms () {
             <h3>{room.title}</h3>
             <p>Price: {room.price}</p>
             {
-              room.isAvailable ? ( <button /*onClick={}*/ >Rent Room</button> ) : ( <p>Occupied</p> )
+              room.isAvailable ? (<button onClick={() => navigate("/booking", { state: room })} >Rent Room</button>) : (<p>Occupied</p>)
             }
           </div>
         ))}
-        {
-          users.map((user) => (
-            <div className="userCard" key={user._id}>
-              <h3>Users</h3>
-              <p>{user.user.name}</p>
-            </div>
-          ))
-        }
+      {
+        users.map((user) => (
+          <div className="userCard" key={user._id}>
+            <h3>Users</h3>
+            <p>{user.user.name}</p>
+          </div>
+        ))
+      }
     </div>
-  );
+  )
 }
 
 export default Rooms;

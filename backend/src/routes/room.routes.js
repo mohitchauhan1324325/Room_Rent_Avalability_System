@@ -1,6 +1,6 @@
 import express from "express";
 
-import { addRoom, deleteRoomById, getRoomById, getRooms, deleteAllRooms, roomRent, bookRooms, cancelBooking, getBookings } from "../controllers/room.controller.js";
+import { addRoom, deleteRoomById, getRoomById, getRooms, deleteAllRooms, roomRent, bookRooms, cancelBooking, getBookings, updateRoom } from "../controllers/room.controller.js";
 
 const router = express.Router();
 
@@ -19,5 +19,7 @@ router.delete("/rooms/:id", deleteRoomById);
 router.delete("/rooms", deleteAllRooms);
 router.delete("/bookings/:id", cancelBooking);
 
+//PUT methods
+router.put("/rooms/:id", updateRoom);
 
 export default router;

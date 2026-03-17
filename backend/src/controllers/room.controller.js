@@ -142,7 +142,7 @@ export const getBookings = async (req, res) => {
 
     const bookings = await Booking
       .find()
-      .populate("user");   // 👈 here
+      .populate("user");   
 
     res.status(200).json(bookings);
 
@@ -153,10 +153,21 @@ export const getBookings = async (req, res) => {
 
 export const updateRoom = async (req, res) => {
     try {
-        
-        const updatedRoom = await Room.findByIdAndUpdate()
+        const { id } = req.params;
+
+        const updatedRoom = await Room.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true }
+        );
+
+        if(!updatedRoom){
+            return res.status(404).json({ message: "Room not found" });
+        }
+
+        res.json(updatedRoom);
 
     } catch (error) {
-        
+        res.status(500).json({ message: error.message });
     }
-}
+};

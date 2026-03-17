@@ -4,7 +4,7 @@ import "../styles/room.css";
 import "../styles/users.css";
 import { useNavigate } from "react-router-dom"
 
-function Rooms() {
+const Rooms = () => {
 
   const navigate = useNavigate();
 
@@ -31,6 +31,10 @@ function Rooms() {
       })
   }, []);
 
+  const handleEdit = (id) => {
+    navigate(`/EditRooms/${id}`);
+  };
+
   return (
     <div className="app">
       {
@@ -41,6 +45,7 @@ function Rooms() {
             {
               room.isAvailable ? (<button onClick={() => navigate("/booking", { state: room })} >Rent Room</button>) : (<p>Occupied</p>)
             }
+            <button onClick={() => handleEdit(room._id)}>Edit</button>
           </div>
         ))}
       {

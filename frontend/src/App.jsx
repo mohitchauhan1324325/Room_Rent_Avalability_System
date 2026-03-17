@@ -2,8 +2,9 @@ import './App.css'
 import Rooms from './pages/Rooms'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import BookingForm from './pages/BookingForm'
+import EditRooms from './pages/EditRooms'
 
-function App() {
+const App = () => {
 
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Rooms />} />
             <Route path="/booking" element={<BookingForm />} />
+            <Route path="/EditRooms/:id" element={<EditRooms />} />
           </Routes>
         </BrowserRouter>
 

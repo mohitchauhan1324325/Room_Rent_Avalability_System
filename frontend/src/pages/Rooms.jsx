@@ -35,6 +35,20 @@ const Rooms = () => {
     navigate(`/EditRooms/${id}`);
   };
 
+  const handleDelete = async (id) => {
+    try{
+      const confirmDelete = window.confirm("Are you sure you want to delete?");
+      if(!confirmDelete) return;
+
+      await api.delete(`/api/rooms/${id}`);
+
+      setRooms(rooms.filter(room => room._id !== id));
+    }
+    catch(error){
+      console.log(error);
+    }
+  };
+
   return (
     <div className="app">
       {
@@ -46,6 +60,7 @@ const Rooms = () => {
               room.isAvailable ? (<button onClick={() => navigate("/booking", { state: room })} >Rent Room</button>) : (<p>Occupied</p>)
             }
             <button onClick={() => handleEdit(room._id)}>Edit</button>
+            <button onClick={() => handleDelete(room._id)} >Delete Room</button>
           </div>
         ))}
       {

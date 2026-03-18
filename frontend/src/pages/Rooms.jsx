@@ -3,6 +3,7 @@ import api from "../utils/api";
 import "../styles/room.css";
 import "../styles/users.css";
 import { useNavigate } from "react-router-dom"
+import RoomsFilter from "../comonents/RoomsFilter";
 
 const Rooms = () => {
 
@@ -10,6 +11,7 @@ const Rooms = () => {
 
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     api.get("/api/rooms")
@@ -36,43 +38,64 @@ const Rooms = () => {
   };
 
   const handleDelete = async (id) => {
-    try{
+    try {
       const confirmDelete = window.confirm("Are you sure you want to delete?");
-      if(!confirmDelete) return;
+      if (!confirmDelete) return;
 
       await api.delete(`/api/rooms/${id}`);
 
       setRooms(rooms.filter(room => room._id !== id));
     }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
   };
 
+  const filteredRooms = filter === "available" ? rooms.filter((room) => room.isAvailable) : rooms;
+
   return (
     <div className="app">
-      {
-        rooms.map((room) => (
-          <div className="roomCard" key={room._id}>
-            <h3>{room.title}</h3>
-            <p>Price: {room.price}</p>
-            {
-              room.isAvailable ? (<button onClick={() => navigate("/booking", { state: room })} >Rent Room</button>) : (<p>Occupied</p>)
-            }
-            <button onClick={() => handleEdit(room._id)}>Edit</button>
-            <button onClick={() => handleDelete(room._id)} >Delete Room</button>
-          </div>
-        ))}
-      {
-        users.map((user) => (
-          <div className="userCard" key={user._id}>
-            <h3>Users</h3>
-            <p>{user.user.name}</p>
-          </div>
-        ))
-      }
+
+      {/* Filter Component */}
+      <RoomsFilter setFilter={setFilter} />
+
+      {filteredRooms.length === 0 ? (
+        <p>No rooms found</p>
+      ) : (
+        <>
+          {/* Rooms List */}
+          {filteredRooms.map((room) => (
+            <div className="roomCard" key={room._id}>
+              <h3>{room.title}</h3>
+              <p>Price: {room.price}</p>
+
+              {room.isAvailable ? (
+                <button onClick={() => navigate("/booking", { state: room })}>
+                  Rent Room
+                </button>
+              ) : (
+                <p>Occupied</p>
+              )}
+
+              <button onClick={() => handleEdit(room._id)}>Edit</button>
+              <button onClick={() => handleDelete(room._id)}>
+                Delete Room
+              </button>
+            </div>
+          ))}
+
+          {/* Users List */}
+          {users.map((user) => (
+            <div className="userCard" key={user._id}>
+              <h3>Users</h3>
+              <p>{user.user.name}</p>
+            </div>
+          ))}
+        </>
+      )}
+
     </div>
-  )
+  );
 }
 
 export default Rooms;

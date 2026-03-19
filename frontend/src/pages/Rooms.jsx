@@ -58,7 +58,7 @@ const Rooms = () => {
 
       {/* Filter Component */}
       <RoomsFilter setFilter={setFilter} />
-
+      <button onClick={() => navigate("/AddRooms")}>Add Rooms</button>
       {filteredRooms.length === 0 ? (
         <p>No rooms found</p>
       ) : (
@@ -68,6 +68,7 @@ const Rooms = () => {
             <div className="roomCard" key={room._id}>
               <h3>{room.title}</h3>
               <p>Price: {room.price}</p>
+              <p>Location: {room.location}</p>
 
               {room.isAvailable ? (
                 <button onClick={() => navigate("/booking", { state: room })}>

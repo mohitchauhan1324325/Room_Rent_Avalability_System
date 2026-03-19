@@ -89,7 +89,8 @@ const Rooms = () => {
           {users.map((user) => (
             <div className="userCard" key={user._id}>
               <h3>Users</h3>
-              <p>{user.user.name}</p>
+              <p>Name: {user.user.name}</p>
+              <p>Phone: {user.user.phone}</p>
             </div>
           ))}
         </>

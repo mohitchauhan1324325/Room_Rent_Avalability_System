@@ -9,7 +9,6 @@ const ManageBookings = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-
                 const res = await api.get("/api/users");
                 setUsers(res.data);
 
@@ -17,7 +16,6 @@ const ManageBookings = () => {
                 console.log(error);
             }
         }
-
         fetchUsers();
     }, []);
 

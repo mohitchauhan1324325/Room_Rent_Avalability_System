@@ -92,7 +92,9 @@ const Rooms = () => {
                   Rent Room
                 </button>
               ) : (
-                <p>Occupied</p>
+                <div>
+                  <p>Occupied</p>
+                </div>
               )}
 
               <button onClick={(e) => {

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import BookingForm from './pages/BookingForm'
 import EditRooms from './pages/EditRooms'
 import AddRooms from './pages/addRooms'
+import RoomDetails from './pages/RoomDetails'
 
 const App = () => {
 
@@ -24,7 +25,8 @@ const App = () => {
             <Route path="/" element={<Rooms />} />
             <Route path="/booking" element={<BookingForm />} />
             <Route path="/EditRooms/:id" element={<EditRooms />} />
-            <Route path='/AddRooms' element={<AddRooms />}/>
+            <Route path="/AddRooms" element={<AddRooms />}/>
+            <Route path="/RoomDetails/:id" element={<RoomDetails />}/>
           </Routes>
         </BrowserRouter>
 

@@ -8,12 +8,12 @@ import RoomsFilter from "../comonents/RoomsFilter";
 const Rooms = () => {
 
   const navigate = useNavigate();
-  
+
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("all");
 
-  {/* Get all rooms Occupied/Not Occupied */}
+  {/* Get all rooms Occupied/Not Occupied */ }
   useEffect(() => {
     const fetchRoom = async () => {
       try {
@@ -26,7 +26,7 @@ const Rooms = () => {
     fetchRoom();
   }, []);
 
-  {/* Get all user who book the rooms */}
+  {/* Get all user who book the rooms */ }
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -40,12 +40,12 @@ const Rooms = () => {
     fetchUser();
   }, []);
 
-  {/* To navigate the Edit window to update/edit the rooms */}
+  {/* To navigate the Edit window to update/edit the rooms */ }
   const handleEdit = (id) => {
     navigate(`/EditRooms/${id}`);
   };
 
-  {/* Delete the Rooms by Landlord */}
+  {/* Delete the Rooms by Landlord */ }
   const handleDelete = async (id) => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete?");
@@ -60,8 +60,13 @@ const Rooms = () => {
     }
   };
 
-  {/* Filter the room available/not available */}
+  {/* Filter the room available/not available */ }
   const filteredRooms = filter === "available" ? rooms.filter((room) => room.isAvailable) : rooms;
+
+  {/* navigate to room details window */ }
+  const handleDetails = (id) => {
+    navigate(`/RoomDetails/${id}`);
+  }
 
   return (
     <div className="app">
@@ -79,23 +84,45 @@ const Rooms = () => {
         <>
           {/* Rooms List */}
           {filteredRooms.map((room) => (
-            <div className="roomCard" key={room._id}>
+
+            <div
+              className="roomCard"
+              key={room._id}
+              onClick={() => handleDetails(room._id)}
+            >
+
               <h3>{room.title}</h3>
               <p>Price: {room.price}</p>
               <p>Location: {room.location}</p>
 
               {room.isAvailable ? (
-                <button onClick={() => navigate("/booking", { state: room })}>
+                <button onClick={(e) => {
+                  e.stopPropagation();                                  // Stop the click event go to the parent elements
+                  navigate("/booking", { state: room });
+                }}
+                >
                   Rent Room
                 </button>
               ) : (
                 <p>Occupied</p>
               )}
 
-              <button onClick={() => handleEdit(room._id)}>Edit</button>
-              <button onClick={() => handleDelete(room._id)}>
+              <button onClick={(e) => {
+                e.stopPropagation();              // Stop the click event go to the parent elements
+                handleEdit(room._id);
+              }}
+              >
+                Edit
+              </button>
+
+              <button onClick={(e) => {
+                e.stopPropagation();          // Stop the click event go to the parent elements
+                handleDelete(room._id);
+              }}
+              >
                 Delete Room
               </button>
+
             </div>
           ))}
 

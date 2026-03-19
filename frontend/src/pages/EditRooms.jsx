@@ -5,7 +5,7 @@ import api from "../utils/api";
 const EditRooms = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [room, setRoom] = useState({
     title: "",
     location: "",
@@ -14,10 +14,14 @@ const EditRooms = () => {
 
   useEffect(() => {
     const fetchRoom = async () => {
-      const res = await api.get(
-        `/api/rooms/${id}`
-      );
-      setRoom(res.data);
+      try {
+        const res = await api.get(
+          `/api/rooms/${id}`
+        );
+        setRoom(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     fetchRoom();
@@ -32,15 +36,19 @@ const EditRooms = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
+  try {
     await api.put(`/api/rooms/${id}`, room);
 
     alert("Room updated!");
-
     navigate("/");
 
-  };
+  } catch (err) {
+    console.log(err);
+    alert("Something went wrong!");
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} >

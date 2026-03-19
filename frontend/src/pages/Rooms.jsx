@@ -8,35 +8,44 @@ import RoomsFilter from "../comonents/RoomsFilter";
 const Rooms = () => {
 
   const navigate = useNavigate();
-
+  
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("all");
 
+  {/* Get all rooms Occupied/Not Occupied */}
   useEffect(() => {
-    api.get("/api/rooms")
-      .then((res) => {
+    const fetchRoom = async () => {
+      try {
+        const res = await api.get("/api/rooms");
         setRooms(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchRoom();
   }, []);
 
+  {/* Get all user who book the rooms */}
   useEffect(() => {
-    api.get("/api/users")
-      .then((res) => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/api/users");
         setUsers(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchUser();
   }, []);
 
+  {/* To navigate the Edit window to update/edit the rooms */}
   const handleEdit = (id) => {
     navigate(`/EditRooms/${id}`);
   };
 
+  {/* Delete the Rooms by Landlord */}
   const handleDelete = async (id) => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete?");
@@ -51,6 +60,7 @@ const Rooms = () => {
     }
   };
 
+  {/* Filter the room available/not available */}
   const filteredRooms = filter === "available" ? rooms.filter((room) => room.isAvailable) : rooms;
 
   return (
@@ -58,7 +68,11 @@ const Rooms = () => {
 
       {/* Filter Component */}
       <RoomsFilter setFilter={setFilter} />
+
+      {/* Add Rooms by Landlord */}
       <button onClick={() => navigate("/AddRooms")}>Add Rooms</button>
+
+      {/* Filter Conditions */}
       {filteredRooms.length === 0 ? (
         <p>No rooms found</p>
       ) : (

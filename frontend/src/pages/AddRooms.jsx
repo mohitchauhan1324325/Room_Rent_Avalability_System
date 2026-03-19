@@ -3,65 +3,68 @@ import api from "../utils/api";
 
 const AddRooms = () => {
 
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        price: "",
-        location: ""
-    });
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: "",
+    location: ""
+  });
 
-const handleChange = (e) => {
+  const handleChange = (e) => {
     setFormData({
-        ...formData,
-        [e.target.name] : e.target.value
+      ...formData,
+      [e.target.name]: e.target.value
     });
-};
+  };
 
-const handleAddRooms = async (e) => {
+  const handleAddRooms = async (e) => {
     e.preventDefault();
 
-    await api.post(`/api/rooms`, formData);
-
-    alert("Room Saved!");
-}
+    try {
+      await api.post(`/api/rooms`, formData);
+      alert("Room Saved!");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div>
       <form onSubmit={handleAddRooms}>
 
-        <input 
-        type="text"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-        placeholder="title"
-        required
-        />
-
-        <input 
-        type="text"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="description"
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="title"
+          required
         />
 
         <input
-        type="number"
-        name="price"
-        value={formData.price}
-        onChange={handleChange}
-        placeholder="price"
-        required
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="description"
         />
 
         <input
-        type="text"
-        name="location"
-        value={formData.location}
-        onChange={handleChange}
-        placeholder="location"
-        required
+          type="number"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+          placeholder="price"
+          required
+        />
+
+        <input
+          type="text"
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          placeholder="location"
+          required
         />
 
         <button type="submit">Submit</button>

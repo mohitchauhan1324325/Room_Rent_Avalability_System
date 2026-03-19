@@ -8,8 +8,9 @@ const EditRooms = () => {
 
   const [room, setRoom] = useState({
     title: "",
+    description: "",
+    price: "",
     location: "",
-    price: ""
   });
 
   useEffect(() => {
@@ -59,6 +60,14 @@ const EditRooms = () => {
         value={room.title}
         onChange={handleChange}
         placeholder="Room Title"
+      />
+
+      <input
+      type="text"
+      name="description"
+      value={room.description}
+      onChange={handleChange}
+      placeholder="Room Description"
       />
 
       <input

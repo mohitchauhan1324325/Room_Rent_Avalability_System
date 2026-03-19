@@ -23,7 +23,10 @@ const RoomDetails = () => {
 
     return (
         <div>
-            <p>{room?.title}</p>
+            <h1>{room?.title}</h1>
+            <p>Description: {room?.description}</p>
+            <p>Price: {room?.price}</p>
+            <p>Location: {room?.location}</p>
         </div>
     )
 }

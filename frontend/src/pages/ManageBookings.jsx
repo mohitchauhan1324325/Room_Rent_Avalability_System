@@ -19,6 +19,19 @@ const ManageBookings = () => {
         fetchUsers();
     }, []);
 
+    const handleDeleteBooking = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete?");
+        if(!confirmDelete) return;
+
+        try {
+            await api.delete(`/api/bookings/${id}`);
+
+            setUsers(prev => prev.filter(b => b._id !== id));
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <div>
@@ -38,6 +51,9 @@ const ManageBookings = () => {
                                 })}
                         </p>
                         <p>Location: {user.roomId.location}</p>
+
+                        <button onClick={() => handleDeleteBooking(user._id)}>Delete Booking</button>
+
                     </div>
                 ))
             }

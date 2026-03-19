@@ -21,6 +21,7 @@ const BookingForm = () => {
       roomId: room._id,
       tenantName: name,
       phone,
+      location: room.location,
       moveInDate: date
     };  
 

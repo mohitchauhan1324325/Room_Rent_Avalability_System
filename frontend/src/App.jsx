@@ -5,6 +5,7 @@ import BookingForm from './pages/BookingForm'
 import EditRooms from './pages/EditRooms'
 import AddRooms from './pages/addRooms'
 import RoomDetails from './pages/RoomDetails'
+import ManageBookings from './pages/ManageBookings'
 
 const App = () => {
 
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/EditRooms/:id" element={<EditRooms />} />
             <Route path="/AddRooms" element={<AddRooms />}/>
             <Route path="/RoomDetails/:id" element={<RoomDetails />}/>
+            <Route path="/ManageBookings" element={<ManageBookings />}/>
           </Routes>
         </BrowserRouter>
 

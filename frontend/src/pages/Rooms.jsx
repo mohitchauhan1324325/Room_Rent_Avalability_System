@@ -10,7 +10,6 @@ const Rooms = () => {
   const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
-  const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("all");
 
   {/* Get all rooms Occupied/Not Occupied */ }
@@ -24,20 +23,6 @@ const Rooms = () => {
       }
     }
     fetchRoom();
-  }, []);
-
-  {/* Get all user who book the rooms */ }
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get("/api/users");
-        setUsers(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    fetchUser();
   }, []);
 
   {/* To navigate the Edit window to update/edit the rooms */ }
@@ -76,6 +61,9 @@ const Rooms = () => {
 
       {/* Add Rooms by Landlord */}
       <button onClick={() => navigate("/AddRooms")}>Add Rooms</button>
+
+      {/* Manages all bookings details */}
+      <button onClick={() => navigate("/ManageBookings")}>All Bookings here</button>
 
       {/* Filter Conditions */}
       {filteredRooms.length === 0 ? (
@@ -126,14 +114,6 @@ const Rooms = () => {
             </div>
           ))}
 
-          {/* Users List */}
-          {users.map((user) => (
-            <div className="userCard" key={user._id}>
-              <h3>Users</h3>
-              <p>Name: {user.user.name}</p>
-              <p>Phone: {user.user.phone}</p>
-            </div>
-          ))}
         </>
       )}
 

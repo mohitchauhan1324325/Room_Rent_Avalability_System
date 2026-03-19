@@ -61,7 +61,7 @@ export const deleteRoomById = async (req, res) => {
 
         res.json({ message: "Room deleted successfully" })
     }
-    catch (error) { 
+    catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
@@ -73,7 +73,13 @@ export const roomRent = async (req, res) => {
 
         const room = await Room.findById(roomId);
 
-        if(!room.isAvailable){
+        if (!room) {
+            return res.status(404).json({
+                message: "Room not found"
+            });
+        }
+
+        if (!room.isAvailable) {
             return res.status(400).json({
                 message: "Room already booked"
             });
@@ -128,7 +134,7 @@ export const cancelBooking = async (req, res) => {
         );
 
         const b = await Booking.findByIdAndDelete(booking.id);
-        
+
         res.status(200).json({ message: "Booking cancelled successfully" });
 
     } catch (error) {
@@ -137,18 +143,18 @@ export const cancelBooking = async (req, res) => {
 
 };
 
-export const getBookings = async (req, res) => {
-  try {
+export const getUsersBooking = async (req, res) => {
+    try {
 
-    const bookings = await Booking
-      .find()
-      .populate("user");   
+        const bookings = await Booking.find()
+            .populate("user", "name phone")
+            .populate("roomId", "title location");
 
-    res.status(200).json(bookings);
+        res.status(200).json(bookings);
 
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 export const updateRoom = async (req, res) => {
@@ -161,7 +167,7 @@ export const updateRoom = async (req, res) => {
             { new: true }
         );
 
-        if(!updatedRoom){
+        if (!updatedRoom) {
             return res.status(404).json({ message: "Room not found" });
         }
 

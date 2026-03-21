@@ -1,5 +1,6 @@
 import { useState } from "react"
 import api from "../utils/api";
+import { createRoom } from "../api/RoomApi";
 
 const AddRooms = () => {
 
@@ -21,7 +22,7 @@ const AddRooms = () => {
     e.preventDefault();
 
     try {
-      await api.post(`/api/rooms`, formData);
+      await createRoom(formData);
       alert("Room Saved!");
     } catch (error) {
       console.log(error);

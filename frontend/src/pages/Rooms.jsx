@@ -4,6 +4,7 @@ import "../styles/room.css";
 import "../styles/users.css";
 import { useNavigate } from "react-router-dom"
 import RoomsFilter from "../comonents/RoomsFilter";
+import { deleteRoom, getRooms } from "../api/RoomApi";
 
 const Rooms = () => {
 
@@ -16,8 +17,8 @@ const Rooms = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await api.get("/api/rooms");
-        setRooms(res.data);
+        const res = await getRooms();
+        setRooms(res);
       } catch (error) {
         console.log(error);
       }
@@ -36,7 +37,7 @@ const Rooms = () => {
       const confirmDelete = window.confirm("Are you sure you want to delete?");
       if (!confirmDelete) return;
 
-      await api.delete(`/api/rooms/${id}`);
+      await deleteRoom(id);
 
       setRooms(rooms.filter(room => room._id !== id));
     }

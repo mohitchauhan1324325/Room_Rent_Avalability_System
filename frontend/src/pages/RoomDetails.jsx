@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import api from "../utils/api";
 import { useParams } from "react-router-dom";
+import { getRoomById } from "../api/RoomApi";
 
 const RoomDetails = () => {
 
@@ -10,9 +10,8 @@ const RoomDetails = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-
-                const res = await api.get(`/api/rooms/${id}`);
-                setRoom(res.data);
+                const res = await getRoomById(id);
+                setRoom(res);
             } catch (error) {
                 console.log(error);
             }

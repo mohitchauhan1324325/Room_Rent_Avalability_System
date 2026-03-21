@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import api from "../utils/api";
+import { getRoomById, updateRoom } from "../api/RoomApi";
 
 const EditRooms = () => {
   const { id } = useParams();
@@ -16,10 +17,8 @@ const EditRooms = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await api.get(
-          `/api/rooms/${id}`
-        );
-        setRoom(res.data);
+        const res = await getRoomById(id);
+        setRoom(res);
       } catch (error) {
         console.log(error);
       }
@@ -40,7 +39,7 @@ const EditRooms = () => {
   e.preventDefault();
 
   try {
-    await api.put(`/api/rooms/${id}`, room);
+    await updateRoom(id, room);
 
     alert("Room updated!");
     navigate("/");

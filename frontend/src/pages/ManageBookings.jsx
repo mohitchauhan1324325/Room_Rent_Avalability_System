@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../utils/api";
+import { deleteBooking, getBookings } from "../api/bookingApi";
 
 
 const ManageBookings = () => {
@@ -9,8 +10,8 @@ const ManageBookings = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await api.get("/api/users");
-                setUsers(res.data);
+                const res = await getBookings();
+                setUsers(res);
 
             } catch (error) {
                 console.log(error);
@@ -24,7 +25,7 @@ const ManageBookings = () => {
         if(!confirmDelete) return;
 
         try {
-            await api.delete(`/api/bookings/${id}`);
+            await deleteBooking(id);
 
             setUsers(prev => prev.filter(b => b._id !== id));
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import api from "../utils/api";
 import { getRoomById, updateRoom } from "../api/RoomApi";
 
 const EditRooms = () => {

@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import api from "../utils/api";
+import { bookRoom } from "../api/bookingApi";
 
 const BookingForm = () => {
 
@@ -26,8 +27,8 @@ const BookingForm = () => {
     };  
 
     try {
-      const res = await api.post("/api/room-rent", bookingData);
-      alert(res.data.message);
+      const res = await bookRoom(bookingData);
+      alert(res.message);
     } catch (err) {
       console.log(err);
     }

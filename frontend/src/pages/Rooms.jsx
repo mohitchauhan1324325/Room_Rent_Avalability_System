@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import api from "../utils/api";
 import "../styles/room.css";
 import "../styles/users.css";
 import { useNavigate } from "react-router-dom"
@@ -89,6 +88,7 @@ const Rooms = () => {
                   e.stopPropagation();                                  // Stop the click event go to the parent elements
                   navigate("/booking", { state: room });
                 }}
+                class="btn-primary"
                 >
                   Rent Room
                 </button>

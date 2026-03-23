@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import "../styles/room.css";
-import "../styles/users.css";
 import { useNavigate } from "react-router-dom"
 import RoomsFilter from "../comonents/RoomsFilter";
 import { deleteRoom, getRooms } from "../api/RoomApi";

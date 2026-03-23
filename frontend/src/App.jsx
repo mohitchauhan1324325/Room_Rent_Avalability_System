@@ -12,10 +12,12 @@ const App = () => {
   return (
     <>
       <header>
+
+        <img src="transparent-logo.png" alt="logo" style={{ width: "70px", height: "80px" }} />
         <h1>
-          <img src="transparent-logo.png" alt="logo" style={{ width: "70px", height: "80px" }} />
           StayNest
         </h1>
+
       </header>
 
       <main>

@@ -14,7 +14,7 @@ const useRooms = () => {
       const data = await getRooms();
       setRooms(data);
     } catch (err) {
-      setError("Failed to fetch rooms");
+      setError("Failed to fetch rooms :", err);
     } finally {
       setLoading(false);
     }
@@ -25,7 +25,7 @@ const useRooms = () => {
       await deleteRoom(id);
       setRooms(prev => prev.filter(room => room._id !== id));
     } catch (err) {
-      setError("Failed to delete room");
+      setError("Failed to delete room :", err);
     }
   };
 

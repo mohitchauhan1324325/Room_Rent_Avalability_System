@@ -6,7 +6,7 @@ import EditRooms from './pages/EditRooms'
 import AddRooms from './pages/addRooms'
 import RoomDetails from './pages/RoomDetails'
 import ManageBookings from './pages/ManageBookings'
-import Layout from './component/Layout'
+import Layout from './components/Layout'
 
 const App = () => {
 

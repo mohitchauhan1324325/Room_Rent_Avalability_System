@@ -1,126 +1,92 @@
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/room.css";
-import { useNavigate } from "react-router-dom"
-import RoomsFilter from "../comonents/RoomsFilter";
-import { deleteRoom, getRooms } from "../api/RoomApi";
+import RoomsFilter from "../components/RoomsFilter";
+import useRooms from "../hooks/useRooms";
 
 const Rooms = () => {
-
   const navigate = useNavigate();
 
-  const [rooms, setRooms] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const {
+    filteredRooms,
+    setFilter,
+    handleDelete,
+    loading,
+    error,
+  } = useRooms();
 
-  {/* Get all rooms Occupied/Not Occupied */ }
-  useEffect(() => {
-    const fetchRoom = async () => {
-      try {
-        const res = await getRooms();
-        setRooms(res);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchRoom();
-  }, []);
-
-  {/* To navigate the Edit window to update/edit the rooms */ }
   const handleEdit = (id) => {
     navigate(`/EditRooms/${id}`);
   };
 
-  {/* Delete the Rooms by Landlord */ }
-  const handleDelete = async (id) => {
-    try {
-      const confirmDelete = window.confirm("Are you sure you want to delete?");
-      if (!confirmDelete) return;
-
-      await deleteRoom(id);
-
-      setRooms(rooms.filter(room => room._id !== id));
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
-
-  {/* Filter the room available/not available */ }
-  const filteredRooms = filter === "available" ? rooms.filter((room) => room.isAvailable) : rooms;
-
-  {/* navigate to room details window */ }
   const handleDetails = (id) => {
     navigate(`/RoomDetails/${id}`);
-  }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="app">
 
-      {/* Filter Component */}
       <RoomsFilter setFilter={setFilter} />
 
-      {/* Add Rooms by Landlord */}
-      <button onClick={() => navigate("/AddRooms")}>Add Rooms</button>
+      <button onClick={() => navigate("/AddRooms")}>
+        Add Rooms
+      </button>
 
-      {/* Manages all bookings details */}
-      <button onClick={() => navigate("/ManageBookings")}>All Bookings here</button>
+      <button onClick={() => navigate("/ManageBookings")}>
+        All Bookings here
+      </button>
 
-      {/* Filter Conditions */}
       {filteredRooms.length === 0 ? (
         <p>No rooms found</p>
       ) : (
-        <>
-          {/* Rooms List */}
-          {filteredRooms.map((room) => (
+        filteredRooms.map((room) => (
+          <div
+            className="roomCard"
+            key={room._id}
+            onClick={() => handleDetails(room._id)}
+          >
+            <h3>{room.title}</h3>
+            <p>Price: {room.price}</p>
+            <p>Location: {room.location}</p>
 
-            <div
-              className="roomCard"
-              key={room._id}
-              onClick={() => handleDetails(room._id)}
-            >
-
-              <h3>{room.title}</h3>
-              <p>Price: {room.price}</p>
-              <p>Location: {room.location}</p>
-
-              {room.isAvailable ? (
-                <button onClick={(e) => {
-                  e.stopPropagation();                                  // Stop the click event go to the parent elements
+            {room.isAvailable ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigate("/booking", { state: room });
                 }}
-                class="btn-primary"
-                >
-                  Rent Room
-                </button>
-              ) : (
-                <div>
-                  <p>Occupied</p>
-                </div>
-              )}
+                className="btn-primary"
+              >
+                Rent Room
+              </button>
+            ) : (
+              <p>Occupied</p>
+            )}
 
-              <button onClick={(e) => {
-                e.stopPropagation();              // Stop the click event go to the parent elements
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
                 handleEdit(room._id);
               }}
-              >
-                Edit
-              </button>
+            >
+              Edit
+            </button>
 
-              <button onClick={(e) => {
-                e.stopPropagation();          // Stop the click event go to the parent elements
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
                 handleDelete(room._id);
               }}
-              >
-                Delete Room
-              </button>
-
-            </div>
-          ))}
-
-        </>
+            >
+              Delete Room
+            </button>
+          </div>
+        ))
       )}
-
     </div>
   );
-}
+};
 
 export default Rooms;

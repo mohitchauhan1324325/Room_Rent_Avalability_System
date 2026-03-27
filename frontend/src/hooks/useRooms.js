@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { getRooms, deleteRoom } from "../api/RoomApi";
+import { useNavigate } from "react-router-dom";
 
 const useRooms = () => {
+
+  const navigate = useNavigate();
+
   const [rooms, setRooms] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch rooms
+  {/* Get all rooms Occupied/Not Occupied */ }
   const fetchRooms = async () => {
     try {
       setLoading(true);
@@ -20,6 +24,16 @@ const useRooms = () => {
     }
   };
 
+  {/* To navigate the Edit window to update/edit the rooms */ }
+  const handleEdit = (id) => {
+    navigate(`/EditRooms/${id}`);
+  };
+
+  const handleDetails = (id) => {
+    navigate(`/RoomDetails/${id}`);
+  };
+
+  {/* Delete the Rooms by Landlord */ }
   const handleDelete = async (id) => {
     try {
       await deleteRoom(id);
@@ -43,6 +57,8 @@ const useRooms = () => {
     filteredRooms,
     setFilter,
     handleDelete,
+    handleEdit,
+    handleDetails,
     loading,
     error,
   };

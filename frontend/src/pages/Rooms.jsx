@@ -10,17 +10,11 @@ const Rooms = () => {
     filteredRooms,
     setFilter,
     handleDelete,
+    handleEdit,
+    handleDetails,
     loading,
     error,
   } = useRooms();
-
-  const handleEdit = (id) => {
-    navigate(`/EditRooms/${id}`);
-  };
-
-  const handleDetails = (id) => {
-    navigate(`/RoomDetails/${id}`);
-  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

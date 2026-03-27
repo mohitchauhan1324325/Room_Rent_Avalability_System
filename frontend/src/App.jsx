@@ -6,6 +6,7 @@ import EditRooms from './pages/EditRooms'
 import AddRooms from './pages/addRooms'
 import RoomDetails from './pages/RoomDetails'
 import ManageBookings from './pages/ManageBookings'
+import Layout from './component/Layout'
 
 const App = () => {
 
@@ -14,24 +15,22 @@ const App = () => {
       <header>
 
         <img src="transparent-logo.png" alt="logo" style={{ width: "70px", height: "80px" }} />
-        <h1>
-          StayNest
-        </h1>
 
       </header>
 
       <main>
-        <p>Smart Room Availability & Rent Booking Platform</p>
 
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Rooms />} />
-            <Route path="/booking" element={<BookingForm />} />
-            <Route path="/EditRooms/:id" element={<EditRooms />} />
-            <Route path="/AddRooms" element={<AddRooms />}/>
-            <Route path="/RoomDetails/:id" element={<RoomDetails />}/>
-            <Route path="/ManageBookings" element={<ManageBookings />}/>
-          </Routes>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Rooms />} />
+              <Route path="/booking" element={<BookingForm />} />
+              <Route path="/EditRooms/:id" element={<EditRooms />} />
+              <Route path="/AddRooms" element={<AddRooms />} />
+              <Route path="/RoomDetails/:id" element={<RoomDetails />} />
+              <Route path="/ManageBookings" element={<ManageBookings />} />
+            </Routes>
+          </Layout>
         </BrowserRouter>
 
       </main>

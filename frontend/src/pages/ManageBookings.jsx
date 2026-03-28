@@ -1,47 +1,49 @@
 import useBookings from "../hooks/useBookings";
 
-
 const ManageBookings = () => {
+  const {
+    bookings,
+    handleDeleteBooking,
+    loading,
+    error,
+  } = useBookings();
 
-    const {
-        users,
-        handleDeleteBooking,
-        loading,
-        error,
-    } = useBookings();
+  if (loading) return <h2>Loading...</h2>;
+  if (error) return <h2>{error}</h2>;
 
-    if (loading) return <h2>Loading...</h2>;
+  if (bookings.length === 0) {
+    return <h2>No bookings available</h2>;
+  }
 
-    if (!users || users.length === 0) {
-        return <h2>No bookings available</h2>;
-    }   
+  return (
+    <div>
+      {bookings.map((booking) => (
+        <div key={booking._id}>
 
-    return (
-        <div>
-            {
-                users.map((user) => (
-                    <div key={user._id}>
-                        <h3>{user.user.name}</h3>
-                        <p>Phone: {user.user.phone}</p>
-                        <p>Room_ID: {user.roomId._id}</p>
-                        <p>
-                            Move_In Date:{" "}
-                            {user.moveInDate &&
-                                new Date(user.moveInDate).toLocaleDateString("en-IN", {
-                                    day: "numeric",
-                                    month: "long",
-                                    year: "numeric",
-                                })}
-                        </p>
-                        <p>Location: {user.roomId.location}</p>
+          <h3>{booking.user.name}</h3>
+          <p>Phone: {booking.user.phone}</p>
+          <p>Room_ID: {booking.roomId._id}</p>
 
-                        <button onClick={() => handleDeleteBooking(user._id)}>Delete Booking</button>
+          <p>
+            Move_In Date:{" "}
+            {booking.moveInDate &&
+              new Date(booking.moveInDate).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+          </p>
 
-                    </div>
-                ))
-            }
+          <p>Location: {booking.roomId.location}</p>
+
+          <button onClick={() => handleDeleteBooking(booking._id)}>
+            Delete Booking
+          </button>
+
         </div>
-    )
-}
+      ))}
+    </div>
+  );
+};
 
-export default ManageBookings
+export default ManageBookings;

@@ -1,46 +1,44 @@
-import { useEffect, useState } from 'react'
-import { deleteBooking, getBookings } from '../api/bookingApi';
+import { useEffect, useState } from "react";
+import { deleteBooking, getBookings } from "../api/bookingApi";
 
 const useBookings = () => {
+  const [bookings, setBookings] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const [users, setUsers] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const res = await getBookings();
+        setBookings(res);
+      } catch (err) {
+        setError("Failed to load bookings");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const res = await getBookings();
-                setUsers(res);
-                setLoading(false);
+    fetchBookings();
+  }, []);
 
-            } catch (error) {
-                setError(error);
-                setLoading(false);
-            }
-        }
-        fetchUsers();
-    }, []);
+  const handleDeleteBooking = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (!confirmDelete) return;
 
-    const handleDeleteBooking = async (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete?");
-        if (!confirmDelete) return;
-
-        try {
-            await deleteBooking(id);
-            setUsers(prev => prev.filter(b => b._id !== id));
-
-        } catch (error) {
-            setError(error);
-        }
+    try {
+      await deleteBooking(id);
+      setBookings(prev => prev.filter(b => b._id !== id));
+    } catch (err) {
+      setError("Failed to delete booking");
     }
+  };
 
-    return {
-        users,
-        handleDeleteBooking,
-        loading,
-        error
-    }
-}
+  return {
+    bookings,
+    handleDeleteBooking,
+    loading,
+    error,
+  };
+};
 
-export default useBookings
+export default useBookings;

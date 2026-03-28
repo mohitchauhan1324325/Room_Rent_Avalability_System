@@ -39,7 +39,7 @@ const Rooms = () => {
           <div
             className="roomCard"
             key={room._id}
-            onClick={() => handleDetails(room._id)}
+            onClick={room.isAvailable ? () => handleDetails(room._id) : undefined}
           >
             <h3>{room.title}</h3>
             <p>Price: {room.price}</p>

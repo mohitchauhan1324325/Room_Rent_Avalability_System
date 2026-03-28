@@ -1,46 +1,20 @@
-import { useEffect, useState } from "react"
-import { deleteBooking, getBookings } from "../api/bookingApi";
+import useBookings from "../hooks/useBookings";
 
 
 const ManageBookings = () => {
 
-    const [users, setUsers] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const res = await getBookings();
-                setUsers(res);
-                setLoading(false);
-
-            } catch (error) {
-                console.log(error);
-                setLoading(false);
-            }
-        }
-        fetchUsers();
-    }, []);
+    const {
+        users,
+        handleDeleteBooking,
+        loading,
+        error,
+    } = useBookings();
 
     if (loading) return <h2>Loading...</h2>;
 
     if (!users || users.length === 0) {
         return <h2>No bookings available</h2>;
     }   
-
-    const handleDeleteBooking = async (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete?");
-        if (!confirmDelete) return;
-
-        try {
-            await deleteBooking(id);
-
-            setUsers(prev => prev.filter(b => b._id !== id));
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     return (
         <div>

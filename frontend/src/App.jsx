@@ -7,23 +7,17 @@ import AddRooms from './pages/addRooms'
 import RoomDetails from './pages/RoomDetails'
 import ManageBookings from './pages/ManageBookings'
 import Layout from './components/Layout'
+import Home from './pages/Home'
 
 const App = () => {
 
   return (
     <>
-      <header>
-
-        <img src="transparent-logo.png" alt="logo" style={{ width: "70px", height: "80px" }} />
-
-      </header>
-
-      <main>
-
         <BrowserRouter>
           <Layout>
             <Routes>
-              <Route path="/" element={<Rooms />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/rooms" element={<Rooms />} />
               <Route path="/booking" element={<BookingForm />} />
               <Route path="/EditRooms/:id" element={<EditRooms />} />
               <Route path="/AddRooms" element={<AddRooms />} />
@@ -32,12 +26,6 @@ const App = () => {
             </Routes>
           </Layout>
         </BrowserRouter>
-
-      </main>
-
-      <footer>
-        <p>© 2026 StayNest. All rights reserved.</p>
-      </footer>
     </>
   )
 }

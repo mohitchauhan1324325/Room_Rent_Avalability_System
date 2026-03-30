@@ -1,6 +1,5 @@
 import { useState } from "react"
-import api from "../utils/api";
-import { createRoom } from "../api/RoomApi";
+import { createRoom } from "../api/roomApi";
 
 const AddRooms = () => {
 
@@ -8,7 +7,8 @@ const AddRooms = () => {
     title: "",
     description: "",
     price: "",
-    location: ""
+    location: "",
+    owner: ""
   });
 
   const handleChange = (e) => {
@@ -65,6 +65,15 @@ const AddRooms = () => {
           value={formData.location}
           onChange={handleChange}
           placeholder="location"
+          required
+        />
+
+        <input
+          type="text"
+          name="owner"
+          value={formData.owner}
+          onChange={handleChange}
+          placeholder="Owner"
           required
         />
 

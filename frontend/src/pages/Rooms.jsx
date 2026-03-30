@@ -44,7 +44,7 @@ const Rooms = () => {
             <h3>{room.title}</h3>
             <p>Price: {room.price}</p>
             <p>Location: {room.location}</p>
-            {/* <p>Owner: {room.users}</p> */}
+            <p>Owner: {room.owner}</p>
 
             {room.isAvailable ? (
               <button

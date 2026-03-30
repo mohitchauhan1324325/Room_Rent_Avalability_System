@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
-import { getRoomById } from "../api/RoomApi";
+import { getRoomById } from "../api/roomApi";
 
 const RoomDetails = () => {
 
@@ -26,6 +26,7 @@ const RoomDetails = () => {
             <p>Description: {room?.description}</p>
             <p>Price: {room?.price}</p>
             <p>Location: {room?.location}</p>
+            <p>Owener: {room?.owner}</p>
         </div>
     )
 }

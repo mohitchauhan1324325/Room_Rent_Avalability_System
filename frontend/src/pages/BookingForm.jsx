@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import api from "../utils/api";
 import { bookRoom } from "../api/bookingApi";
 
 const BookingForm = () => {

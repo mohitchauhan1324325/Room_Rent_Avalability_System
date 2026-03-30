@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { getRoomById, updateRoom } from "../api/RoomApi";
+import { getRoomById, updateRoom } from "../api/roomApi";
 
 const EditRooms = () => {
   const { id } = useParams();
@@ -41,7 +41,7 @@ const EditRooms = () => {
     await updateRoom(id, room);
 
     alert("Room updated!");
-    navigate("/");
+    navigate("/Rooms");
 
   } catch (err) {
     console.log(err);

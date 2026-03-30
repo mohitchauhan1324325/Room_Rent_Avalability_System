@@ -7,11 +7,7 @@ const roomSchema = new mongoose.Schema({
     price: Number,
     location: String,
     capacity: Number,
-
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    },
+    owner: String,
 
     isAvailable: {
         type: Boolean,

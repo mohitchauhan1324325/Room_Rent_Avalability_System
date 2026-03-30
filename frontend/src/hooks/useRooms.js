@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getRooms, deleteRoom } from "../api/RoomApi";
+import { getRooms, deleteRoom } from "../api/roomApi";
 import { useNavigate } from "react-router-dom";
 
 const useRooms = () => {
@@ -35,6 +35,9 @@ const useRooms = () => {
 
   {/* Delete the Rooms by Landlord */ }
   const handleDelete = async (id) => {
+    const confimDelete = window.confirm("Are you sure to delete the room");
+    if(!confimDelete) return;
+
     try {
       await deleteRoom(id);
       setRooms(prev => prev.filter(room => room._id !== id));

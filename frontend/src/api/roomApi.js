@@ -53,4 +53,4 @@ export const updateRoom = async (id, data) => {
     } catch (error) {
         throw error;
     }
-}
+};

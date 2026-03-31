@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/room.css";
 import RoomsFilter from "../components/RoomsFilter";
 import useRooms from "../hooks/useRooms";
+import EmptyState from "./EmptyState.jsx";
 
 const Rooms = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const Rooms = () => {
       </button>
 
       {filteredRooms.length === 0 ? (
-        <p>No rooms found</p>
+        <EmptyState />
       ) : (
         filteredRooms.map((room) => (
           <div

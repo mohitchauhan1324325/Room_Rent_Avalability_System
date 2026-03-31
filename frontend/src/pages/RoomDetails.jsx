@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
-import { getRoomById } from "../api/roomApi";
+import { getRoomById } from "../api/roomApi.js";
 
 const RoomDetails = () => {
 

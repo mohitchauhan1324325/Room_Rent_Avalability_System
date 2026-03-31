@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getRooms, deleteRoom } from "../api/roomApi";
+import { getRooms, deleteRoom } from "../api/roomApi.js";
 import { useNavigate } from "react-router-dom";
 
 const useRooms = () => {

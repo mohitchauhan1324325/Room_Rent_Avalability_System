@@ -1,13 +1,13 @@
 import './App.css'
-import Rooms from './pages/Rooms'
+import Rooms from './pages/Rooms.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import BookingForm from './pages/BookingForm'
-import EditRooms from './pages/EditRooms'
-import AddRooms from './pages/addRooms'
-import RoomDetails from './pages/RoomDetails'
-import ManageBookings from './pages/ManageBookings'
-import Layout from './components/Layout'
-import Home from './pages/Home'
+import BookingForm from './pages/BookingForm.jsx'
+import EditRooms from './pages/EditRooms.jsx'
+import AddRooms from './pages/AddRooms.jsx'
+import RoomDetails from './pages/RoomDetails.jsx'
+import ManageBookings from './pages/ManageBookings.jsx'
+import Layout from './components/Layout.jsx'
+import Home from './pages/Home.jsx'
 
 const App = () => {
 

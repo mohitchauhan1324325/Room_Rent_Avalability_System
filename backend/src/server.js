@@ -12,7 +12,9 @@ dotenv.config()
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: "https://room-rent-avalability-system.vercel.app"
+}))
 app.use(express.json())
 
 dbConnect()

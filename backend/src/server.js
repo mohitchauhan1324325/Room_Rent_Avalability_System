@@ -13,7 +13,7 @@ dotenv.config()
 const app = express()
 
 app.use(cors({
-  origin: "https://room-rent-avalability-system.vercel.app"
+  origin: process.env.CLIENT_URL
 }))
 app.use(express.json())
 

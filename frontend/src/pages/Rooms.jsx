@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/room.css";
 import RoomsFilter from "../components/RoomsFilter.jsx";
 import useRooms from "../hooks/useRooms.js";
-import EmptyState from "./EmptyState.jsx";
+import EmptyState from "../components/EmptyState.jsx";
 import RoomCard from "../components/RoomCard.jsx";
 
 const Rooms = () => {

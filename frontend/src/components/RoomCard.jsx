@@ -16,6 +16,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
         }
       >
         <h3>{room.title}</h3>
+        <img src={`${import.meta.env.VITE_API_URL}${room.image}`} alt="room" />
         <p>Price: {room.price}</p>
         <p>Location: {room.location}</p>
         <p>Owner: {room.owner}</p>

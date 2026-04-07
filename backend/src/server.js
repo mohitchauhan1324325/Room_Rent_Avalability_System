@@ -19,6 +19,7 @@ app.use(express.json())
 
 dbConnect()
 
+app.use('/uploads', express.static('src/uploads'));
 app.use("/api", roomRoutes)
 
 app.listen(PORT, () => {

@@ -23,6 +23,12 @@ const RoomDetails = () => {
     return (
         <div>
             <h1>{room?.title}</h1>
+            {room && (
+                <img
+                    src={`${import.meta.env.VITE_API_URL}${room.image}`}
+                    alt="room"
+                />
+            )}
             <p>Description: {room?.description}</p>
             <p>Price: {room?.price}</p>
             <p>Location: {room?.location}</p>

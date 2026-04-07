@@ -4,7 +4,16 @@ import { User } from "../models/user.models.js";
 
 export const addRoom = async (req, res) => {
     try {
-        const room = new Room(req.body);
+
+        const room = new Room({
+            title: req.body.title,
+            image: req.file ? `/uploads/${req.file.filename}` : "",
+            description: req.body.description,
+            price: req.body.price,
+            location: req.body.location,
+            owner: req.body.owner
+        });
+
         const savedRoom = await room.save();
 
         res.status(201).json(savedRoom);

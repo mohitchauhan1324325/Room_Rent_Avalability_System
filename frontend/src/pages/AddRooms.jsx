@@ -5,6 +5,7 @@ const AddRooms = () => {
 
   const [formData, setFormData] = useState({
     title: "",
+    image: null,
     description: "",
     price: "",
     location: "",
@@ -12,9 +13,11 @@ const AddRooms = () => {
   });
 
   const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: files ? files[0] : value
     });
   };
 
@@ -22,7 +25,14 @@ const AddRooms = () => {
     e.preventDefault();
 
     try {
-      await createRoom(formData);
+
+      const data = new FormData();
+
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
+
+      await createRoom(data);
       alert("Room Saved!");
     } catch (error) {
       console.log(error);
@@ -40,6 +50,13 @@ const AddRooms = () => {
           onChange={handleChange}
           placeholder="title"
           required
+        />
+        
+        <input 
+        type="file" 
+        name="image"
+        onChange={handleChange}
+        required
         />
 
         <input

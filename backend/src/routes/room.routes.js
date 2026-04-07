@@ -1,11 +1,23 @@
 import express from "express";
+import upload from "../middlewares/upload.js";
 
-import { addRoom, deleteRoomById, getRoomById, getRooms, deleteAllRooms, roomRent, bookRooms, cancelBooking, getUsersBooking, updateRoom } from "../controllers/room.controller.js";
+import {
+    addRoom,
+    deleteRoomById,
+    getRoomById,
+    getRooms,
+    deleteAllRooms,
+    roomRent,
+    bookRooms,
+    cancelBooking,
+    getUsersBooking,
+    updateRoom
+} from "../controllers/room.controller.js";
 
 const router = express.Router();
 
 //POST methods
-router.post("/rooms", addRoom);
+router.post("/rooms", upload.single("image"), addRoom);
 router.post("/room-rent", roomRent);
 
 //GET methods

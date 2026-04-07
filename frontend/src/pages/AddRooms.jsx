@@ -40,64 +40,62 @@ const AddRooms = () => {
   }
 
   return (
-    <div>
-      <form onSubmit={handleAddRooms}>
+    <form
+      onSubmit={handleAddRooms}
+      className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md space-y-4"
+    >
 
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          placeholder="title"
-          required
-        />
-        
-        <input 
-        type="file" 
+      <input
+        type="text"
+        name="title"
+        placeholder="Title"
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
+
+      <input
+        type="file"
         name="image"
         onChange={handleChange}
-        required
-        />
+        className="w-full"
+      />
 
-        <input
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          placeholder="description"
-        />
+      <input
+        type="text"
+        name="description"
+        placeholder="Description"
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
 
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          placeholder="price"
-          required
-        />
+      <input
+        type="number"
+        name="price"
+        placeholder="Price"
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
 
-        <input
-          type="text"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          placeholder="location"
-          required
-        />
+      <input
+        type="text"
+        name="location"
+        placeholder="Location"
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
 
-        <input
-          type="text"
-          name="owner"
-          value={formData.owner}
-          onChange={handleChange}
-          placeholder="Owner"
-          required
-        />
+      <input
+        type="text"
+        name="owner"
+        placeholder="Owner"
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
 
-        <button type="submit">Submit</button>
-
-      </form>
-    </div>
+      <button className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+        Add Room
+      </button>
+    </form>
   )
 }
 

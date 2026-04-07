@@ -5,54 +5,88 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {rooms.map((room) => (
-      <div
-        className="roomCard"
-        key={room._id}
-        onClick={room.isAvailable 
-          ? () => handleDetails(room._id)
-          : undefined
-        }
-      >
-        <h3>{room.title}</h3>
-        <img src={`${import.meta.env.VITE_API_URL}${room.image}`} alt="room" />
-        <p>Price: {room.price}</p>
-        <p>Location: {room.location}</p>
-        <p>Owner: {room.owner}</p>
-
-        {room.isAvailable ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate("/booking", { state: room });
-            }}
-            className="btn-primary"
-          >
-            Rent Room
-          </button>
-        ) : (
-          <p>Occupied</p>
-        )}
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleEdit(room._id);
-          }}
+        <div
+          key={room._id}
+          className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer"
+          onClick={() =>
+            room.isAvailable && handleDetails(room._id)
+          }
         >
-          Edit
-        </button>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDelete(room._id);
-          }}
-        >
-          Delete Room
-        </button>
-      </div>
+          {/* Image */}
+          <div className="relative">
+            <img
+              src={`${import.meta.env.VITE_API_URL}${room.image}`}
+              className="w-full h-48 object-cover"
+            />
+
+            {/* Status Badge */}
+            <span
+              className={`absolute top-2 right-2 px-2 py-1 text-xs rounded ${room.isAvailable
+                  ? "bg-green-500 text-white"
+                  : "bg-red-500 text-white"
+                }`}
+            >
+              {room.isAvailable ? "Available" : "Booked"}
+            </span>
+          </div>
+
+          {/* Content */}
+          <div className="p-4">
+            <h3 className="text-lg font-semibold">{room.title}</h3>
+            <p className="text-gray-500 text-sm">{room.location}</p>
+
+            <div className="flex justify-between items-center mt-3">
+              <span className="text-blue-600 font-bold">
+                ₹ {room.price}
+              </span>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-2 mt-3">
+              {room.isAvailable ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate("/booking", { state: room });
+                  }}
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  Rent
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="bg-gray-300 px-3 py-1 rounded cursor-not-allowed"
+                >
+                  Booked
+                </button>
+              )}
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit(room._id);
+                }}
+                className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(room._id);
+                }}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   )

@@ -29,16 +29,39 @@ const RoomDetails = () => {
     if (!room) return <p>Loading...</p>;
 
     return (
-        <div>
-            <h1>{room.title}</h1>
-            <img
-                src={`${import.meta.env.VITE_API_URL}${room.image}`}
-                alt="room"
-            />
-            <p>Description: {room.description}</p>
-            <p>Price: {room.price}</p>
-            <p>Location: {room.location}</p>
-            <p>Owener: {room.owner}</p>
+        <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+            <div className="bg-white rounded-2xl shadow-lg max-w-2xl w-full overflow-hidden">
+
+                <img
+                    src={`${import.meta.env.VITE_API_URL}${room.image}`}
+                    className="w-full h-64 object-cover"
+                />
+
+                <div className="p-5">
+
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-2xl font-bold">{room.title}</h1>
+
+                        <span
+                            className={`px-3 py-1 rounded text-sm ${room.isAvailable
+                                    ? "bg-green-500 text-white"
+                                    : "bg-red-500 text-white"
+                                }`}
+                        >
+                            {room.isAvailable ? "Available" : "Booked"}
+                        </span>
+                    </div>
+
+                    <p className="text-gray-600 mt-2">{room.description}</p>
+
+                    <div className="mt-4 space-y-1">
+                        <p><strong>Price:</strong> ₹ {room.price}</p>
+                        <p><strong>Location:</strong> {room.location}</p>
+                        <p><strong>Owner:</strong> {room.owner}</p>
+                    </div>
+
+                </div>
+            </div>
         </div>
     )
 }

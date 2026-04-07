@@ -1,4 +1,3 @@
-import './App.css'
 import Rooms from './pages/Rooms.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import BookingForm from './pages/BookingForm.jsx'

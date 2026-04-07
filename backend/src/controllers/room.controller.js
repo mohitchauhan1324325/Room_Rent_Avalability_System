@@ -38,10 +38,6 @@ export const getRoomById = async (req, res) => {
             return res.status(400).json({ message: "Room not found" });
         }
 
-        if (!room.isAvailable) {
-            return res.json({ message: "Room already rented" });
-        }
-
         res.json(room);
     }
     catch (error) {

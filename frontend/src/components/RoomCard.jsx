@@ -1,25 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import useRooms from "../hooks/useRooms";
 
-const RoomCard = () => {
+const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
 
   const navigate = useNavigate();
 
-  const {
-    filteredRooms,
-    handleDelete,
-    handleEdit,
-    handleDetails,
-  } = useRooms();
-
   return (
     <div>
-      {
-        filteredRooms.map((room) => (
+      {rooms.map((room) => (
       <div
         className="roomCard"
         key={room._id}
-        onClick={room.isAvailable ? () => handleDetails(room._id) : undefined}
+        onClick={room.isAvailable 
+          ? () => handleDetails(room._id)
+          : undefined
+        }
       >
         <h3>{room.title}</h3>
         <p>Price: {room.price}</p>

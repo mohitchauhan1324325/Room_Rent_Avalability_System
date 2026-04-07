@@ -11,6 +11,9 @@ const Rooms = () => {
   const {
     filteredRooms,
     setFilter,
+    handleDelete,
+    handleEdit,
+    handleDetails,
     loading,
     error,
   } = useRooms();
@@ -34,7 +37,12 @@ const Rooms = () => {
       {filteredRooms.length === 0 ? (
         <EmptyState />
       ) : (
-        <RoomCard />
+        <RoomCard
+        rooms={filteredRooms}
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+        handleDetails={handleDetails}
+        />
       )}
     </div>
   );

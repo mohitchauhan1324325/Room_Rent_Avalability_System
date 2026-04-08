@@ -5,9 +5,7 @@ import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
   try {
-
-    console.log("FILE:", req.file); 
-
+    
     const room = new Room({
       ...req.body,
       image: req.file ? req.file.path : "",

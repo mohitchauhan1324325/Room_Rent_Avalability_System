@@ -4,18 +4,23 @@ import { User } from "../models/user.models.js";
 import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
-    try {
+  try {
 
-        const room = new Room({
-            ...req.body,
-            image: req.file ? req.file.path : "",
-        });
+    console.log("FILE:", req.file); 
 
-        const savedRoom = await room.save();
-        res.status(201).json(savedRoom);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    const room = new Room({
+      ...req.body,
+      image: req.file ? req.file.path : "",
+    });
+
+    const savedRoom = await room.save();
+
+    res.status(201).json(savedRoom);
+
+  } catch (error) {
+    console.log("ADD ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const getRooms = async (req, res) => {

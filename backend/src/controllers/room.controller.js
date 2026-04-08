@@ -5,7 +5,7 @@ import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
   try {
-    
+
     const room = new Room({
       ...req.body,
       image: req.file ? req.file.path : "",
@@ -46,6 +46,7 @@ export const getRoomById = async (req, res) => {
 
 export const deleteAllRooms = async (req, res) => {
     try {
+        await Booking.deleteMany();
         await Room.deleteMany({});
 
         res.json({ message: "All rooms are deleted successfully" });
@@ -69,13 +70,13 @@ export const deleteRoomById = async (req, res) => {
         if (room.image && room.image.includes("cloudinary")) {
             const publicId = room.image
                 .split("/")
-                .slice(-2)
-                .join("/")
+                .slice(-1)[0]
                 .split(".")[0];
 
             await cloudinary.uploader.destroy(publicId);
         }
 
+        await Booking.deleteMany({ room: id});
         await Room.findByIdAndDelete(id);
 
         res.json({ message: "Room deleted" });
@@ -84,6 +85,7 @@ export const deleteRoomById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const roomRent = async (req, res) => {
     try {
 

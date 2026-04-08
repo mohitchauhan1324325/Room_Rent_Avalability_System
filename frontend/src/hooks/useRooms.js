@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { getRooms, deleteRoom } from "../api/roomApi.js";
+import { getRooms, deleteRoom, deleteAllRooms } from "../api/roomApi.js";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const useRooms = () => {
 
@@ -33,16 +34,38 @@ const useRooms = () => {
     navigate(`/RoomDetails/${id}`);
   };
 
+  // Delete all rooms by Landlord
+  const handleDeleteAllRooms = async () => {
+    const confirm = window.confirm("Are you sure to delete all rooms");
+    if (!confirm) return;
+
+      try {
+        setLoading(true);
+        await deleteAllRooms();
+        toast.success("All rooms deleted successfully!");
+        setRooms([]);
+        setError(null);
+
+      } catch (error) {
+        setError("Failed to delete all rooms :"+ error.message);
+      } finally {
+        setLoading(false);
+      }
+  }
+
   {/* Delete the Rooms by Landlord */ }
   const handleDelete = async (id) => {
     const confimDelete = window.confirm("Are you sure to delete the room");
-    if(!confimDelete) return;
+    if (!confimDelete) return;
 
     try {
+      setLoading(true);
       await deleteRoom(id);
       setRooms(prev => prev.filter(room => room._id !== id));
     } catch (err) {
-      setError("Failed to delete room :", err);
+      setError("Failed to delete room :" + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +82,7 @@ const useRooms = () => {
     rooms,
     filteredRooms,
     setFilter,
+    handleDeleteAllRooms,
     handleDelete,
     handleEdit,
     handleDetails,

@@ -7,24 +7,32 @@ import RoomDetails from './pages/RoomDetails.jsx'
 import ManageBookings from './pages/ManageBookings.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
 
   return (
     <>
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/rooms" element={<Rooms />} />
-              <Route path="/booking" element={<BookingForm />} />
-              <Route path="/EditRooms/:id" element={<EditRooms />} />
-              <Route path="/AddRooms" element={<AddRooms />} />
-              <Route path="/RoomDetails/:id" element={<RoomDetails />} />
-              <Route path="/ManageBookings" element={<ManageBookings />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/rooms" element={<Rooms />} />
+            <Route path="/booking" element={<BookingForm />} />
+            <Route path="/EditRooms/:id" element={<EditRooms />} />
+            <Route path="/AddRooms" element={<AddRooms />} />
+            <Route path="/RoomDetails/:id" element={<RoomDetails />} />
+            <Route path="/ManageBookings" element={<ManageBookings />} />
+          </Routes>
+        </Layout>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          theme="colored"
+        />
+      </BrowserRouter>
     </>
   )
 }

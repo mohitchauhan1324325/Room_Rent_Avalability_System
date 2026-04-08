@@ -10,6 +10,7 @@ const Rooms = () => {
   const {
     filteredRooms,
     setFilter,
+    handleDeleteAllRooms,
     handleDelete,
     handleEdit,
     handleDetails,
@@ -40,6 +41,16 @@ const Rooms = () => {
           >
             Bookings
           </button>
+
+          <button
+            onClick={handleDeleteAllRooms}
+            disabled={loading}
+            className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
+              }`}
+          >
+            {loading ? "Deleting..." : "Delete All Rooms"}
+          </button>
+          
         </div>
       </div>
 

@@ -8,6 +8,7 @@ const EditRooms = () => {
 
   const [room, setRoom] = useState({
     title: "",
+    image: "",
     description: "",
     price: "",
     location: "",
@@ -27,9 +28,11 @@ const EditRooms = () => {
   }, [id]);
 
   const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
     setRoom({
       ...room,
-      [e.target.name]: e.target.value,
+      [name]: files && files.length > 0 ? files[0] : value
     });
   };
 
@@ -37,7 +40,13 @@ const EditRooms = () => {
     e.preventDefault();
 
     try {
-      await updateRoom(id, room);
+      const data = new FormData();
+
+      Object.keys(room).forEach((key) => {
+        data.append(key, room[key]);
+      });
+
+      await updateRoom(id, data);
       alert("Room updated!");
       navigate("/Rooms");
     } catch (err) {
@@ -48,7 +57,7 @@ const EditRooms = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8 flex items-center justify-center">
-      
+
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-lg bg-white rounded-2xl shadow-md p-6 md:p-8 space-y-5"
@@ -64,6 +73,13 @@ const EditRooms = () => {
           onChange={handleChange}
           placeholder="Room Title"
           className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <input
+          type="file"
+          name="image"
+          onChange={handleChange}
+          className="w-full"
         />
 
         <input

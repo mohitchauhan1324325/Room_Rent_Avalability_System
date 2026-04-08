@@ -32,6 +32,6 @@ router.delete("/rooms", deleteAllRooms);
 router.delete("/bookings/:id", cancelBooking);
 
 //PUT methods
-router.put("/rooms/:id", updateRoom);
+router.put("/rooms/:id", upload.single("image"),updateRoom);
 
 export default router;

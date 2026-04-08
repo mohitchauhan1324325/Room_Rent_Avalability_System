@@ -33,7 +33,8 @@ const RoomDetails = () => {
             <div className="bg-white rounded-2xl shadow-lg max-w-2xl w-full overflow-hidden">
 
                 <img
-                    src={`${import.meta.env.VITE_API_URL}${room.image}`}
+                    src={room.image}
+                    alt={room.title}
                     className="w-full h-64 object-cover"
                 />
 

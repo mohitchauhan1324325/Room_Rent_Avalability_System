@@ -1,21 +1,17 @@
 import Room from "../models/rooms.models.js";
 import { Booking } from "../models/booking.models.js";
 import { User } from "../models/user.models.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
     try {
 
         const room = new Room({
-            title: req.body.title,
-            image: req.file ? `/uploads/${req.file.filename}` : "",
-            description: req.body.description,
-            price: req.body.price,
-            location: req.body.location,
-            owner: req.body.owner
+            ...req.body,
+            image: req.file ? req.file.path : "",
         });
 
         const savedRoom = await room.save();
-
         res.status(201).json(savedRoom);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -47,30 +43,44 @@ export const getRoomById = async (req, res) => {
 
 export const deleteAllRooms = async (req, res) => {
     try {
-        const room = await Room.deleteMany({});
+        await Room.deleteMany({});
 
         res.json({ message: "All rooms are deleted successfully" });
-    }
-    catch (error) {
-        res.statu(500).json({ message: error.message });
-    }
-};
-
-export const deleteRoomById = async (req, res) => {
-    try {
-        const room = await Room.findByIdAndDelete(req.params.id);
-
-        if (!room) {
-            return res.status(400).json({ message: "Room not found" });
-        }
-
-        res.json({ message: "Room deleted successfully" })
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
+export const deleteRoomById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const room = await Room.findById(id);
+
+        if (!room) {
+            return res.status(404).json({ message: "Room not found" });
+        }
+
+
+        if (room.image && room.image.includes("cloudinary")) {
+            const publicId = room.image
+                .split("/")
+                .slice(-2)
+                .join("/")
+                .split(".")[0];
+
+            await cloudinary.uploader.destroy(publicId);
+        }
+
+        await Room.findByIdAndDelete(id);
+
+        res.json({ message: "Room deleted" });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 export const roomRent = async (req, res) => {
     try {
 
@@ -166,15 +176,43 @@ export const updateRoom = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const updatedRoom = await Room.findByIdAndUpdate(
-            id,
-            req.body,
-            { new: true }
-        );
+        const room = await Room.findById(id);
 
-        if (!updatedRoom) {
+        if (!room) {
             return res.status(404).json({ message: "Room not found" });
         }
+
+        let imageUrl = room.image;
+
+        if (req.file) {
+
+            if (room.image && room.image.includes("res.cloudinary.com")) {
+                try {
+                    const parts = room.image.split("/");
+                    const fileName = parts.pop();
+                    const folder = parts.pop();
+                    const publicId = `${folder}/${fileName.split(".")[0]}`;
+
+                    await cloudinary.uploader.destroy(publicId);
+                } catch (err) {
+                    console.log("Cloudinary delete error:", err);
+                }
+            }
+
+            imageUrl = req.file.path;
+        }
+
+        const updatedRoom = await Room.findByIdAndUpdate(
+            id,
+            {
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price,
+                location: req.body.location,
+                image: imageUrl,
+            },
+            { returnDocument: "after" }
+        );
 
         res.json(updatedRoom);
 

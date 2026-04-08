@@ -18,7 +18,8 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
           {/* Image */}
           <div className="relative">
             <img
-              src={`${import.meta.env.VITE_API_URL}${room.image}`}
+              src={room.image}
+              alt={room.title}
               className="w-full h-48 object-cover"
             />
 

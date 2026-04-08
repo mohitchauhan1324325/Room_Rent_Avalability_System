@@ -17,7 +17,7 @@ const AddRooms = () => {
 
     setFormData({
       ...formData,
-      [name]: files ? files[0] : value
+      [name]: files && files.length > 0 ? files[0] : value
     });
   };
 

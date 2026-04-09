@@ -6,6 +6,7 @@ import Loader from "../components/Loader.jsx";
 const RoomDetails = () => {
 
     const { id } = useParams();
+
     const [room, setRoom] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -22,6 +23,7 @@ const RoomDetails = () => {
 
                 setRoom(res);
             } catch (error) {
+                alert("Failed to load room");
                 console.log(error);
             } finally {
                 setLoading(false);
@@ -31,7 +33,7 @@ const RoomDetails = () => {
         fetchDetails();
     }, [id]);
 
-    if (loading) return <Loader /> ;
+    if (loading || !room) return <Loader />;
 
     return (
         <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
@@ -50,8 +52,8 @@ const RoomDetails = () => {
 
                         <span
                             className={`px-3 py-1 rounded text-sm ${room.isAvailable
-                                    ? "bg-green-500 text-white"
-                                    : "bg-red-500 text-white"
+                                ? "bg-green-500 text-white"
+                                : "bg-red-500 text-white"
                                 }`}
                         >
                             {room.isAvailable ? "Available" : "Booked"}

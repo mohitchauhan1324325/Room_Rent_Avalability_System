@@ -46,13 +46,14 @@ const EditRooms = () => {
 
     try {
       setLoading(true);
+
       const data = new FormData();
 
-      data.append("title", formData.title);
-      data.append("price", formData.price);
-      data.append("location", formData.location);
-      data.append("description", formData.description);
-      data.append("image", formData.image);
+      data.append("title", room.title);
+      data.append("price", room.price);
+      data.append("location", room.location);
+      data.append("description", room.description);
+      data.append("image", room.image);
 
       await updateRoom(id, data);
       alert("Room updated!");

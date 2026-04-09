@@ -1,3 +1,4 @@
+import Loader from "../components/Loader";
 import useBookings from "../hooks/useBookings";
 
 const ManageBookings = () => {
@@ -8,12 +9,7 @@ const ManageBookings = () => {
     error,
   } = useBookings();
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-lg font-semibold text-gray-600">
-        Loading...
-      </div>
-    );
+  if (loading) return <Loader /> ;
 
   if (error)
     return (

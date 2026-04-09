@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getRoomById, updateRoom } from "../api/roomApi";
+import Loader from "../components/Loader";
 
 const EditRooms = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
   const [room, setRoom] = useState({
     title: "",
     image: "",
@@ -17,10 +19,13 @@ const EditRooms = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
+        setLoading(true);
         const res = await getRoomById(id);
         setRoom(res);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -40,11 +45,14 @@ const EditRooms = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const data = new FormData();
 
-      Object.keys(room).forEach((key) => {
-        data.append(key, room[key]);
-      });
+      data.append("title", formData.title);
+      data.append("price", formData.price);
+      data.append("location", formData.location);
+      data.append("description", formData.description);
+      data.append("image", formData.image);
 
       await updateRoom(id, data);
       alert("Room updated!");
@@ -52,8 +60,12 @@ const EditRooms = () => {
     } catch (err) {
       console.log(err);
       alert("Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if(loading) return <Loader /> ;
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8 flex items-center justify-center">

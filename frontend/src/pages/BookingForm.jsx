@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import { bookRoom } from "../api/bookingApi";
+import Loader from "../components/Loader";
 
 const BookingForm = () => {
   const location = useLocation();
@@ -30,10 +31,13 @@ const BookingForm = () => {
       alert(res.message);
     } catch (err) {
       console.log(err);
-    }
+    } finally {
+      setLoading(false);
 
-    setLoading(false);
+    }
   };
+
+  if(loading) return <Loader /> ;
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8 flex items-center justify-center">

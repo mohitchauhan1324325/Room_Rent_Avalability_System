@@ -3,6 +3,7 @@ import RoomsFilter from "../components/RoomsFilter.jsx";
 import useRooms from "../hooks/useRooms.js";
 import EmptyState from "../components/EmptyState.jsx";
 import RoomCard from "../components/RoomCard.jsx";
+import Loader from "../components/Loader.jsx";
 
 const Rooms = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Rooms = () => {
     error,
   } = useRooms();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
   return (

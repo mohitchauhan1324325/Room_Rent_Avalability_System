@@ -1,16 +1,18 @@
 import { useState } from "react"
 import { createRoom } from "../api/roomApi";
+import Loader from "../components/Loader";
 
 const AddRooms = () => {
 
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState(false);
+  const initialState = {
     title: "",
-    image: null,
-    description: "",
     price: "",
     location: "",
-    owner: ""
-  });
+    image: null
+  };
+
+  const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -25,19 +27,29 @@ const AddRooms = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
 
       const data = new FormData();
 
-      Object.keys(formData).forEach((key) => {
-        data.append(key, formData[key]);
-      });
+      data.append("title", formData.title);
+      data.append("price", formData.price);
+      data.append("location", formData.location);
+      data.append("description", formData.description);
+      data.append("image", formData.image);
 
       await createRoom(data);
+
       alert("Room Saved!");
+      setFormData(initialState);
     } catch (error) {
       console.log(error);
+      alert("Error saving room");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
+  if(loading) return <Loader /> ;
 
   return (
     <form
@@ -51,6 +63,7 @@ const AddRooms = () => {
         placeholder="Title"
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
 
       <input
@@ -58,6 +71,7 @@ const AddRooms = () => {
         name="image"
         onChange={handleChange}
         className="w-full"
+        required
       />
 
       <input
@@ -66,6 +80,7 @@ const AddRooms = () => {
         placeholder="Description"
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
 
       <input
@@ -74,6 +89,7 @@ const AddRooms = () => {
         placeholder="Price"
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
 
       <input
@@ -82,6 +98,7 @@ const AddRooms = () => {
         placeholder="Location"
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
 
       <input

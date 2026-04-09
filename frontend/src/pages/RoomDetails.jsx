@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 import { getRoomById } from "../api/roomApi.js";
+import Loader from "../components/Loader.jsx";
 
 const RoomDetails = () => {
 
     const { id } = useParams();
     const [room, setRoom] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchDetails = async () => {
             try {
+                setLoading(true);
                 const res = await getRoomById(id);
 
                 if (res.message) {
@@ -20,13 +23,15 @@ const RoomDetails = () => {
                 setRoom(res);
             } catch (error) {
                 console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchDetails();
     }, [id]);
 
-    if (!room) return <p>Loading...</p>;
+    if (loading) return <Loader /> ;
 
     return (
         <div className="min-h-screen bg-gray-100 p-6 flex justify-center">

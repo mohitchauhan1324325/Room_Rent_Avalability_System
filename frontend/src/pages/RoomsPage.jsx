@@ -5,7 +5,7 @@ import EmptyState from "../components/EmptyState.jsx";
 import RoomCard from "../components/RoomCard.jsx";
 import Loader from "../components/Loader.jsx";
 
-const Rooms = () => {
+const RoomsPage = () => {
   const navigate = useNavigate();
 
   const {
@@ -71,4 +71,4 @@ const Rooms = () => {
   );
 };
 
-export default Rooms;
+export default RoomsPage;

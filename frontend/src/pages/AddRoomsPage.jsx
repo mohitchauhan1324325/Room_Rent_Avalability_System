@@ -3,7 +3,7 @@ import { createRoom } from "../api/roomApi";
 import Loader from "../components/Loader";
 import AddRoomsForm from "../components/AddRoomsForm";
 
-const AddRooms = () => {
+const AddRoomsPage = () => {
 
   const [loading, setLoading] = useState(false);
   const initialState = {
@@ -61,4 +61,4 @@ const AddRooms = () => {
   )
 }
 
-export default AddRooms
+export default AddRoomsPage

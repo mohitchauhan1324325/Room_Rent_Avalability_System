@@ -4,7 +4,7 @@ import { bookRoom } from "../api/bookingApi";
 import Loader from "../components/Loader";
 import BookingForm from "../components/BookingForm";
 
-const Booking = () => {
+const BookingPage = () => {
   const location = useLocation();
   const room = location.state;
   const navigate = useNavigate();
@@ -61,4 +61,4 @@ const Booking = () => {
   );
 };
 
-export default Booking;
+export default BookingPage;

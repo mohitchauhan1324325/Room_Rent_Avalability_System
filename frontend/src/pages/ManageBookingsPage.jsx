@@ -2,7 +2,7 @@ import BookingDetails from "../components/BookingDetails";
 import Loader from "../components/Loader";
 import useBookings from "../hooks/useBookings";
 
-const ManageBookings = () => {
+const ManageBookingsPage = () => {
   const {
     bookings,
     handleDeleteBooking,
@@ -37,4 +37,4 @@ const ManageBookings = () => {
   );
 };
 
-export default ManageBookings;
+export default ManageBookingsPage;

@@ -1,12 +1,12 @@
-import Rooms from './pages/Rooms.jsx'
+import RoomsPage from './pages/RoomsPage.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Booking from './pages/Booking.jsx'
-import EditRooms from './pages/EditRooms.jsx'
-import AddRooms from './pages/AddRooms.jsx'
+import BookingPage from './pages/BookingPage.jsx'
+import EditRoomsPage from './pages/EditRoomsPage.jsx'
+import AddRoomsPage from './pages/AddRoomsPage.jsx'
 import RoomDetailsPage from './pages/RoomDetailsPage.jsx'
-import ManageBookings from './pages/ManageBookings.jsx'
+import ManageBookingsPage from './pages/ManageBookingsPage.jsx'
 import Layout from './components/Layout.jsx'
-import Home from './pages/Home.jsx'
+import HomePage from './pages/HomePage.jsx'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,13 +17,13 @@ const App = () => {
       <BrowserRouter>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/rooms" element={<Rooms />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/EditRooms/:id" element={<EditRooms />} />
-            <Route path="/AddRooms" element={<AddRooms />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/rooms" element={<RoomsPage />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/EditRooms/:id" element={<EditRoomsPage />} />
+            <Route path="/AddRooms" element={<AddRoomsPage />} />
             <Route path="/RoomDetails/:id" element={<RoomDetailsPage />} />
-            <Route path="/ManageBookings" element={<ManageBookings />} />
+            <Route path="/ManageBookings" element={<ManageBookingsPage />} />
           </Routes>
         </Layout>
 

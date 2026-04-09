@@ -4,7 +4,7 @@ import { getRoomById, updateRoom } from "../api/roomApi";
 import Loader from "../components/Loader";
 import EditForm from "../components/EditForm";
 
-const EditRooms = () => {
+const EditRoomsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -82,4 +82,4 @@ const EditRooms = () => {
   );
 };
 
-export default EditRooms;
+export default EditRoomsPage;

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Booking from './pages/Booking.jsx'
 import EditRooms from './pages/EditRooms.jsx'
 import AddRooms from './pages/AddRooms.jsx'
-import RoomDetails from './pages/RoomDetails.jsx'
+import RoomDetailsPage from './pages/RoomDetailsPage.jsx'
 import ManageBookings from './pages/ManageBookings.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
@@ -22,7 +22,7 @@ const App = () => {
             <Route path="/booking" element={<Booking />} />
             <Route path="/EditRooms/:id" element={<EditRooms />} />
             <Route path="/AddRooms" element={<AddRooms />} />
-            <Route path="/RoomDetails/:id" element={<RoomDetails />} />
+            <Route path="/RoomDetails/:id" element={<RoomDetailsPage />} />
             <Route path="/ManageBookings" element={<ManageBookings />} />
           </Routes>
         </Layout>

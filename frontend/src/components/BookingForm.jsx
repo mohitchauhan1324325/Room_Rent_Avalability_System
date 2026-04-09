@@ -1,48 +1,7 @@
-import { useLocation } from "react-router-dom";
-import { useState } from "react";
-import { bookRoom } from "../api/bookingApi";
-import Loader from "../components/Loader";
 
-const BookingForm = () => {
-  const location = useLocation();
-  const room = location.state;
-
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-  const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-
-    const bookingData = {
-      roomId: room._id,
-      tenantName: name,
-      phone,
-      location: room.location,
-      moveInDate: date,
-    };
-
-    try {
-      setLoading(true);
-      const res = await bookRoom(bookingData);
-      alert(res.message);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-
-    }
-  };
-
-  if(loading) return <Loader /> ;
-
+const BookingForm = ({ room, name, setName, date, setDate, phone, setPhone, loading, handleSubmit }) => {
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8 flex items-center justify-center">
-      
-      <div className="w-full max-w-2xl space-y-6">
+    <div className="w-full max-w-2xl space-y-6">
         
         {/* Room Info Card */}
         <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition duration-300">
@@ -99,8 +58,7 @@ const BookingForm = () => {
         </form>
 
       </div>
-    </div>
-  );
-};
+  )
+}
 
-export default BookingForm;
+export default BookingForm

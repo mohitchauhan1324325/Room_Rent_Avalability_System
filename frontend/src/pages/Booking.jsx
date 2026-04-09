@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { bookRoom } from "../api/bookingApi";
 import Loader from "../components/Loader";
@@ -7,6 +7,7 @@ import BookingForm from "../components/BookingForm";
 const Booking = () => {
   const location = useLocation();
   const room = location.state;
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -30,6 +31,7 @@ const Booking = () => {
       setLoading(true);
       const res = await bookRoom(bookingData);
       alert(res.message);
+      navigate("/rooms");
     } catch (err) {
       console.log(err);
     } finally {

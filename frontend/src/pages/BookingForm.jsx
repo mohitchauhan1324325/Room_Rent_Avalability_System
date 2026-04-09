@@ -25,6 +25,7 @@ const BookingForm = () => {
     };
 
     try {
+      setLoading(true);
       const res = await bookRoom(bookingData);
       alert(res.message);
     } catch (err) {

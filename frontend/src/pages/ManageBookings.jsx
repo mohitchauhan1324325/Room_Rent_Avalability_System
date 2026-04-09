@@ -1,4 +1,4 @@
-import AllBookings from "../components/AllBookings";
+import BookingDetails from "../components/BookingDetails";
 import Loader from "../components/Loader";
 import useBookings from "../hooks/useBookings";
 
@@ -29,7 +29,7 @@ const ManageBookings = () => {
 
   return (
 
-    <AllBookings
+    <BookingDetails
       bookings={bookings}
       handleDeleteBooking={handleDeleteBooking}
     />

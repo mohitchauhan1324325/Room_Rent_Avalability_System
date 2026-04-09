@@ -1,5 +1,5 @@
 
-const AllBookings = ({ bookings, handleDeleteBooking }) => {
+const BookingDetails = ({ bookings, handleDeleteBooking }) => {
     return (
         <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8">
 
@@ -53,4 +53,4 @@ const AllBookings = ({ bookings, handleDeleteBooking }) => {
     )
 }
 
-export default AllBookings
+export default BookingDetails

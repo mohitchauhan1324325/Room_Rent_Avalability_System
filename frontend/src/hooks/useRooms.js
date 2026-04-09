@@ -19,7 +19,7 @@ const useRooms = () => {
       const data = await getRooms();
       setRooms(data);
     } catch (err) {
-      setError("Failed to fetch rooms :", err);
+      setError("Failed to fetch rooms : " + err);
     } finally {
       setLoading(false);
     }

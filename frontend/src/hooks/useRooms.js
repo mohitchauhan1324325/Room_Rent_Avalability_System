@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { getRooms, deleteRoom, deleteAllRooms } from "../api/roomApi.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { isAuthenticated } from "../utils/auth.js";
+import Swal from "sweetalert2";
 
 const useRooms = () => {
 
@@ -34,33 +36,63 @@ const useRooms = () => {
 
   // Delete all rooms by Landlord
   const handleDeleteAllRooms = async () => {
-    const confirm = window.confirm("Are you sure to delete all rooms");
-    if (!confirm) return;
 
-      try {
-        setLoading(true);
-        await deleteAllRooms();
-        toast.success("All rooms deleted successfully!");
-        setRooms([]);
-        setError(null);
+    if (!isAuthenticated()) {
+      navigate("/register");
+      return;
+    }
 
-      } catch (error) {
-        setError("Failed to delete all rooms :"+ error.message);
-      } finally {
-        setLoading(false);
-      }
+    const result = await Swal.fire({
+      title: "Delete ALL rooms?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete all!",
+    });
+
+    if (!result.isConfirmed) return;
+    try {
+      setLoading(true);
+      await deleteAllRooms();
+      setRooms([]);
+      toast.success("All rooms deleted successfully!");
+      setError(null);
+
+    } catch (error) {
+      toast.error("Error!", error.message, "error");
+      setError("Failed to delete all rooms :" + error.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   {/* Delete the Rooms by Landlord */ }
   const handleDelete = async (id) => {
-    const confimDelete = window.confirm("Are you sure to delete the room");
-    if (!confimDelete) return;
+
+    if (!isAuthenticated()) {
+      navigate("/register");
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This room will be deleted permanently!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       setLoading(true);
       await deleteRoom(id);
       setRooms(prev => prev.filter(room => room._id !== id));
+      toast.success("Room deleted successfully!");
     } catch (err) {
+      toast.error("Error!", err.message, "error");
       setError("Failed to delete room :" + err.message);
     } finally {
       setLoading(false);

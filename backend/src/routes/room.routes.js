@@ -1,5 +1,6 @@
 import express from "express";
 import upload from "../middlewares/upload.js";
+import protect from "../middlewares/authMiddleware.js";
 
 import {
     addRoom,
@@ -17,21 +18,21 @@ import {
 const router = express.Router();
 
 //POST methods
-router.post("/rooms", upload.single("image"), addRoom);
-router.post("/room-rent", roomRent);
+router.post("/rooms", protect, upload.single("image"), addRoom);
+router.post("/room-rent", protect, roomRent);
 
 //GET methods
-router.get("/room-rent", bookRooms);
+router.get("/room-rent", protect, bookRooms);
 router.get("/rooms", getRooms);
 router.get("/rooms/:id", getRoomById);
-router.get("/users", getUsersBooking);
+router.get("/users", protect, getUsersBooking);
 
 //Delete methods
-router.delete("/rooms/:id", deleteRoomById);
-router.delete("/rooms", deleteAllRooms);
-router.delete("/bookings/:id", cancelBooking);
+router.delete("/rooms/:id", protect, deleteRoomById);
+router.delete("/rooms", protect, deleteAllRooms);
+router.delete("/bookings/:id", protect, cancelBooking);
 
 //PUT methods
-router.put("/rooms/:id", upload.single("image"),updateRoom);
+router.put("/rooms/:id", protect, upload.single("image"),updateRoom);
 
 export default router;

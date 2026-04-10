@@ -10,7 +10,7 @@ import dbConnect from "./db/dbConnect.js";
 import roomRoutes from "./routes/room.routes.js";
 import { PORT } from "./constants.js";
 import cors from "cors";
-
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -22,6 +22,7 @@ app.use(express.json());
 
 dbConnect();
 
+app.use("/api", authRoutes);
 app.use("/api", roomRoutes);
 
 app.listen(PORT, () => {

@@ -9,6 +9,8 @@ import Layout from './components/Layout.jsx'
 import HomePage from './pages/HomePage.jsx'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoginPage from './pages/LoginPage.jsx'
+import RegisterPage from './pages/RegisterPage.jsx'
 
 const App = () => {
 
@@ -18,6 +20,8 @@ const App = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/rooms" element={<RoomsPage />} />
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/EditRooms/:id" element={<EditRoomsPage />} />

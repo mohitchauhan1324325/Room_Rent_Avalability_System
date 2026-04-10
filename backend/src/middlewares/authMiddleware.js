@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const authMiddleware = (req, res, next) => {
+const protect = (req, res, next) => {
   try {
     const token = req.headers.authorization;
 
@@ -17,4 +17,4 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+export default protect;

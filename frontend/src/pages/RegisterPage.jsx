@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -63,6 +64,14 @@ const RegisterPage = () => {
                 >
                     Register
                 </button>
+
+                <p className="text-center mt-3 text-sm text-gray-600">
+                    Already registered?{" "}
+                    <Link to="/login" className="text-blue-600 font-medium hover:underline">
+                        Login
+                    </Link>
+                </p>
+
             </div>
         </div>
     );

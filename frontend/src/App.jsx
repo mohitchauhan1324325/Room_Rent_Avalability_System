@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const App = () => {
 
@@ -19,15 +20,51 @@ const App = () => {
       <BrowserRouter>
         <Layout>
           <Routes>
+
+            {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/rooms" element={<RoomsPage />} />
-            <Route path="/booking" element={<BookingPage />} />
-            <Route path="/EditRooms/:id" element={<EditRoomsPage />} />
-            <Route path="/AddRooms" element={<AddRoomsPage />} />
             <Route path="/RoomDetails/:id" element={<RoomDetailsPage />} />
-            <Route path="/ManageBookings" element={<ManageBookingsPage />} />
+
+            {/* Protected Routes */}
+            <Route 
+              path="/booking" 
+              element={
+                <ProtectedRoute>
+                  <BookingPage />
+                </ProtectedRoute>
+              } 
+            />
+
+            <Route 
+              path="/AddRooms" 
+              element={
+                <ProtectedRoute>
+                  <AddRoomsPage />
+                </ProtectedRoute>
+              } 
+            />
+
+            <Route 
+              path="/EditRooms/:id" 
+              element={
+                <ProtectedRoute>
+                  <EditRoomsPage />
+                </ProtectedRoute>
+              } 
+            />
+
+            <Route 
+              path="/ManageBookings" 
+              element={
+                <ProtectedRoute>
+                  <ManageBookingsPage />
+                </ProtectedRoute>
+              } 
+            />
+
           </Routes>
         </Layout>
 
@@ -41,4 +78,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

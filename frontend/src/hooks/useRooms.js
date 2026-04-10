@@ -12,7 +12,6 @@ const useRooms = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  {/* Get all rooms Occupied/Not Occupied */ }
   const fetchRooms = async () => {
     try {
       setLoading(true);
@@ -25,7 +24,6 @@ const useRooms = () => {
     }
   };
 
-  {/* To navigate the Edit window to update/edit the rooms */ }
   const handleEdit = (id) => {
     navigate(`/EditRooms/${id}`);
   };

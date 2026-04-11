@@ -6,17 +6,13 @@ const Navbar = () => {
   const loggedIn = isAuthenticated();
 
   const handleLogout = () => {
-
-    const confirm = window.confirm("Are you sure to logout");
-    if(!confirm) return;
-
     logout();
     navigate("/login");
   };
 
   return (
     <nav className="bg-gray-900 text-white px-4 md:px-8 py-3 flex items-center justify-between shadow-md">
-      
+
       {/* Left: Logo + Brand */}
       <div className="flex items-center gap-3">
         <img

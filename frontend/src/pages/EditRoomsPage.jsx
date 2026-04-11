@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getRoomById, updateRoom } from "../api/roomApi";
 import Loader from "../components/Loader";
 import EditForm from "../components/EditForm";
+import { toast } from "react-toastify";
 
 const EditRoomsPage = () => {
   const { id } = useParams();
@@ -57,11 +58,11 @@ const EditRoomsPage = () => {
       data.append("image", room.image);
 
       await updateRoom(id, data);
-      alert("Room updated!");
+      toast.success("Room updated!");
       navigate("/Rooms");
     } catch (err) {
       console.log(err);
-      alert("Something went wrong!");
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }

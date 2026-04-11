@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { loginUser } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -16,15 +18,20 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         try {
+            setLoading(true);
             const data = await loginUser(form);
 
-            alert("Login successful");
+            toast.success("Login successful");
 
             navigate("/");
         } catch (err) {
-            alert(err.message);
+            toast.error(err.message);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) return <Loader />;
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getRoomById } from "../api/roomApi.js";
 import Loader from "../components/Loader.jsx";
 import RoomDetails from "../components/RoomDetails.jsx";
+import { toast } from "react-toastify";
 
 const RoomDetailsPage = () => {
 
@@ -18,13 +19,13 @@ const RoomDetailsPage = () => {
                 const res = await getRoomById(id);
 
                 if (res.message) {
-                    alert(res.message);
+                    toast.success(res.message);
                     return;
                 }
 
                 setRoom(res);
             } catch (error) {
-                alert("Failed to load room");
+                toast.error("Failed to load room");
                 console.log(error);
             } finally {
                 setLoading(false);

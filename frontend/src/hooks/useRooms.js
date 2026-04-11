@@ -34,7 +34,7 @@ const useRooms = () => {
     navigate(`/RoomDetails/${id}`);
   };
 
-  // Delete all rooms by Landlord
+  
   const handleDeleteAllRooms = async () => {
 
     if (!isAuthenticated()) {

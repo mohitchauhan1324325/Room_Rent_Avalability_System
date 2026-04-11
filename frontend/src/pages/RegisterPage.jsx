@@ -2,10 +2,12 @@ import { useState } from "react";
 import { registerUser } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -18,14 +20,19 @@ const RegisterPage = () => {
 
     const handleRegister = async () => {
         try {
+            setLoading(true);
             const data = await registerUser(form);
-            alert(data.message || "Registered successfully");
+            toast.success(data.message || "Registered successfully");
 
             navigate("/login");
         } catch (err) {
-            alert(err.message);
+            toast.error(err.message);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) return <Loader />;
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">

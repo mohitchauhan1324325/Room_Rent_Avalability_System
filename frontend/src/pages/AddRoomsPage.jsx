@@ -2,6 +2,7 @@ import { useState } from "react"
 import { createRoom } from "../api/roomApi";
 import Loader from "../components/Loader";
 import AddRoomsForm from "../components/AddRoomsForm";
+import { toast } from "react-toastify";
 
 const AddRoomsPage = () => {
 
@@ -41,11 +42,11 @@ const AddRoomsPage = () => {
       
       await createRoom(data);
 
-      alert("Room Saved!");
+      toast.success("Room Saved!");
       setFormData(initialState);
     } catch (error) {
       console.log(error);
-      alert("Error saving room");
+      toast.error("Error saving room");
     } finally {
       setLoading(false);
     }

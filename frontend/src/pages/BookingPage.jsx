@@ -3,6 +3,7 @@ import { useState } from "react";
 import { bookRoom } from "../api/bookingApi";
 import Loader from "../components/Loader";
 import BookingForm from "../components/BookingForm";
+import { toast } from "react-toastify";
 
 const BookingPage = () => {
   const location = useLocation();
@@ -30,9 +31,10 @@ const BookingPage = () => {
     try {
       setLoading(true);
       const res = await bookRoom(bookingData);
-      alert(res.message);
+      toast.success(res.message);
       navigate("/rooms");
     } catch (err) {
+      toast.error("Error!", err.message);
       console.log(err);
     } finally {
       setLoading(false);

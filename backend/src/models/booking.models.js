@@ -17,6 +17,20 @@ const bookingSchema = new mongoose.Schema({
     moveInDate: {
         type: Date,
         required: true
+    },
+
+    paymentId: {
+        type: String
+    },
+
+    orderId: {
+        type: String
+    },
+
+    paymentStatus: {
+        type: String,
+        enum: ["pending", "paid", "failed"],
+        default: "pending"
     }
 
 }, { timestamps: true });

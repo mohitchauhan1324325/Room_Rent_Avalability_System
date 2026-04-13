@@ -86,49 +86,6 @@ export const deleteRoomById = async (req, res) => {
     }
 };
 
-export const roomRent = async (req, res) => {
-    try {
-
-        const { tenantName, phone, roomId, moveInDate } = req.body;
-
-        const room = await Room.findById(roomId);
-
-        if (!room) {
-            return res.status(404).json({
-                message: "Room not found"
-            });
-        }
-
-        if (!room.isAvailable) {
-            return res.status(400).json({
-                message: "Room already booked"
-            });
-        }
-
-        const user = await User.create({
-            name: tenantName,
-            phone
-        });
-
-        const booking = await Booking.create({
-            roomId,
-            user: user._id,
-            moveInDate
-        });
-
-        await Room.findByIdAndUpdate(roomId, { isAvailable: false });
-
-        res.status(200).json({
-            message: "Room booked successfully",
-            user,
-            booking
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
 export const bookRooms = async (req, res) => {
     try {
         const room = await Booking.find();

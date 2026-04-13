@@ -8,7 +8,6 @@ import {
     getRoomById,
     getRooms,
     deleteAllRooms,
-    roomRent,
     bookRooms,
     cancelBooking,
     getUsersBooking,
@@ -19,7 +18,6 @@ const router = express.Router();
 
 //POST methods
 router.post("/rooms", protect, upload.single("image"), addRoom);
-router.post("/room-rent", protect, roomRent);
 
 //GET methods
 router.get("/room-rent", protect, bookRooms);

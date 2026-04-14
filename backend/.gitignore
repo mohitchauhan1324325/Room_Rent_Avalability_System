@@ -1,72 +1,26 @@
-# =========================
-#  ENV FILES (CRITICAL)
-# =========================
-.env
-.env.*
-!.env.example
-
-# =========================
-#  DEPENDENCIES
-# =========================
-node_modules
-
-# =========================
-#  LOG FILES
-# =========================
-logs/
+# Logs
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# =========================
-#  OS FILES
-# =========================
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
-
-# =========================
-#  IDE / EDITOR
-# =========================
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# =========================
-# FILE UPLOADS (IMPORTANT)
-# =========================
-uploads/
-tmp/
-temp/
-
-# =========================
-# DATABASE FILES (if any local DB)
-# =========================
-*.sqlite
-*.db
-
-# =========================
-#  TEST COVERAGE
-# =========================
-coverage/
-.nyc_output/
-
-# =========================
-#  SECRET / CONFIG FILES
-# =========================
-secret.json
-config.json
-
-# =========================
-#  CACHE
-# =========================
-.cache/
-.eslintcache
-
-# =========================
-# PROCESS FILES
-# =========================
-*.pid
-*.seed
-*.pid.lock
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.env
+.env.*

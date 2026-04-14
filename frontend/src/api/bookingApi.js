@@ -2,7 +2,7 @@ import api from "../utils/api";
 
 export const bookRoom = async (data) => {
     try {
-        const res = await api.post("/api/room-rent", data);
+        const res = await api.post("/api/confirm", data);
         return res.data;
 
     } catch (error) {

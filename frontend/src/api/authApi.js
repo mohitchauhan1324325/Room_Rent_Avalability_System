@@ -11,17 +11,20 @@ export const registerUser = async (data) => {
 };
 
 export const loginUser = async (data) => {
-    try {
-        const res = await api.post("/api/login", data);
+  try {
+    const res = await api.post("/api/login", data);
 
-        if (res.data.token) {
-            localStorage.setItem("token", res.data.token);
-        }
-
-        return res.data;
-
-    } catch (error) {
-        throw error.response?.data || { message: "Login failed" };
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
     }
-};
+    
+    if (res.data.user) {
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    }
 
+    return res.data;
+
+  } catch (error) {
+    throw error.response?.data || { message: "Login failed" };
+  }
+};

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 import { getRoomById } from "../api/roomApi.js";
 import Loader from "../components/Loader.jsx";
@@ -11,6 +11,8 @@ const RoomDetailsPage = () => {
 
     const [room, setRoom] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -35,11 +37,13 @@ const RoomDetailsPage = () => {
         fetchDetails();
     }, [id]);
 
+    
     if (loading || !room) return <Loader />;
 
     return (
         <RoomDetails
         room={room}
+        user={user}
         />
     )
 }

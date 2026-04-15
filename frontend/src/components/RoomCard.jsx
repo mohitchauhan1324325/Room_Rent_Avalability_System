@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { getUserRole } from "../utils/auth";
 
 const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
 
   const navigate = useNavigate();
+  const role = getUserRole();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -26,8 +28,8 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
             {/* Status Badge */}
             <span
               className={`absolute top-2 right-2 px-2 py-1 text-xs rounded ${room.isAvailable
-                  ? "bg-green-500 text-white"
-                  : "bg-red-500 text-white"
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white"
                 }`}
             >
               {room.isAvailable ? "Available" : "Booked"}
@@ -66,25 +68,30 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
                 </button>
               )}
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit(room._id);
-                }}
-                className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
-              >
-                Edit
-              </button>
+              {role == "admin" || role === "owner" ?
+                <div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(room._id);
+                    }}
+                    className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
+                  >
+                    Edit
+                  </button>
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(room._id);
-                }}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(room._id);
+                    }}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div> :
+                ""}
+
             </div>
           </div>
         </div>

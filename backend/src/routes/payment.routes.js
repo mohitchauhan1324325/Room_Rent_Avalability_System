@@ -8,14 +8,14 @@ const router = express.Router();
 router.post(
     "/create-order",
     protect,
-    authorizeRoles("user", "admin"),
+    authorizeRoles("user"),
     createOrder
 );
 
 router.post(
     "/verify",
     protect,
-    authorizeRoles("user", "admin"),
+    authorizeRoles("user"),
     verifyPayment
 );
 

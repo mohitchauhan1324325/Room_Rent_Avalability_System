@@ -14,12 +14,11 @@ export const loginUser = async (data) => {
   try {
     const res = await api.post("/api/login", data);
 
-    if (res.data.token) {
-      localStorage.setItem("token", res.data.token);
-    }
-    
-    if (res.data.user) {
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+    const { token, user } = res.data;
+  
+    if (token && user){
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
     }
 
     return res.data;

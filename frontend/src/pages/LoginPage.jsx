@@ -20,7 +20,7 @@ const LoginPage = () => {
     const handleLogin = async () => {
         try {
             setLoading(true);
-            const data = await loginUser(form);
+            await loginUser(form);
 
             toast.success("Login successful");
 

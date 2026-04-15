@@ -32,7 +32,7 @@ const App = () => {
             <Route 
               path="/booking" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["user"]}>
                   <BookingPage />
                 </ProtectedRoute>
               } 
@@ -41,7 +41,7 @@ const App = () => {
             <Route 
               path="/AddRooms" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["owner", "admin"]}>
                   <AddRoomsPage />
                 </ProtectedRoute>
               } 
@@ -50,7 +50,7 @@ const App = () => {
             <Route 
               path="/EditRooms/:id" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["owner", "admin"]}>
                   <EditRoomsPage />
                 </ProtectedRoute>
               } 
@@ -59,7 +59,7 @@ const App = () => {
             <Route 
               path="/ManageBookings" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["owner", "admin", "user"]}>
                   <ManageBookingsPage />
                 </ProtectedRoute>
               } 

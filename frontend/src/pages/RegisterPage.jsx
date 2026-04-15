@@ -13,6 +13,7 @@ const RegisterPage = () => {
         email: "",
         password: "",
         phone: "",
+        role: "user",
     });
 
     const handleChange = (e) => {
@@ -20,6 +21,10 @@ const RegisterPage = () => {
     };
 
     const handleRegister = async () => {
+
+        if (!form.name || !form.email || !form.password) {
+            return toast.error("Please fill all required fields");
+        }
         try {
             setLoading(true);
             const data = await registerUser(form);

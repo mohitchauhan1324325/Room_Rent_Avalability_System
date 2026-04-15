@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { isAuthenticated, logout } from "../utils/auth";
+import { isAuthenticated, logout, getUserRole } from "../utils/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const loggedIn = isAuthenticated();
+  const role = getUserRole();
 
   const handleLogout = () => {
     logout();
@@ -13,65 +14,59 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900 text-white px-4 md:px-8 py-3 flex items-center justify-between shadow-md">
 
-      {/* Left: Logo + Brand */}
+      {/* Left */}
       <div className="flex items-center gap-3">
-        <img
-          src="transparent-logo.png"
-          alt="logo"
-          className="w-12 h-12 object-contain"
-        />
-        <h1 className="text-xl font-bold tracking-wide">StayNest</h1>
+        <img src="transparent-logo.png" alt="logo" className="w-12 h-12" />
+        <h1 className="text-xl font-bold">StayNest</h1>
       </div>
 
-      {/* Right: Links */}
+      {/* Right */}
       <div className="flex items-center gap-6 text-sm md:text-base">
 
-        <Link to="/" className="hover:text-gray-300">
-          Home
-        </Link>
+        <Link to="/">Home</Link>
+        <Link to="/rooms">Rooms</Link>
 
-        <Link to="/rooms" className="hover:text-gray-300">
-          Rooms
-        </Link>
+        {/* USER */}
+        {role === "user" && (
+          <Link to="/ManageBookings">My Bookings</Link>
+        )}
 
-        {/* Only show if logged in */}
-        {loggedIn && (
+        {/* OWNER */}
+        {role === "owner" && (
           <>
-            <Link to="/AddRooms" className="hover:text-gray-300">
-              Add Room
-            </Link>
-
-            <Link to="/ManageBookings" className="hover:text-gray-300">
-              Booking
-            </Link>
+            <Link to="/AddRooms">Add Room</Link>
+            <Link to="/my-rooms">My Rooms</Link>
           </>
         )}
 
-        {/* Auth buttons */}
+        {/* ADMIN */}
+        {role === "admin" && (
+          <>
+            <Link to="/AddRooms">Add Room</Link>
+            <Link to="/ManageBookings">All Bookings</Link>
+            <Link to="/admin">Admin Panel</Link>
+          </>
+        )}
+
+        {/* Auth Buttons */}
         {!loggedIn ? (
           <>
-            <Link
-              to="/login"
-              className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600"
-            >
+            <Link className="bg-blue-500 px-3 py-1 rounded" to="/login">
               Login
             </Link>
-
-            <Link
-              to="/register"
-              className="bg-green-500 px-3 py-1 rounded hover:bg-green-600"
-            >
+            <Link className="bg-green-500 px-3 py-1 rounded" to="/register">
               Register
             </Link>
           </>
         ) : (
           <button
             onClick={handleLogout}
-            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+            className="bg-red-500 px-3 py-1 rounded"
           >
             Logout
           </button>
         )}
+
       </div>
     </nav>
   );

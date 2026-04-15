@@ -1,24 +1,25 @@
+// Check login
 export const isAuthenticated = () => {
-    return !!localStorage.getItem("token");
+  return !!localStorage.getItem("token");
 };
 
+// Get token
 export const getToken = () => {
-    return localStorage.getItem("token");
+  return localStorage.getItem("token");
 };
 
+// Logout
 export const logout = () => {
-    localStorage.removeItem("token");
+  localStorage.removeItem("token");
+  localStorage.removeItem("user"); 
 };
 
+// Get full user (from storage)
 export const getUser = () => {
-    const token = localStorage.getItem("token");
+  return JSON.parse(localStorage.getItem("user"));
+};
 
-    if (!token) return null;
-
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        return payload;
-    } catch (error) {
-        return null;
-    }
+// Get role directly
+export const getUserRole = () => {
+  return getUser()?.role;
 };

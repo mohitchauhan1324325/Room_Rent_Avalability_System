@@ -39,6 +39,12 @@ const RegisterForm = ({ handleChange, handleRegister }) => {
                     className="border p-2 w-full mb-3"
                 />
 
+                <select name="role" onChange={handleChange}
+                    className="border p-2 w-full mb-3">
+                    <option value="user">User</option>
+                    <option value="owner">Owner</option>
+                </select>
+
                 <button
                     className="bg-green-500 text-white w-full p-2 rounded"
                     onClick={handleRegister}

@@ -4,9 +4,11 @@ import useRooms from "../hooks/useRooms.js";
 import EmptyState from "../components/EmptyState.jsx";
 import RoomCard from "../components/RoomCard.jsx";
 import Loader from "../components/Loader.jsx";
+import { getUserRole } from "../utils/auth.js";
 
 const RoomsPage = () => {
   const navigate = useNavigate();
+  const role = getUserRole();
 
   const {
     filteredRooms,
@@ -29,12 +31,15 @@ const RoomsPage = () => {
         <h1 className="text-2xl font-bold">Available Rooms</h1>
 
         <div className="flex gap-2">
-          <button
-            onClick={() => navigate("/AddRooms")}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-          >
-            Add Room
-          </button>
+
+          {role === "owner" && (
+            <button
+              onClick={() => navigate("/AddRooms")}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+              Add Room
+            </button>
+          )}
 
           <button
             onClick={() => navigate("/ManageBookings")}
@@ -43,15 +48,16 @@ const RoomsPage = () => {
             Bookings
           </button>
 
-          <button
-            onClick={handleDeleteAllRooms}
-            disabled={loading}
-            className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
-              }`}
-          >
-            {loading ? "Deleting..." : "Delete All Rooms"}
-          </button>
-          
+          {role === "admin" && (
+            <button
+              onClick={handleDeleteAllRooms}
+              disabled={loading}
+              className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
+                }`}
+            >
+              {loading ? "Deleting..." : "Delete All Rooms"}
+            </button>)}
+
         </div>
       </div>
 

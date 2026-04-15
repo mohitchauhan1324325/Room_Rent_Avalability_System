@@ -6,13 +6,13 @@ import { toast } from "react-toastify";
 import { createOrder, verifyPayment } from "../api/paymentApi";
 import { bookRoom } from "../api/bookingApi";
 import Swal from "sweetalert2";
+import { getUser } from "../utils/auth";
 
 const BookingPage = () => {
   const location = useLocation();
   const room = location.state;
   const navigate = useNavigate();
-
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getUser();
   const [date, setDate] = useState("");
   const [phone, setPhone] = useState(user?.phone || "");
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,18 @@ const BookingPage = () => {
     e.preventDefault();
 
     try {
-      if (!user) {
+
+      if (user.role !== "user") {
+        toast.error("Only users can book rooms");
+        return;
+      }
+
+      if (!room.isAvailable) {
+        toast.error("Room not available");
+        return;
+      }
+
+      if (!user || user.role !== "user") {
         toast.error("Please login first");
         return;
       }
@@ -70,7 +81,6 @@ const BookingPage = () => {
 
             await bookRoom({
               roomId: room._id,
-              user: user._id,
               moveInDate: date,
               paymentId: response.razorpay_payment_id,
               orderId: response.razorpay_order_id,
@@ -99,6 +109,8 @@ const BookingPage = () => {
 
     } catch (error) {
       setLoading(false);
+      console.log(error);
+
       toast.error("Something went wrong");
     }
   };
@@ -110,7 +122,7 @@ const BookingPage = () => {
 
       <BookingForm
         room={room}
-        user={user}   
+        user={user}
         date={date}
         setDate={setDate}
         phone={phone}

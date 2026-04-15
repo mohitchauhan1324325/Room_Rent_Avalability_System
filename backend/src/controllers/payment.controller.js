@@ -27,25 +27,31 @@ export const verifyPayment = async (req, res) => {
             razorpay_signature,
         } = req.body;
 
+        console.log("BODY:", req.body);
+
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 
         const expectedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-            .update(body)
+            .update(body.toString())
             .digest("hex");
 
-        if (expectedSignature === razorpay_signature) {
-            return res.status(200).json({
-                success: true,
-                message: "Payment verified",
-            });
-        } else {
+        console.log("EXPECTED:", expectedSignature);
+        console.log("RECEIVED:", razorpay_signature);
+
+        if (expectedSignature !== razorpay_signature) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid signature (payment failed)",
+                message: "Payment verification failed",
             });
         }
+
+        res.status(200).json({
+            success: true,
+            message: "Payment verified successfully",
+        });
+
     } catch (error) {
-        res.status(500).json({ message: "Verification error" });
+        res.status(500).json({ message: error.message });
     }
 };

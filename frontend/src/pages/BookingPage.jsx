@@ -77,7 +77,16 @@ const BookingPage = () => {
 
         handler: async function (response) {
           try {
-            await verifyPayment(response);
+            const verifyRes = await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (!verifyRes.success) {
+              toast.error("Payment verification failed ❌");
+              return;
+            }
 
             await bookRoom({
               roomId: room._id,
@@ -90,7 +99,11 @@ const BookingPage = () => {
             navigate("/rooms");
 
           } catch (error) {
-            toast.error("Payment verification failed");
+            console.log("ERROR:", error); // 👈 IMPORTANT
+
+            toast.error(
+              error.response?.data?.message || "Booking failed ❌"
+            );
           } finally {
             setLoading(false);
           }

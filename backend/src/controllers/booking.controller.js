@@ -5,14 +5,15 @@ export const confirmBooking = async (req, res) => {
   try {
     const {
       roomId,
-      user,
       moveInDate,
       paymentId,
       orderId,
     } = req.body;
 
+    const userId = req.user.id;
+
     const existingBooking = await Booking.findOne({
-      user,
+      user: userId,
       paymentStatus: "paid",
     });
 
@@ -38,7 +39,7 @@ export const confirmBooking = async (req, res) => {
 
     const booking = new Booking({
       roomId,
-      user,
+      user: userId,
       moveInDate,
       paymentId,
       orderId,

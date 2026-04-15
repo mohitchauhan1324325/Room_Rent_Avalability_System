@@ -41,7 +41,7 @@ router.get(
 router.get(
     "/users",
     protect,
-    authorizeRoles("admin"),
+    authorizeRoles("admin", "owner"),
     getUsersBooking
 );
 

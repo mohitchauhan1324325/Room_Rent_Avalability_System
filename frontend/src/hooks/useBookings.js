@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { deleteBooking, getBookings } from "../api/bookingApi";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+
 const useBookings = () => {
   const [bookings, setBookings] = useState([]); 
   const [loading, setLoading] = useState(true);

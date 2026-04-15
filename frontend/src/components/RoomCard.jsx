@@ -50,22 +50,24 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
             {/* Buttons */}
             <div className="flex gap-2 mt-3">
               {room.isAvailable ? (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate("/booking", { state: room });
-                  }}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                >
-                  Rent
-                </button>
+                ( role === "user" && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate("/booking", { state: room });
+                    }}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                  >
+                    Rent
+                  </button>
+                ))
               ) : (
-                <button
-                  disabled
-                  className="bg-gray-300 px-3 py-1 rounded cursor-not-allowed"
-                >
-                  Booked
-                </button>
+              <button
+                disabled
+                className="bg-gray-300 px-3 py-1 rounded cursor-not-allowed"
+              >
+                Booked
+              </button>
               )}
 
               {role == "admin" || role === "owner" ?

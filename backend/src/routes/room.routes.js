@@ -1,6 +1,7 @@
 import express from "express";
 import upload from "../middlewares/upload.js";
 import protect from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
 import {
     addRoom,
@@ -8,7 +9,6 @@ import {
     getRoomById,
     getRooms,
     deleteAllRooms,
-    bookRooms,
     cancelBooking,
     getUsersBooking,
     updateRoom
@@ -16,21 +16,66 @@ import {
 
 const router = express.Router();
 
-//POST methods
-router.post("/rooms", protect, upload.single("image"), addRoom);
+// add rooms by owner and admin
+router.post(
+    "/rooms",
+    protect,
+    authorizeRoles("owner", "admin"),
+    upload.single("image"),
+    addRoom
+);
 
-//GET methods
-router.get("/room-rent", protect, bookRooms);
-router.get("/rooms", getRooms);
-router.get("/rooms/:id", getRoomById);
-router.get("/users", protect, getUsersBooking);
+// get all rooms data
+router.get(
+    "/rooms",
+    getRooms
+);
 
-//Delete methods
-router.delete("/rooms/:id", protect, deleteRoomById);
-router.delete("/rooms", protect, deleteAllRooms);
-router.delete("/bookings/:id", protect, cancelBooking);
+// get room data by their id
+router.get(
+    "/rooms/:id",
+    getRoomById
+);
 
-//PUT methods
-router.put("/rooms/:id", protect, upload.single("image"),updateRoom);
+// get all booking rooms user data
+router.get(
+    "/users",
+    protect,
+    authorizeRoles("admin"),
+    getUsersBooking
+);
+
+
+// delete room by their id
+router.delete(
+    "/rooms/:id",
+    protect,
+    authorizeRoles("owner", "admin"),
+    deleteRoomById
+);
+
+// delete all rooms
+router.delete(
+    "/rooms",
+    protect,
+    authorizeRoles("admin"),
+    deleteAllRooms
+);
+
+// cancel booking by id
+router.delete(
+    "/bookings/:id",
+    protect,
+    cancelBooking
+);
+
+// update the existing room data
+router.put(
+    "/rooms/:id",
+    protect,
+    authorizeRoles("owner", "admin"),
+    upload.single("image"),
+    updateRoom
+);
 
 export default router;

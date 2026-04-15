@@ -11,7 +11,12 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     password: String,
-    phone: Number
+    phone: Number,
+    role: {
+        type: String,
+        enum: ["user", "owner", "admin"],
+        default: "user"
+    }
 }, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema);

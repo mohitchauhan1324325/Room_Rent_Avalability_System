@@ -4,21 +4,21 @@ import { User } from "../models/user.models.js";
 import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
-  try {
+    try {
 
-    const room = new Room({
-      ...req.body,
-      image: req.file ? req.file.path : "",
-    });
+        const room = new Room({
+            ...req.body,
+            image: req.file ? req.file.path : "",
+        });
 
-    const savedRoom = await room.save();
+        const savedRoom = await room.save();
 
-    res.status(201).json(savedRoom);
+        res.status(201).json(savedRoom);
 
-  } catch (error) {
-    console.log("ADD ERROR:", error);
-    res.status(500).json({ message: error.message });
-  }
+    } catch (error) {
+        console.log("ADD ERROR:", error);
+        res.status(500).json({ message: error.message });
+    }
 };
 
 export const getRooms = async (req, res) => {
@@ -76,21 +76,10 @@ export const deleteRoomById = async (req, res) => {
             await cloudinary.uploader.destroy(publicId);
         }
 
-        await Booking.deleteMany({ room: id});
+        await Booking.deleteMany({ room: id });
         await Room.findByIdAndDelete(id);
 
         res.json({ message: "Room deleted" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-export const bookRooms = async (req, res) => {
-    try {
-        const room = await Booking.find();
-
-        res.status(200).json(room);
 
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -106,11 +95,19 @@ export const cancelBooking = async (req, res) => {
             return res.status(404).json({ message: "Booking not found" });
         }
 
-        const a = await Room.findByIdAndUpdate(
+        if (
+            booking.user.toString() !== req.user.id &&
+            req.user.role !== "admin"
+        ) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        await Room.findByIdAndUpdate(
             booking.roomId, { isAvailable: true }
         );
 
-        const b = await Booking.findByIdAndDelete(booking.id);
+        booking.status = "cancelled";
+        await booking.save();
 
         res.status(200).json({ message: "Booking cancelled successfully" });
 

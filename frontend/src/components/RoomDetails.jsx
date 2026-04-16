@@ -1,5 +1,5 @@
 
-const RoomDetails = ({ room,  }) => {
+const RoomDetails = ({ room }) => {
     return (
         <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
             <div className="bg-white rounded-2xl shadow-lg max-w-2xl w-full overflow-hidden">

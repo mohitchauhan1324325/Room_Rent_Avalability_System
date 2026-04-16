@@ -1,5 +1,5 @@
 import express from "express";
-import { confirmBooking } from "../controllers/booking.controller.js";
+import { confirmBooking, getMyBooking } from "../controllers/booking.controller.js";
 import protect from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
@@ -10,6 +10,13 @@ router.post(
     protect,
     authorizeRoles("user", "admin"),
     confirmBooking
+);
+
+router.get(
+    "/myBooking",
+    protect,
+    authorizeRoles("user", "owner", "admin"),
+    getMyBooking
 );
 
 export default router;

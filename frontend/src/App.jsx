@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import UserBookingPage from './pages/UserBookingPage.jsx'
 
 const App = () => {
 
@@ -57,9 +58,18 @@ const App = () => {
             />
 
             <Route 
+              path="/UserBooking" 
+              element={
+                <ProtectedRoute allowedRoles={["user"]}>
+                  <UserBookingPage />
+                </ProtectedRoute>
+              } 
+            />
+
+            <Route 
               path="/ManageBookings" 
               element={
-                <ProtectedRoute allowedRoles={["owner", "admin", "user"]}>
+                <ProtectedRoute allowedRoles={["admin", "user"]}>
                   <ManageBookingsPage />
                 </ProtectedRoute>
               } 

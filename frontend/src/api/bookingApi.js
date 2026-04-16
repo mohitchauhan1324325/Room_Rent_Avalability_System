@@ -29,4 +29,13 @@ export const deleteBooking = async (id) => {
     }
 };
 
+export const getMyBooking = async (id) => {
+    try {
+        const res = await api.get("/api/getMyBooking");
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 

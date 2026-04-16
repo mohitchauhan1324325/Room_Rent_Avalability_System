@@ -32,7 +32,7 @@ const RoomsPage = () => {
 
         <div className="flex gap-2">
 
-          {role === "owner" && (
+          {(role === "owner" || role === "admin") && (
             <button
               onClick={() => navigate("/AddRooms")}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
@@ -41,12 +41,15 @@ const RoomsPage = () => {
             </button>
           )}
 
-          <button
-            onClick={() => navigate("/ManageBookings")}
+          {role === "user" && (
+            <button
+            onClick={() => navigate("/UserBooking")}
             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
           >
-            Bookings
+            MyBookings
           </button>
+          )
+        }   
 
           {role === "admin" && (
             <button

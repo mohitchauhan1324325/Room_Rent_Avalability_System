@@ -14,15 +14,16 @@ export const getBookings = async () => {
     try {
         const res = await api.get("/api/users");
         return res.data;
-        
+
     } catch (error) {
-        throw error;      
+        throw error;
     }
 };
 
 export const deleteBooking = async (id) => {
     try {
-        await api.delete(`/api/bookings/${id}`);
+        const res = await api.delete(`/api/cancelBookings/${id}`);
+        return res.data;
 
     } catch (error) {
         throw error;

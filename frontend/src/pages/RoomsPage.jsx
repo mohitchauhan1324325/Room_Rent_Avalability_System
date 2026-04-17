@@ -41,15 +41,21 @@ const RoomsPage = () => {
             </button>
           )}
 
-          {role === "user" && (
+          {role === "user" ? (
             <button
-            onClick={() => navigate("/UserBooking")}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-          >
-            MyBookings
-          </button>
-          )
-        }   
+              onClick={() => navigate("/UserBooking")}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+              My Bookings
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/ManageBookings")}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+              Manage Bookings
+            </button>
+          )}
 
           {role === "admin" && (
             <button

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 const useBookings = () => {
-  const [bookings, setBookings] = useState([]); 
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,7 +25,7 @@ const useBookings = () => {
   }, []);
 
   const handleDeleteBooking = async (id) => {
-    
+
     const result = await Swal.fire({
       title: "Delete booking?",
       text: "This booking will be deleted permanently!",
@@ -44,7 +44,10 @@ const useBookings = () => {
       setBookings(prev => prev.filter(b => b._id !== id));
       toast.success("Booking deleted successfully!");
     } catch (err) {
-      toast.error("Error!", err.message, "error");
+      const message =
+        err.response?.data?.message || "Failed to delete booking";
+
+      toast.error(message);
       setError("Failed to delete booking");
     } finally {
       setLoading(false);

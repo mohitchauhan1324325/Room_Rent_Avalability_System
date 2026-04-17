@@ -86,37 +86,6 @@ export const deleteRoomById = async (req, res) => {
     }
 };
 
-export const cancelBooking = async (req, res) => {
-    try {
-
-        const booking = await Booking.findById(req.params.id);
-
-        if (!booking) {
-            return res.status(404).json({ message: "Booking not found" });
-        }
-
-        if (
-            booking.user.toString() !== req.user.id &&
-            req.user.role !== "admin"
-        ) {
-            return res.status(403).json({ message: "Unauthorized" });
-        }
-
-        await Room.findByIdAndUpdate(
-            booking.roomId, { isAvailable: true }
-        );
-
-        booking.status = "cancelled";
-        await booking.save();
-
-        res.status(200).json({ message: "Booking cancelled successfully" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-
-};
-
 export const getUsersBooking = async (req, res) => {
     try {
 

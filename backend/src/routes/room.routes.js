@@ -9,7 +9,6 @@ import {
     getRoomById,
     getRooms,
     deleteAllRooms,
-    cancelBooking,
     getUsersBooking,
     updateRoom
 } from "../controllers/room.controller.js";
@@ -60,13 +59,6 @@ router.delete(
     protect,
     authorizeRoles("admin"),
     deleteAllRooms
-);
-
-// cancel booking by id
-router.delete(
-    "/bookings/:id",
-    protect,
-    cancelBooking
 );
 
 // update the existing room data

@@ -15,7 +15,7 @@ export const confirmBooking = async (req, res) => {
 
     const existingBooking = await Booking.findOne({
       user: userId,
-      paymentStatus: "paid",
+      status: "confirmed",
     });
 
     if (existingBooking) {
@@ -45,6 +45,7 @@ export const confirmBooking = async (req, res) => {
       paymentId,
       orderId,
       paymentStatus: "paid",
+      status: "confirmed",
     });
 
     await booking.save();
@@ -66,14 +67,42 @@ export const confirmBooking = async (req, res) => {
 export const getMyBooking = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("REQ.USER:", req.user);
-    
-    const bookings = await Booking.find({ user: userId })
+
+    const bookings = await Booking.find({
+      user: userId,
+      status: "confirmed"
+    })
       .populate("roomId")
       .populate("user");
 
     res.json(bookings);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch bookings" });
+  }
+};
+
+export const cancelBookingByUser = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    if (booking.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: "You can only cancel your own booking" });
+    }
+
+    await Room.findByIdAndUpdate(booking.roomId, {
+      isAvailable: true,
+    });
+
+    booking.status = "cancelled";
+    await booking.save();
+
+    res.status(200).json({ message: "Booking cancelled successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

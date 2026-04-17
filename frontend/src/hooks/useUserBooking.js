@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { deleteBooking, getMyBooking } from "../api/bookingApi";
+import { cancelBookingByUser, getMyBooking } from "../api/bookingApi";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
@@ -41,11 +41,11 @@ const useUserBooking = () => {
       
           try {
             setLoading(true);
-            await deleteBooking(id);
-            setBookings(prev => prev.filter(b => b._id !== id));
+            await cancelBookingByUser(id);
+            setUserBooking(prev => prev.filter(b => b._id !== id));
             toast.success("Booking deleted successfully!");
           } catch (err) {
-            toast.error("Error!", err.message, "error");
+            toast.error("Error!");
             setError("Failed to delete booking");
           } finally {
             setLoading(false);

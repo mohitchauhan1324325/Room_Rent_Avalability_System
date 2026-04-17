@@ -29,6 +29,16 @@ export const deleteBooking = async (id) => {
     }
 };
 
+export const cancelBookingByUser = async (id) => {
+    try {
+        const res = await api.delete(`/api/cancel/${id}`);
+        return res.data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getMyBooking = async () => {
     try {
         const res = await api.get("/api/myBooking");

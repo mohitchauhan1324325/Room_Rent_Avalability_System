@@ -1,5 +1,5 @@
 import express from "express";
-import { confirmBooking, getMyBooking } from "../controllers/booking.controller.js";
+import { cancelBookingByUser, confirmBooking, getMyBooking } from "../controllers/booking.controller.js";
 import protect from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
@@ -17,6 +17,13 @@ router.get(
     protect,
     authorizeRoles("user", "owner", "admin"),
     getMyBooking
+);
+
+router.delete(
+  "/cancel/:id",
+  protect,
+  authorizeRoles("user"),
+  cancelBookingByUser
 );
 
 export default router;

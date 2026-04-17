@@ -7,7 +7,6 @@ const useBookings = () => {
   const [bookings, setBookings] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userBooking, setUserBooking] = useState([]);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -24,20 +23,6 @@ const useBookings = () => {
 
     fetchBookings();
   }, []);
-
-  const handleDetailBooking = async () => {
-      try {
-        setLoading(true);
-        const res = await getMyBooking();
-        setUserBooking(res);
-      } catch (error) {
-        setError("Failed to load booking");
-        toast.error("Booking not fetch");
-      } finally {
-        setLoading(false);
-      }
-  
-  }
 
   const handleDeleteBooking = async (id) => {
     
@@ -68,8 +53,6 @@ const useBookings = () => {
 
   return {
     bookings,
-    userBooking,
-    handleDetailBooking,
     handleDeleteBooking,
     loading,
     error,

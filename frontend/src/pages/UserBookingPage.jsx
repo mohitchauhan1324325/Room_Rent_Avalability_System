@@ -1,9 +1,8 @@
-import React from 'react'
-import useBookings from '../hooks/useBookings'
 import Loader from '../components/Loader';
 import UserBookingDetails from '../components/UserBookingDetails';
 import { useEffect } from 'react';
 import { getUserRole } from '../utils/auth';
+import useUserBooking from '../hooks/useUserBooking';
 
 const UserBookingPage = () => {
   const {
@@ -12,8 +11,7 @@ const UserBookingPage = () => {
     handleDeleteBooking,
     loading,
     error,
-  } = useBookings();
-  const role = getUserRole();
+  } = useUserBooking();
   
   useEffect(() => {
     handleDetailBooking();

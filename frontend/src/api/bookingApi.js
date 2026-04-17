@@ -29,9 +29,9 @@ export const deleteBooking = async (id) => {
     }
 };
 
-export const getMyBooking = async (id) => {
+export const getMyBooking = async () => {
     try {
-        const res = await api.get("/api/getMyBooking");
+        const res = await api.get("/api/myBooking");
         return res.data;
     } catch (error) {
         throw error;

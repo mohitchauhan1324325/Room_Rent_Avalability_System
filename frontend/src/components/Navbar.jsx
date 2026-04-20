@@ -28,7 +28,7 @@ const Navbar = () => {
 
         {/* USER */}
         {role === "user" && (
-          <Link to="/ManageBookings">My Bookings</Link>
+          <Link to="/UserBooking">My Bookings</Link>
         )}
 
         {/* OWNER */}

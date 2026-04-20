@@ -13,6 +13,8 @@ import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import UserBookingPage from './pages/UserBookingPage.jsx'
+import AdminPanelPage from './pages/AdminPanelPage.jsx'
+import OwnerRoomsPage from './pages/OwnerRoomsPage.jsx'
 
 const App = () => {
 
@@ -30,51 +32,69 @@ const App = () => {
             <Route path="/RoomDetails/:id" element={<RoomDetailsPage />} />
 
             {/* Protected Routes */}
-            <Route 
-              path="/booking" 
+            <Route
+              path="/booking"
               element={
                 <ProtectedRoute allowedRoles={["user"]}>
                   <BookingPage />
                 </ProtectedRoute>
-              } 
+              }
             />
 
-            <Route 
-              path="/AddRooms" 
+            <Route
+              path="/AddRooms"
               element={
                 <ProtectedRoute allowedRoles={["owner", "admin"]}>
                   <AddRoomsPage />
                 </ProtectedRoute>
-              } 
+              }
             />
 
-            <Route 
-              path="/EditRooms/:id" 
+            <Route
+              path="/EditRooms/:id"
               element={
                 <ProtectedRoute allowedRoles={["owner", "admin"]}>
                   <EditRoomsPage />
                 </ProtectedRoute>
-              } 
+              }
             />
 
-            <Route 
-              path="/UserBooking" 
+            <Route
+              path="/UserBooking"
               element={
                 <ProtectedRoute allowedRoles={["user"]}>
                   <UserBookingPage />
                 </ProtectedRoute>
-              } 
+              }
             />
 
-            <Route 
-              path="/ManageBookings" 
+            <Route
+              path="/ManageBookings"
               element={
                 <ProtectedRoute allowedRoles={["admin", "owner"]}>
                   <ManageBookingsPage />
                 </ProtectedRoute>
-              } 
+              }
             />
 
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminPanelPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/my-rooms"
+              element={
+                <ProtectedRoute allowedRoles={["owner"]}>
+                  <OwnerRoomsPage />
+                </ProtectedRoute>
+              }
+            />
+            
           </Routes>
         </Layout>
 

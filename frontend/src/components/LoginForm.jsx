@@ -13,6 +13,7 @@ const LoginForm = ({ handleChange, handleLogin }) => {
                     name="email"
                     placeholder="Email"
                     onChange={handleChange}
+                    required
                 />
 
                 <input
@@ -21,6 +22,7 @@ const LoginForm = ({ handleChange, handleLogin }) => {
                     name="password"
                     placeholder="Password"
                     onChange={handleChange}
+                    required
                 />
 
                 <button

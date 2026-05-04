@@ -1,37 +1,40 @@
-
 const LoginForm = ({ handleChange, handleLogin }) => {
-    return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="bg-white p-6 rounded-xl shadow-md w-80">
-                <h2 className="text-2xl font-bold mb-4 text-center">
-                    Login
-                </h2>
+  return (
+    <div className="w-full max-w-sm mx-auto">
 
-                <input
-                    className="border p-2 w-full mb-3"
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                />
+      <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg">
 
-                <input
-                    className="border p-2 w-full mb-3"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                />
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+          Login
+        </h2>
 
-                <button
-                    className="bg-blue-500 text-white w-full p-2 rounded"
-                    onClick={handleLogin}
-                >
-                    Login
-                </button>
-            </div>
-        </div>
-    )
-}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-export default LoginForm
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          className="w-full p-2 mb-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-200 font-medium"
+        >
+          Login
+        </button>
+
+      </div>
+
+    </div>
+  );
+};
+
+export default LoginForm;

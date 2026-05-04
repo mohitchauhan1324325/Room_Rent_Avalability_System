@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getRoomById } from "../api/roomApi.js";
 import Loader from "../components/Loader.jsx";
@@ -6,46 +6,59 @@ import RoomDetails from "../components/RoomDetails.jsx";
 import { toast } from "react-toastify";
 
 const RoomDetailsPage = () => {
+  const { id } = useParams();
 
-    const { id } = useParams();
+  const [room, setRoom] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    const [room, setRoom] = useState(null);
-    const [loading, setLoading] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-    const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const res = await getRoomById(id);
 
-    useEffect(() => {
-        const fetchDetails = async () => {
-            try {
-                setLoading(true);
-                const res = await getRoomById(id);
+        if (!res) {
+          throw new Error("Room not found");
+        }
 
-                if (res.message) {
-                    toast.success(res.message);
-                    return;
-                }
+        setRoom(res);
+      } catch (error) {
+        console.log(error);
+        setError("Failed to load room");
+        toast.error("Failed to load room");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                setRoom(res);
-            } catch (error) {
-                toast.error("Failed to load room");
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    fetchDetails();
+  }, [id]);
 
-        fetchDetails();
-    }, [id]);
+  if (loading) return <Loader />;
 
-    
-    if (loading || !room) return <Loader />;
-
+  if (error) {
     return (
-        <RoomDetails
-        room={room}
-        user={user}
-        />
-    )
-}
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg text-red-500 font-semibold">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
-export default RoomDetailsPage
+  if (!room) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg text-gray-600">
+          Room not found
+        </div>
+      </div>
+    );
+  }
+
+  return <RoomDetails room={room} user={user} />;
+};
+
+export default RoomDetailsPage;

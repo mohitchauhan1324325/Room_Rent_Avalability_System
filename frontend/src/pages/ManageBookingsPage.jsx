@@ -12,28 +12,31 @@ const ManageBookingsPage = () => {
 
   if (loading) return <Loader />;
 
-  if (error)
+  if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-500 font-semibold">
-        {error}
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg text-red-500 font-semibold">
+          {error}
+        </div>
       </div>
     );
+  }
 
   if (bookings.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500 text-lg">
-        No bookings available
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg text-gray-600 text-lg">
+          No bookings available
+        </div>
       </div>
     );
   }
 
   return (
-
     <BookingDetails
       bookings={bookings}
       handleDeleteBooking={handleDeleteBooking}
     />
-
   );
 };
 

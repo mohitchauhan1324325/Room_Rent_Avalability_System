@@ -131,7 +131,7 @@ const BookingPage = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8 flex items-center justify-center">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-6">
 
       <BookingForm
         room={room}
@@ -147,5 +147,4 @@ const BookingPage = () => {
     </div>
   );
 };
-
 export default BookingPage;

@@ -1,12 +1,12 @@
 const EmptyState = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-6 md:px-8">
-      
-      <div className="max-w-md w-full text-center bg-white shadow-md rounded-2xl p-8 hover:shadow-lg transition duration-300">
+    <div className="min-h-[60vh] flex items-center justify-center px-4 py-6">
+
+      <div className="max-w-md w-full text-center bg-white/80 backdrop-blur-md shadow-lg rounded-2xl p-8 hover:shadow-xl transition duration-300">
         
         {/* Icon */}
         <div className="flex justify-center">
-          <div className="bg-indigo-100 p-4 rounded-full">
+          <div className="bg-indigo-100/80 p-4 rounded-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -26,12 +26,12 @@ const EmptyState = () => {
 
         {/* Title */}
         <h2 className="mt-6 text-xl md:text-2xl font-semibold text-gray-800">
-          No items found
+          No Rooms Found
         </h2>
 
         {/* Subtitle */}
-        <p className="mt-2 text-sm text-gray-500">
-          Try adjusting your search or check back later.
+        <p className="mt-2 text-sm text-gray-600">
+          Try changing filters or explore other locations.
         </p>
 
       </div>

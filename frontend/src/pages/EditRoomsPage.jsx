@@ -50,7 +50,6 @@ const EditRoomsPage = () => {
       setLoading(true);
 
       const data = new FormData();
-
       data.append("title", room.title);
       data.append("price", room.price);
       data.append("location", room.location);
@@ -71,7 +70,14 @@ const EditRoomsPage = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6 md:px-8 flex items-center justify-center">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-6">
+
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-4 bg-white/30 backdrop-blur-md px-4 py-2 rounded-lg text-white hover:bg-white/50 transition"
+      >
+        ← Back
+      </button>
 
       <EditForm
         room={room}

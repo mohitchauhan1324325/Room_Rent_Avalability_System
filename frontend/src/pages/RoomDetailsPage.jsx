@@ -58,7 +58,10 @@ const RoomDetailsPage = () => {
     );
   }
 
-  return <RoomDetails room={room} user={user} />;
+  return <RoomDetails
+    room={room}
+  />;
+
 };
 
 export default RoomDetailsPage;

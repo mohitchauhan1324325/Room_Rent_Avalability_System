@@ -11,7 +11,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
       {rooms.map((room) => (
         <div
           key={room._id}
-          className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition duration-300 cursor-pointer"
+          className="bg-pink-100 rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition duration-300 cursor-pointer"
           onClick={() => room.isAvailable && handleDetails(room._id)}
         >
 
@@ -71,7 +71,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
               {!room.isAvailable && (
                 <button
                   disabled
-                  className="bg-gray-300 px-3 py-1 rounded-lg cursor-not-allowed"
+                  className="bg-gray-300 px-3 py-1 text-black rounded-lg cursor-not-allowed"
                 >
                   Booked
                 </button>

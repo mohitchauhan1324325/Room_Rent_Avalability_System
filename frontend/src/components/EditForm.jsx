@@ -15,7 +15,7 @@ const EditForm = ({ room, handleChange, handleSubmit }) => {
         value={room.title}
         onChange={handleChange}
         placeholder="Room Title"
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       {/* Styled File Input */}
@@ -35,7 +35,7 @@ const EditForm = ({ room, handleChange, handleSubmit }) => {
         value={room.description}
         onChange={handleChange}
         placeholder="Room Description"
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <input
@@ -44,7 +44,7 @@ const EditForm = ({ room, handleChange, handleSubmit }) => {
         value={room.location}
         onChange={handleChange}
         placeholder="Room Location"
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <input
@@ -53,7 +53,7 @@ const EditForm = ({ room, handleChange, handleSubmit }) => {
         value={room.price}
         onChange={handleChange}
         placeholder="Room Price"
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <button

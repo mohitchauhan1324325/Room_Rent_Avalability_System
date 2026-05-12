@@ -74,7 +74,7 @@ const EditRoomsPage = () => {
 
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 bg-white/30 backdrop-blur-md px-4 py-2 rounded-lg text-white hover:bg-white/50 transition"
+        className="mb-4 bg-white/30 backdrop-blur-md px-4 py-2 rounded-lg text-black hover:bg-white/50 transition"
       >
         ← Back
       </button>

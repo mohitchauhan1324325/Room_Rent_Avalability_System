@@ -4,11 +4,12 @@ import { User } from "../models/user.models.js";
 import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
-    try {
-
+    try{
+        
+        const imagePaths = req.files.map((file) => file.path);
         const room = new Room({
             ...req.body,
-            image: req.file ? req.file.path : "",
+            images: imagePaths
         });
 
         const savedRoom = await room.save();

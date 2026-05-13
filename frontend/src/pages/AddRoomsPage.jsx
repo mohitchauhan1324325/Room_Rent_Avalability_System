@@ -11,17 +11,19 @@ const AddRoomsPage = () => {
     title: "",
     price: "",
     location: "",
-    image: null
+    images: []
   };
 
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type } = e.target;
 
     setFormData({
       ...formData,
-      [name]: files && files.length > 0 ? files[0] : value
+      [name]: type === "file"
+      ? Array.from(files)
+      : value
     });
   };
 
@@ -37,8 +39,11 @@ const AddRoomsPage = () => {
       data.append("price", formData.price);
       data.append("location", formData.location);
       data.append("description", formData.description);
-      data.append("image", formData.image);
       data.append("owner", formData.owner);
+
+      formData.images.forEach((image) => {
+        data.append("images", image);
+      });
       
       await createRoom(data);
 

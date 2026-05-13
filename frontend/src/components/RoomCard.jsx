@@ -18,7 +18,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
           {/* Image */}
           <div className="relative overflow-hidden">
             <img
-              src={room.image}
+              src={room.images[0]}
               alt={room.title}
               className="w-full h-48 object-cover transition duration-300 hover:scale-110"
             />

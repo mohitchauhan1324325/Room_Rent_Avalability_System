@@ -20,7 +20,9 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
 
       <input
         type="file"
-        name="image"
+        name="images"
+        multiple={true}
+        accept="image/*,video/*"
         onChange={handleChange}
         className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 
                    file:rounded-lg file:border-0 

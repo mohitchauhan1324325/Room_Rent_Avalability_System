@@ -20,7 +20,7 @@ router.post(
     "/rooms",
     protect,
     authorizeRoles("owner", "admin"),
-    upload.single("image"),
+    upload.array("images", 10),
     addRoom
 );
 

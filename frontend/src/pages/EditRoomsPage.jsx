@@ -12,7 +12,7 @@ const EditRoomsPage = () => {
   const [loading, setLoading] = useState(false);
   const [room, setRoom] = useState({
     title: "",
-    image: "",
+    images: [],
     description: "",
     price: "",
     location: "",
@@ -35,11 +35,13 @@ const EditRoomsPage = () => {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type } = e.target;
 
     setRoom({
       ...room,
-      [name]: files && files.length > 0 ? files[0] : value
+      [name]: type === "file"
+      ? Array.from(files)
+      : value
     });
   };
 
@@ -50,11 +52,15 @@ const EditRoomsPage = () => {
       setLoading(true);
 
       const data = new FormData();
+
       data.append("title", room.title);
       data.append("price", room.price);
       data.append("location", room.location);
       data.append("description", room.description);
-      data.append("image", room.image);
+      
+      room.images.forEach((image) => {
+        data.append("images", image);
+      })
 
       await updateRoom(id, data);
       toast.success("Room updated!");

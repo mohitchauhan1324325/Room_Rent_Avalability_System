@@ -32,6 +32,38 @@ const RoomDetails = ({ room }) => {
           ))}
 
         </Swiper>
+        
+        {/* videos */}
+        {room.videos?.length > 0 && (
+
+          <Swiper
+            modules={[Navigation]}
+            navigation={true}
+            spaceBetween={10}
+            slidesPerView={1}
+            className="mt-4"
+          >
+
+            {room.videos.map((video, index) => (
+
+              <SwiperSlide key={index}>
+
+                <video
+                  controls
+                  className="w-full h-64 object-cover rounded-xl"
+                >
+
+                  <source src={video} type="video/mp4" />
+
+                </video>
+
+              </SwiperSlide>
+
+            ))}
+
+          </Swiper>
+
+        )}
 
         {/* Content */}
         <div className="p-6">

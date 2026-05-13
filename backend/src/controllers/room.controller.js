@@ -4,12 +4,30 @@ import { User } from "../models/user.models.js";
 import cloudinary from "../config/cloudinary.js";
 
 export const addRoom = async (req, res) => {
-    try{
-        
-        const imagePaths = req.files.map((file) => file.path);
+
+    try {
+
+        let images = [];
+        let videos = [];
+
+        req.files.forEach((file) => {
+
+            if (file.mimetype.startsWith("image")) {
+
+                images.push(file.path);
+
+            } else if (file.mimetype.startsWith("video")) {
+
+                videos.push(file.path);
+
+            }
+
+        });
+
         const room = new Room({
             ...req.body,
-            images: imagePaths
+            images,
+            videos
         });
 
         const savedRoom = await room.save();
@@ -17,9 +35,15 @@ export const addRoom = async (req, res) => {
         res.status(201).json(savedRoom);
 
     } catch (error) {
+
         console.log("ADD ERROR:", error);
-        res.status(500).json({ message: error.message });
+
+        res.status(500).json({
+            message: error.message
+        });
+
     }
+
 };
 
 export const getRooms = async (req, res) => {
@@ -68,13 +92,36 @@ export const deleteRoomById = async (req, res) => {
         }
 
 
-        if (room.image && room.image.includes("cloudinary")) {
-            const publicId = room.image
-                .split("/")
-                .slice(-1)[0]
-                .split(".")[0];
+        for (const image of room.images) {
 
-            await cloudinary.uploader.destroy(publicId);
+            if (image.includes("cloudinary")) {
+
+                const publicId = image
+                    .split("/")
+                    .slice(-1)[0]
+                    .split(".")[0];
+
+                await cloudinary.uploader.destroy(`rooms/${publicId}`);
+
+            }
+
+        }
+        for (const video of room.videos) {
+
+            if (video.includes("cloudinary")) {
+
+                const publicId = video
+                    .split("/")
+                    .slice(-1)[0]
+                    .split(".")[0];
+
+                await cloudinary.uploader.destroy(
+                    `rooms/${publicId}`,
+                    { resource_type: "video" }
+                );
+
+            }
+
         }
 
         await Booking.deleteMany({ room: id });
@@ -102,33 +149,42 @@ export const getUsersBooking = async (req, res) => {
 };
 
 export const updateRoom = async (req, res) => {
+
     try {
+
         const { id } = req.params;
 
         const room = await Room.findById(id);
 
         if (!room) {
-            return res.status(404).json({ message: "Room not found" });
+            return res.status(404).json({
+                message: "Room not found"
+            });
         }
 
-        let imageUrl = room.image;
+        let images = room.images;
+        let videos = room.videos;
 
-        if (req.file) {
 
-            if (room.image && room.image.includes("res.cloudinary.com")) {
-                try {
-                    const parts = room.image.split("/");
-                    const fileName = parts.pop();
-                    const folder = parts.pop();
-                    const publicId = `${folder}/${fileName.split(".")[0]}`;
+        if (req.files && req.files.length > 0) {
 
-                    await cloudinary.uploader.destroy(publicId);
-                } catch (err) {
-                    console.log("Cloudinary delete error:", err);
+            images = [];
+            videos = [];
+
+            req.files.forEach((file) => {
+
+                if (file.mimetype.startsWith("image")) {
+
+                    images.push(file.path);
+
+                } else if (file.mimetype.startsWith("video")) {
+
+                    videos.push(file.path);
+
                 }
-            }
 
-            imageUrl = req.file.path;
+            });
+
         }
 
         const updatedRoom = await Room.findByIdAndUpdate(
@@ -138,7 +194,8 @@ export const updateRoom = async (req, res) => {
                 description: req.body.description,
                 price: req.body.price,
                 location: req.body.location,
-                image: imageUrl,
+                images,
+                videos
             },
             { returnDocument: "after" }
         );
@@ -146,6 +203,12 @@ export const updateRoom = async (req, res) => {
         res.json(updatedRoom);
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.log(error);
+
+        res.status(500).json({
+            message: error.message
+        });
+
     }
+
 };

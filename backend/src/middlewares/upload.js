@@ -6,6 +6,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "rooms",
+    resource_type: "auto",
     allowed_formats: ["jpg", "png", "jpeg", "mp4", "mov"],
   },
 });

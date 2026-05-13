@@ -3,10 +3,14 @@ import mongoose from "mongoose";
 const roomSchema = new mongoose.Schema({
 
     title: String,
-    images : {
+    images: {
         type: [String],
         default: [],
         required: true
+    },
+    videos: {
+        type: [String],
+        default: []
     },
     description: String,
     price: Number,

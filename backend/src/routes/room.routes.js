@@ -66,7 +66,7 @@ router.put(
     "/rooms/:id",
     protect,
     authorizeRoles("owner", "admin"),
-    upload.single("image"),
+    upload.array("images", 10),
     updateRoom
 );
 

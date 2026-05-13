@@ -17,9 +17,9 @@ const Layout = ({ children }) => {
         <div className="flex flex-1">
 
           {/* Sidebar */}
-          <div className="w-64 backdrop-blur-md bg-white/10 border-r border-white/20 hidden md:block">
+          {/* <div className="w-64 backdrop-blur-md bg-white/10 border-r border-white/20 hidden md:block">
             <SideBar />
-          </div>
+          </div> */}
 
           {/* Main Content */}
           <main className="flex-1 p-6 text-white">

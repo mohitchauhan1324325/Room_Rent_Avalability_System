@@ -11,7 +11,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
       {rooms.map((room) => (
         <div
           key={room._id}
-          className="bg-pink-100 rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition duration-300 cursor-pointer"
+          className="bg-white/80 rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition duration-300 cursor-pointer"
           onClick={() => room.isAvailable && handleDetails(room._id)}
         >
 

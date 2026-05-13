@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <div className="h-full p-4 text-white backdrop-blur-md bg-white/10 border-r border-white/20">
+    <div className="absolute right-0 text-white backdrop-blur-md bg-white/10 border-r border-white/20">
 
       <h2 className="text-2xl font-bold mb-6 text-center">
         Room Rent

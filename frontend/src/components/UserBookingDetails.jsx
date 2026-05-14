@@ -27,9 +27,23 @@ const UserBookingDetails = ({ booking, deleteBooking }) => {
         </p>
 
         <p className="text-sm text-gray-600">
+          <span className="font-medium">Payment Status:</span> {booking?.paymentStatus}
+        </p>
+
+        <p className="text-sm text-gray-600">
           <span className="font-medium">Move-In:</span>{" "}
           {booking?.moveInDate &&
             new Date(booking?.moveInDate).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+        </p>
+
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Created At:</span>{" "}
+          {booking?.createdAt &&
+            new Date(booking?.createdAt).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
               year: "numeric",

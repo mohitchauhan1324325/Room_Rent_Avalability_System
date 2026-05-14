@@ -4,9 +4,15 @@ import { getRoomById } from "../api/roomApi.js";
 import Loader from "../components/Loader.jsx";
 import RoomDetails from "../components/RoomDetails.jsx";
 import { toast } from "react-toastify";
+import useRooms from "../hooks/useRooms.js";
 
 const RoomDetailsPage = () => {
   const { id } = useParams();
+
+  const {
+    handleEdit,
+    handleDelete
+  } = useRooms();
 
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,6 +66,8 @@ const RoomDetailsPage = () => {
 
   return <RoomDetails
     room={room}
+    handleDelete={handleDelete}
+    handleEdit={handleEdit}
   />;
 
 };

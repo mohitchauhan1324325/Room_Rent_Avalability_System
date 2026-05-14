@@ -64,7 +64,7 @@ const EditRoomsPage = () => {
 
       await updateRoom(id, data);
       toast.success("Room updated!");
-      navigate("/Rooms");
+      navigate(`/RoomDetails/${id}`);
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong!");

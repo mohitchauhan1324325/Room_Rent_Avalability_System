@@ -25,11 +25,10 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
 
             {/* Status Badge */}
             <span
-              className={`absolute top-2 right-2 px-2 py-1 text-xs rounded-lg shadow ${
-                room.isAvailable
-                  ? "bg-green-500 text-white"
-                  : "bg-red-500 text-white"
-              }`}
+              className={`absolute top-2 right-2 px-2 py-1 text-xs rounded-lg shadow ${room.isAvailable
+                ? "bg-green-500 text-white"
+                : "bg-red-500 text-white"
+                }`}
             >
               {room.isAvailable ? "Available" : "Booked"}
             </span>
@@ -75,31 +74,6 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
                 >
                   Booked
                 </button>
-              )}
-
-              {/* ADMIN / OWNER */}
-              {(role === "admin" || role === "owner") && (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(room._id);
-                    }}
-                    className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded-lg transition"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(room._id);
-                    }}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition"
-                  >
-                    Delete
-                  </button>
-                </>
               )}
 
             </div>

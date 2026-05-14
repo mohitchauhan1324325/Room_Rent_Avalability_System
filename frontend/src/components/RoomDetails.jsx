@@ -2,8 +2,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
+import { useNavigate } from "react-router-dom";
+import { getUserRole } from "../utils/auth";
 
-const RoomDetails = ({ room }) => {
+const RoomDetails = ({ room, handleDelete, handleEdit }) => {
+
+  const navigate = useNavigate();
+  const role = getUserRole();
+
   return (
     <div className="min-h-[80vh] p-6 flex justify-center items-center">
 
@@ -32,7 +38,7 @@ const RoomDetails = ({ room }) => {
           ))}
 
         </Swiper>
-        
+
         {/* videos */}
         {room.videos?.length > 0 && (
 
@@ -99,7 +105,34 @@ const RoomDetails = ({ room }) => {
             </p>
           </div>
 
+
+
         </div>
+
+        {/* ADMIN / OWNER */}
+        {(role === "admin" || role === "owner") && (
+          <>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEdit(room._id);
+              }}
+              className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded-lg transition"
+            >
+              Edit
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(room._id);
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition"
+            >
+              Delete
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

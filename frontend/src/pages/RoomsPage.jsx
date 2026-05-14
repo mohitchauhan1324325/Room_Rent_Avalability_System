@@ -14,8 +14,6 @@ const RoomsPage = () => {
     filteredRooms,
     setFilter,
     handleDeleteAllRooms,
-    handleDelete,
-    handleEdit,
     handleDetails,
     loading,
     error,
@@ -88,8 +86,6 @@ const RoomsPage = () => {
       ) : (
         <RoomCard
           rooms={filteredRooms}
-          handleDelete={handleDelete}
-          handleEdit={handleEdit}
           handleDetails={handleDetails}
         />
       )}

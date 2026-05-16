@@ -14,6 +14,7 @@ const RoomsPage = () => {
     filteredRooms,
     setFilter,
     handleDeleteAllRooms,
+    addToFavorite,
     handleDetails,
     loading,
     error,
@@ -87,6 +88,7 @@ const RoomsPage = () => {
         <RoomCard
           rooms={filteredRooms}
           handleDetails={handleDetails}
+          addToFavorite={addToFavorite}
         />
       )}
 

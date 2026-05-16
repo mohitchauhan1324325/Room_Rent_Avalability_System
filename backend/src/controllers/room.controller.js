@@ -2,6 +2,7 @@ import Room from "../models/rooms.models.js";
 import { Booking } from "../models/booking.models.js";
 import { User } from "../models/user.models.js";
 import cloudinary from "../config/cloudinary.js";
+import { Favorite } from "../models/favorite.model.js";
 
 export const addRoom = async (req, res) => {
 
@@ -81,6 +82,53 @@ export const deleteAllRooms = async (req, res) => {
     }
 };
 
+export const addFavoriteRooms = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const exists = await Favorite.findOne({
+      user: req.user.id,
+      room: id
+    });
+
+    if (exists) {
+      return res.status(400).json({
+        message: "Room already in favorites"
+      });
+    }
+
+    const favorite = await Favorite.create({
+      user: req.user.id,
+      room: id
+    });
+
+    res.status(201).json({
+      message: "Added to favorites",
+      favorite
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+}; 
+
+export const getMyFavoriteRooms = async (req, res) => {
+    try {
+        
+        const room = await Favorite.find();
+
+        res.status(201).json(room);
+
+    } catch (error) {
+        
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
 export const deleteRoomById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -128,20 +176,6 @@ export const deleteRoomById = async (req, res) => {
         await Room.findByIdAndDelete(id);
 
         res.json({ message: "Room deleted" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-export const getUsersBooking = async (req, res) => {
-    try {
-
-        const bookings = await Booking.find()
-            .populate("user", "name phone")
-            .populate("roomId", "title location");
-
-        res.status(200).json(bookings);
 
     } catch (error) {
         res.status(500).json({ message: error.message });

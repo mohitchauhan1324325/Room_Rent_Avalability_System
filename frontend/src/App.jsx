@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import UserBookingPage from './pages/UserBookingPage.jsx'
 import AdminPanelPage from './pages/AdminPanelPage.jsx'
 import OwnerRoomsPage from './pages/OwnerRoomsPage.jsx'
+import FavoriteRoomPage from './pages/FavoriteRoomPage.jsx'
 
 const App = () => {
 
@@ -41,6 +42,15 @@ const App = () => {
               }
             />
 
+            <Route
+            path="/favorite"
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <FavoriteRoomPage />
+              </ProtectedRoute>
+            }
+            />
+            
             <Route
               path="/AddRooms"
               element={

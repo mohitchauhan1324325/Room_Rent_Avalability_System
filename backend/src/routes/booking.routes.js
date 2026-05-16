@@ -1,5 +1,5 @@
 import express from "express";
-import { cancelBooking, cancelBookingByUser, confirmBooking, getMyBooking } from "../controllers/booking.controller.js";
+import { cancelBooking, cancelBookingByUser, confirmBooking, getUsersBooking, getMyBooking } from "../controllers/booking.controller.js";
 import protect from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
@@ -12,11 +12,20 @@ router.post(
     confirmBooking
 );
 
+//get user only booking
 router.get(
     "/myBooking",
     protect,
-    authorizeRoles("user", "owner", "admin"),
+    authorizeRoles("user"),
     getMyBooking
+);
+
+// get all booking rooms user data
+router.get(
+    "/booking",
+    protect,
+    authorizeRoles("owner", "admin"),
+    getUsersBooking
 );
 
 router.delete(

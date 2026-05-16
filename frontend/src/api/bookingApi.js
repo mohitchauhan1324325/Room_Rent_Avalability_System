@@ -12,7 +12,7 @@ export const bookRoom = async (data) => {
 
 export const getBookings = async () => {
     try {
-        const res = await api.get("/api/users");
+        const res = await api.get("/api/booking");
         return res.data;
 
     } catch (error) {

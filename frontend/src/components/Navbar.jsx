@@ -44,6 +44,13 @@ const Navbar = () => {
             </Link>
           )}
 
+          {/* USER */}
+          {role === "user" && (
+            <Link className="hover:text-blue-300" to="/favorite">
+              My Favorite
+            </Link>
+          )}
+
           {/* OWNER */}
           {role === "owner" && (
             <>

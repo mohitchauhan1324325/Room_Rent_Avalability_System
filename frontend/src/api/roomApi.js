@@ -28,6 +28,27 @@ export const createRoom = async (data) => {
     }
 };
 
+export const createFavoriteRoom = async (id) => {
+    try {
+        await api.post(`/api/favoriteRoom/${id}`);
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getMyFavoriteRooms = async () => {
+    try {
+        
+        const res = await api.get("/api/favoriteRooms");
+
+        return res.data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const deleteRoom = async (id) => {
     try {
         await api.delete(`/api/rooms/${id}`);

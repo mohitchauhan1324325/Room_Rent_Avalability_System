@@ -9,8 +9,9 @@ import {
     getRoomById,
     getRooms,
     deleteAllRooms,
-    getUsersBooking,
-    updateRoom
+    updateRoom,
+    addFavoriteRooms,
+    getMyFavoriteRooms
 } from "../controllers/room.controller.js";
 
 const router = express.Router();
@@ -24,6 +25,20 @@ router.post(
     addRoom
 );
 
+router.post(
+    "/favoriteRoom/:id",
+    protect,
+    authorizeRoles("user"),
+    addFavoriteRooms
+);
+
+router.get(
+    "/favoriteRooms",
+    protect,
+    authorizeRoles("user"),
+    getMyFavoriteRooms
+)
+
 // get all rooms data
 router.get(
     "/rooms",
@@ -35,15 +50,6 @@ router.get(
     "/rooms/:id",
     getRoomById
 );
-
-// get all booking rooms user data
-router.get(
-    "/users",
-    protect,
-    authorizeRoles("owner", "admin"),
-    getUsersBooking
-);
-
 
 // delete room by their id
 router.delete(

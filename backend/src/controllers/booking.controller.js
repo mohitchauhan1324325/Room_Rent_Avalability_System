@@ -75,9 +75,23 @@ export const getMyBooking = async (req, res) => {
       .populate("roomId")
       .populate("user");
 
-    res.json(bookings);
+    res.status(201).json(bookings);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch bookings" });
+  }
+};
+
+export const getUsersBooking = async (req, res) => {
+  try {
+
+    const bookings = await Booking.find()
+      .populate("user", "name phone")
+      .populate("roomId", "title location");
+
+    res.status(200).json(bookings);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -108,46 +122,46 @@ export const cancelBookingByUser = async (req, res) => {
 };
 
 export const cancelBooking = async (req, res) => {
-    try {
-        const booking = await Booking.findById(req.params.id);
+  try {
+    const booking = await Booking.findById(req.params.id);
 
-        if (!booking) {
-            return res.status(404).json({ message: "Booking not found" });
-        }
-
-        if (booking.status === "cancelled") {
-            return res.status(400).json({
-                message: "Booking is already cancelled",
-            });
-        }
-
-        if (req.user.role === "owner") {
-            const room = await Room.findById(booking.roomId);
-
-            if (!room || room.owner.toString() !== req.user.id) {
-                return res.status(403).json({
-                    message: "Unauthorized",
-                });
-            }
-        }
-
-        if (booking.paymentStatus === "paid") {
-            console.log("Refund process needed");
-        }
-
-        await Room.findByIdAndUpdate(
-            booking.roomId,
-            { isAvailable: true }
-        );
-
-        booking.status = "cancelled";
-        await booking.save();
-
-        res.status(200).json({
-            message: "Booking cancelled successfully",
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
     }
+
+    if (booking.status === "cancelled") {
+      return res.status(400).json({
+        message: "Booking is already cancelled",
+      });
+    }
+
+    if (req.user.role === "owner") {
+      const room = await Room.findById(booking.roomId);
+
+      if (!room || room.owner.toString() !== req.user.id) {
+        return res.status(403).json({
+          message: "Unauthorized",
+        });
+      }
+    }
+
+    if (booking.paymentStatus === "paid") {
+      console.log("Refund process needed");
+    }
+
+    await Room.findByIdAndUpdate(
+      booking.roomId,
+      { isAvailable: true }
+    );
+
+    booking.status = "cancelled";
+    await booking.save();
+
+    res.status(200).json({
+      message: "Booking cancelled successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

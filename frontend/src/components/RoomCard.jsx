@@ -24,7 +24,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails, addToFavorit
       {rooms.map((room) => (
         <Card
           key={room._id}
-          className="w-full h-full shadow-lg"
+          className="w-full h-[580px] flex flex-col shadow-lg"
         >
           <CardHeader floated={false} color="blue-gray"
             className="h-30"
@@ -33,7 +33,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails, addToFavorit
             <img
               src={room.images[0]}
               alt={room.title}
-              className="w-full h-52 object-coverr"
+              className="w-full h-[200px] object-coverr"
             />
 
             <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
@@ -66,15 +66,19 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails, addToFavorit
 
           </CardHeader>
           <CardBody
+            className="flex flex-col flex-1"
             onClick={() => room.isAvailable && handleDetails(room._id)}
           >
             <div className="mb-3 flex items-center justify-between">
               <Typography variant="h5" color="blue-gray" className="font-medium">
                 ₹{room.price}
               </Typography>
+
               <Typography
                 color="blue-gray"
                 className="flex items-center gap-1.5 font-normal"
+                type="button"
+                onClick={() => viewRating(room._id)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -90,12 +94,18 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails, addToFavorit
                 </svg>
                 5.0
               </Typography>
+              
             </div>
-            <Typography color="blue-gray" className="font-medium">
+            <Typography
+              color="blue-gray"
+              className="font-medium line-clamp-1"
+            >
               {room.title}
             </Typography>
 
-            <Typography color="gray">
+            <Typography color="gray"
+              className="line-clamp-3"
+            >
               {room.description}
             </Typography>
 

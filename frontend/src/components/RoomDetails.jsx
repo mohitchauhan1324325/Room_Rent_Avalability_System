@@ -107,7 +107,26 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
             </p>
           </div>
 
-
+          <Typography
+            color="blue-gray"
+            className="flex items-center gap-1.5 font-normal"
+            type="button"
+            onClick={() => viewRating(room._id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="-mt-0.5 h-5 w-5 text-yellow-700"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                clipRule="evenodd"
+              />
+            </svg>
+            5.0
+          </Typography>
 
         </div>
 
@@ -188,9 +207,14 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
         </div>
 
         <div className="bg-white/80 backdrop-blur-md w-[400px] h-[200px] p-4 max-w-3xl overflow-hidden">
-          <p className="text-2xl text-black h-20">
-            Posted by <strong className="text-blue-500">{room.owner}</strong>
-          </p>
+          <div className="flex gap-2">
+            <img className="w-10 h-10 rounded-full" src="/colored-logo.png" alt="Rounded avatar" />
+
+            <p className="text-2xl text-black h-20">
+              Posted by <strong className="text-blue-500">{room.owner}</strong>
+            </p>
+          </div>
+
           <CardFooter className="pt-3">
             <Button
               size="lg"

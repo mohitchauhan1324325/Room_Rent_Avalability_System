@@ -3,29 +3,36 @@ import Footer from "./Footer.jsx";
 
 const Layout = ({ children }) => {
   return (
-    <div className="relative min-h-screen bg-[url('/cover.jpg')] bg-cover bg-center bg-no-repeat">
+    <div className="relative min-h-screen">
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      {/* Background */}
+      <div
+        className="
+          absolute inset-0
+          bg-[url('/cover.jpg')]
+          bg-cover bg-center
+        "
+      />
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/50" />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex min-h-screen flex-col">
 
         <Navbar />
 
-        <div className="flex flex-1">
-
-          {/* Sidebar */}
-          {/* <div className="w-64 backdrop-blur-md bg-white/10 border-r border-white/20 hidden md:block">
-            <SideBar />
-          </div> */}
-
-          {/* Main Content */}
-          <main className="flex-1 p-6 text-white">
-            {children}
-          </main>
-
-        </div>
+        <main
+          className="
+            flex-1
+            px-4 py-4
+            sm:px-6 sm:py-6
+            md:px-8
+            text-white
+          "
+        >
+          {children}
+        </main>
 
         <Footer />
 

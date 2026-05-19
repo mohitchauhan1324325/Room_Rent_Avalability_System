@@ -4,72 +4,74 @@ import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
 import { getUserRole } from "../utils/auth";
+import useFavoriteRooms from "../hooks/useFavoriteRooms.js";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  Tooltip,
+  IconButton,
+  button,
+} from "@material-tailwind/react";
 
 const RoomDetails = ({ room, handleDelete, handleEdit }) => {
 
   const navigate = useNavigate();
   const role = getUserRole();
+  const { addToFavorite } = useFavoriteRooms();
 
   return (
-    <div className="min-h-[80vh] p-6 flex justify-center items-center">
+    <div className="min-h-[80vh] flex justify-center items-center gap-8">
+      <div className="bg-white/80 backdrop-blur-md max-w-3xl w-full overflow-hidden">
 
-      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg max-w-3xl w-full overflow-hidden hover:shadow-2xl transition">
-
-        {/* Image */}
-        <Swiper
-          modules={[Navigation]}
-          navigation={true}
-          spaceBetween={10}
-          slidesPerView={1}
-        >
-
-          {room.images.map((img, index) => (
-
-            <SwiperSlide key={index}>
-
-              <img
-                src={img}
-                alt=""
-                className="w-full h-64 object-cover"
-              />
-
-            </SwiperSlide>
-
-          ))}
-
-        </Swiper>
-
-        {/* videos */}
-        {room.videos?.length > 0 && (
-
+        <div>
+          {/* Image */}
           <Swiper
             modules={[Navigation]}
             navigation={true}
             spaceBetween={10}
             slidesPerView={1}
-            className="mt-4"
+            className="bg-black/80 overflow-hidden"
           >
-
-            {room.videos.map((video, index) => (
-
+            {room.images.map((img, index) => (
               <SwiperSlide key={index}>
-
-                <video
-                  controls
-                  className="w-full h-64 object-cover rounded-xl"
-                >
-
-                  <source src={video} type="video/mp4" />
-
-                </video>
-
+                <img
+                  src={img}
+                  alt=""
+                  className="w-full h-[400px] px-16 object-cover"
+                />
               </SwiperSlide>
-
             ))}
-
           </Swiper>
+        </div>
 
-        )}
+        <div>
+          {/* videos */}
+          {room.videos?.length > 0 && (
+            <Swiper
+              modules={[Navigation]}
+              navigation={true}
+              spaceBetween={10}
+              slidesPerView={1}
+              className="mt-4 bg-white/ px-4"
+            >
+
+              {room.videos.map((video, index) => (
+                <SwiperSlide key={index}>
+                  <video
+                    controls
+                    className="w-40 h-40 object-cover rounded-xl"
+                  >
+                    <source src={video} type="video/mp4" />
+                  </video>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+        </div>
 
         {/* Content */}
         <div className="p-6">
@@ -134,6 +136,84 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
           </>
         )}
       </div>
+
+      <div className="flex flex-col gap-4">
+        <div className="bg-white/80 backdrop-blur-md w-[400px] h-[200px] p-4 max-w-3xl overflow-hidden">
+          <div className="flex justify-between items-center h-10">
+            <h1 className="text-3xl font-bold text-black">
+              ₹{room.price}
+            </h1>
+
+            <IconButton
+              type="button"
+              size="sm"
+              color="red"
+              variant="text"
+              className="!absolute top-4 right-4 rounded-full z-50"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.nativeEvent.stopImmediatePropagation();
+
+                addToFavorite(room._id);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill={"currentColor"}
+                className="h-6 w-6"
+              >
+                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+              </svg>
+            </IconButton>
+          </div>
+
+          <div className="text-2xl text-black h-[80px]">
+            {room.title}
+          </div>
+
+          <div className="flex gap-20">
+            <p className="text-sm text-gray-800 w-60">
+              {room.location}
+            </p>
+
+            <Typography color="gray" className="text-sm ">
+              {new Date(room.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long"
+              })}
+            </Typography>
+          </div>
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-md w-[400px] h-[200px] p-4 max-w-3xl overflow-hidden">
+          <p className="text-2xl text-black h-20">
+            Posted by <strong className="text-blue-500">{room.owner}</strong>
+          </p>
+          <CardFooter className="pt-3">
+            <Button
+              size="lg"
+              fullWidth={true}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate("/booking", { state: room });
+              }}
+            >
+              Reserve
+            </Button>
+          </CardFooter>
+        </div>
+        <div className="bg-white/80 backdrop-blur-md w-[400px] h-[250px] p-4 max-w-3xl overflow-hidden">
+          <p className="text-2xl text-black">
+            Posted In
+          </p>
+          <p className="text-gray-800">
+            {room.location}
+          </p>
+        </div>
+      </div>
+
     </div>
   );
 };

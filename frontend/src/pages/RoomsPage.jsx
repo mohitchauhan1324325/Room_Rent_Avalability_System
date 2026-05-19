@@ -5,6 +5,7 @@ import EmptyState from "../components/EmptyState.jsx";
 import RoomCard from "../components/RoomCard.jsx";
 import Loader from "../components/Loader.jsx";
 import { getUserRole } from "../utils/auth.js";
+import useFavoriteRooms from "../hooks/useFavoriteRooms.js";
 
 const RoomsPage = () => {
   const navigate = useNavigate();
@@ -14,11 +15,14 @@ const RoomsPage = () => {
     filteredRooms,
     setFilter,
     handleDeleteAllRooms,
-    addToFavorite,
     handleDetails,
     loading,
     error,
   } = useRooms();
+  
+  const {
+    addToFavorite
+  } = useFavoriteRooms();
 
   if (loading) return <Loader />;
   if (error) return <p className="text-white text-center mt-10">{error}</p>;

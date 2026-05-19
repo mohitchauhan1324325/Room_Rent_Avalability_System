@@ -16,7 +16,6 @@ const useRooms = () => {
   const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
-  const [favorite, setFavorite] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,49 +42,6 @@ const useRooms = () => {
   const handleDetails = (id) => {
     navigate(`/RoomDetails/${id}`);
   };
-
-  const addToFavorite = async (id) => {
-    try {
-      setLoading(true);
-
-      await createFavoriteRoom(id);
-
-      const res = await getMyFavoriteRooms();
-
-      setFavorite(res);
-
-      toast.success("Added to favorites");
-
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-        "Failed to add favorite"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-
-    const fetchFavoriteRoom = async () => {
-      try {
-        setLoading(true);
-
-        const res = await getMyFavoriteRooms();
-
-        setFavorite(res);
-
-      } catch (error) {
-        toast.error("Failed to load favorites");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFavoriteRoom();
-
-  }, []);
 
   const handleDeleteAllRooms = async () => {
 
@@ -173,10 +129,8 @@ const useRooms = () => {
 
   return {
     rooms,
-    favorite,
     filteredRooms,
     setFilter,
-    addToFavorite,
     handleDeleteAllRooms,
     handleDelete,
     handleEdit,

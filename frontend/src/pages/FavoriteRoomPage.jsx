@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import FavoriteLists from '../components/FavoriteLists'
-import { getMyFavoriteRooms } from '../api/roomApi';
-import useRooms from '../hooks/useRooms';
-import Loader from '../components/Loader';
+import FavoriteLists from '../components/FavoriteLists.jsx'
+import Loader from '../components/Loader.jsx';
+import useFavoriteRooms from '../hooks/useFavoriteRooms.js';
 
 const FavoriteRoomPage = () => {
 
@@ -10,7 +9,7 @@ const FavoriteRoomPage = () => {
     favorite,
     loading,
     error
-  } = useRooms();
+  } = useFavoriteRooms();
 
   if(loading) return <Loader />
   if (error) return <p className="text-white text-center mt-10">{error}</p>;

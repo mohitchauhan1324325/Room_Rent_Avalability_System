@@ -83,46 +83,48 @@ export const deleteAllRooms = async (req, res) => {
 };
 
 export const addFavoriteRooms = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const exists = await Favorite.findOne({
-      user: req.user.id,
-      room: id
-    });
+        const exists = await Favorite.findOne({
+            user: req.user.id,
+            room: id
+        });
 
-    if (exists) {
-      return res.status(400).json({
-        message: "Room already in favorites"
-      });
+        if (exists) {
+            return res.status(400).json({
+                message: "Room already in favorites"
+            });
+        }
+
+        const favorite = await Favorite.create({
+            user: req.user.id,
+            room: id
+        });
+
+        res.status(201).json({
+            message: "Added to favorites",
+            favorite
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
     }
-
-    const favorite = await Favorite.create({
-      user: req.user.id,
-      room: id
-    });
-
-    res.status(201).json({
-      message: "Added to favorites",
-      favorite
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
-  }
-}; 
+};
 
 export const getMyFavoriteRooms = async (req, res) => {
     try {
-        
-        const room = await Favorite.find();
+        const userId = req.user.id;
 
-        res.status(201).json(room);
+        const room = await Favorite.find({
+            user: userId
+        }).populate("room");
+
+        res.status(200).json(room);
 
     } catch (error) {
-        
         res.status(500).json({
             message: error.message
         });

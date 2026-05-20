@@ -49,16 +49,30 @@ export const addRoom = async (req, res) => {
 
 export const getRooms = async (req, res) => {
     try {
-        const rooms = await Room.find();
+
+        const page = Number(req.query.page) || 1;
+        const limit = 10;
+
+        const rooms = await Room.find()
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean();
+
         res.status(200).json(rooms);
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
 export const getRoomById = async (req, res) => {
     try {
-        const room = await Room.findById(req.params.id);
+        const room = await Room
+            .findById(req.params.id)
+            .lean();
         if (!room) {
             return res.status(400).json({ message: "Room not found" });
         }
@@ -84,35 +98,31 @@ export const deleteAllRooms = async (req, res) => {
 
 export const addFavoriteRooms = async (req, res) => {
     try {
-        const { id } = req.params;
 
-        const exists = await Favorite.findOne({
-            user: req.user.id,
-            room: id
-        });
-
-        if (exists) {
-            return res.status(400).json({
-                message: "Room already in favorites"
+        const favorite =
+            await Favorite.create({
+                user: req.user.id,
+                room: req.params.id
             });
-        }
-
-        const favorite = await Favorite.create({
-            user: req.user.id,
-            room: id
-        });
 
         res.status(201).json({
-            message: "Added to favorites",
+            message: "Added",
             favorite
         });
 
     } catch (error) {
+
+        if (error.code === 11000) {
+            return res.status(400).json({
+                message: "Already favorite"
+            });
+        }
+
         res.status(500).json({
             message: error.message
         });
     }
-};
+}
 
 export const getMyFavoriteRooms = async (req, res) => {
     try {
@@ -120,7 +130,12 @@ export const getMyFavoriteRooms = async (req, res) => {
 
         const room = await Favorite.find({
             user: userId
-        }).populate("room");
+        })
+            .populate(
+                "room",
+                "title price images location"
+            )
+            .lean();
 
         res.status(200).json(room);
 
@@ -135,7 +150,9 @@ export const deleteRoomById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const room = await Room.findById(id);
+        const room = await Room
+            .findById(id)
+            .lean();
 
         if (!room) {
             return res.status(404).json({ message: "Room not found" });
@@ -174,7 +191,9 @@ export const deleteRoomById = async (req, res) => {
 
         }
 
-        await Booking.deleteMany({ room: id });
+        await Booking.deleteMany({
+            roomId: id
+        });
         await Room.findByIdAndDelete(id);
 
         res.json({ message: "Room deleted" });
@@ -190,7 +209,9 @@ export const updateRoom = async (req, res) => {
 
         const { id } = req.params;
 
-        const room = await Room.findById(id);
+        const room = await Room
+            .findById(id)
+            .lean();
 
         if (!room) {
             return res.status(404).json({
@@ -207,7 +228,7 @@ export const updateRoom = async (req, res) => {
             images = [];
             videos = [];
 
-            req.files.forEach((file) => {
+            req.files?.forEach((file) => {
 
                 if (file.mimetype.startsWith("image")) {
 
@@ -223,18 +244,21 @@ export const updateRoom = async (req, res) => {
 
         }
 
-        const updatedRoom = await Room.findByIdAndUpdate(
-            id,
-            {
-                title: req.body.title,
-                description: req.body.description,
-                price: req.body.price,
-                location: req.body.location,
-                images,
-                videos
-            },
-            { returnDocument: "after" }
-        );
+        const updateData = {
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            location: req.body.location,
+            images,
+            videos
+        };
+
+        const updatedRoom =
+            await Room.findByIdAndUpdate(
+                id,
+                updateData,
+                { new: true }
+            );
 
         res.json(updatedRoom);
 

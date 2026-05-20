@@ -20,25 +20,48 @@ const bookingSchema = new mongoose.Schema({
     },
 
     paymentId: {
-        type: String
+        type: String,
+        unique: true
     },
 
     orderId: {
-        type: String
+        type: String,
+        unique: true
     },
 
     paymentStatus: {
         type: String,
-        enum: ["pending", "paid", "failed"],
+        enum: ["pending","paid","failed"],
         default: "pending"
     },
 
     status: {
         type: String,
-        enum: ["confirmed", "cancelled"],
-        default: "confirmed",
+        enum: ["confirmed","cancelled"],
+        default: "confirmed"
     }
 
-}, { timestamps: true });
+}, { timestamps:true });
 
-export const Booking = mongoose.model("Booking", bookingSchema);
+
+// room booking searches
+bookingSchema.index({
+    roomId:1
+});
+
+
+// user booking history +
+// confirmed booking +
+// latest first
+bookingSchema.index({
+    user:1,
+    status:1,
+    createdAt:-1
+});
+
+
+export const Booking =
+mongoose.model(
+    "Booking",
+    bookingSchema
+);

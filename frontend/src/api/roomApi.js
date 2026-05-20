@@ -21,8 +21,8 @@ export const getRoomById = async (id) => {
 
 export const createRoom = async (data) => {
     try {
-        await api.post("/api/rooms", data);
-
+        const res = await api.post("/api/rooms", data);
+        return res.data;
     } catch (error) {
         throw error;
     }
@@ -30,12 +30,12 @@ export const createRoom = async (data) => {
 
 export const createFavoriteRoom = async (id) => {
     try {
-        await api.post(`/api/favoriteRoom/${id}`);
-
+        const res = await api.post(`/api/favoriteRoom/${id}`);
+        return res.data;
     } catch (error) {
         throw error;
     }
-}
+};
 
 export const getMyFavoriteRooms = async () => {
     try {

@@ -16,10 +16,12 @@ export const logout = () => {
 
 // Get full user (from storage)
 export const getUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
 };
 
 // Get role directly
 export const getUserRole = () => {
-  return getUser()?.role;
+  const user = getUser();
+  return user?.role || null;
 };

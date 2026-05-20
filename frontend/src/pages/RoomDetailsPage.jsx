@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getRoomById } from "../api/roomApi.js";
-import Loader from "../components/Loader.jsx";
-import RoomDetails from "../components/RoomDetails.jsx";
+import { getRoomById } from "../api/roomApi";
+import Loader from "../components/Loader";
+import RoomDetails from "../components/RoomDetails";
 import { toast } from "react-toastify";
-import useRooms from "../hooks/useRooms.js";
+import useRooms from "../hooks/useRooms";
+import { getUser } from "../utils/auth";
 
 const RoomDetailsPage = () => {
   const { id } = useParams();
@@ -18,7 +19,7 @@ const RoomDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getUser();
 
   useEffect(() => {
     const fetchDetails = async () => {

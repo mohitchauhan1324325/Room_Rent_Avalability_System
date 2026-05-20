@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import FavoriteLists from '../components/FavoriteLists.jsx'
-import Loader from '../components/Loader.jsx';
-import useFavoriteRooms from '../hooks/useFavoriteRooms.js';
+import FavoriteLists from '../components/FavoriteLists'
+import Loader from '../components/Loader';
+import useFavoriteRooms from '../hooks/useFavoriteRooms';
 
 const FavoriteRoomPage = () => {
 

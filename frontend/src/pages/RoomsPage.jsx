@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import RoomsFilter from "../components/RoomsFilter.jsx";
-import useRooms from "../hooks/useRooms.js";
-import EmptyState from "../components/EmptyState.jsx";
-import RoomCard from "../components/RoomCard.jsx";
-import Loader from "../components/Loader.jsx";
-import { getUserRole } from "../utils/auth.js";
-import useFavoriteRooms from "../hooks/useFavoriteRooms.js";
+import RoomsFilter from "../components/RoomsFilter";
+import useRooms from "../hooks/useRooms";
+import EmptyState from "../components/EmptyState";
+import RoomCard from "../components/RoomCard";
+import Loader from "../components/Loader";
+import { getUserRole } from "../utils/auth";
+import useFavoriteRooms from "../hooks/useFavoriteRooms";
 
 const RoomsPage = () => {
   const navigate = useNavigate();

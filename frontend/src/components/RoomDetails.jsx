@@ -4,7 +4,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
 import { getUserRole } from "../utils/auth";
-import useFavoriteRooms from "../hooks/useFavoriteRooms.js";
+import useFavoriteRooms from "../hooks/useFavoriteRooms";
 import {
   Card,
   CardHeader,

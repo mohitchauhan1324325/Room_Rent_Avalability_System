@@ -4,6 +4,7 @@ import {
   getMyFavoriteRooms,
   createFavoriteRoom
 } from "../api/roomApi";
+import { isAuthenticated } from "../utils/auth";
 
 const useFavoriteRooms = () => {
   const [favorite, setFavorite] = useState([]);
@@ -28,6 +29,11 @@ const useFavoriteRooms = () => {
   const addToFavorite = async (id) => {
     try {
       setLoading(true);
+
+      if(!isAuthenticated()){
+        toast.error("Please login first");
+        return;
+      }
 
       await createFavoriteRoom(id);
 

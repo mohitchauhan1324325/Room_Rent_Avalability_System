@@ -19,10 +19,6 @@ const RoomsPage = () => {
     loading,
     error,
   } = useRooms();
-  
-  const {
-    addToFavorite
-  } = useFavoriteRooms();
 
   if (loading) return <Loader />;
   if (error) return <p className="text-white text-center mt-10">{error}</p>;
@@ -92,7 +88,6 @@ const RoomsPage = () => {
         <RoomCard
           rooms={filteredRooms}
           handleDetails={handleDetails}
-          addToFavorite={addToFavorite}
         />
       )}
 

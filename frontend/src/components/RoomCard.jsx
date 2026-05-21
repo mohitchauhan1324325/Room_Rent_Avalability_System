@@ -12,9 +12,11 @@ import {
   IconButton,
   button,
 } from "@material-tailwind/react";
+import useFavoriteRooms from "../hooks/useFavoriteRooms";
 
-const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails, addToFavorite }) => {
+const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
 
+  const { addToFavorite } = useFavoriteRooms();
   const navigate = useNavigate();
   const role = getUserRole();
 

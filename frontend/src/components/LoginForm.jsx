@@ -13,7 +13,7 @@ const LoginForm = ({ handleChange, handleLogin }) => {
           name="email"
           placeholder="Email"
           onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 mb-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <input
@@ -21,12 +21,12 @@ const LoginForm = ({ handleChange, handleLogin }) => {
           name="password"
           placeholder="Password"
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 mb-4 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <button
           onClick={handleLogin}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-200 font-medium"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-black py-2 rounded-lg transition duration-200 font-medium"
         >
           Login
         </button>

@@ -14,7 +14,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="title"
         placeholder="Room Title"
         onChange={handleChange}
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -24,7 +24,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         multiple={true}
         accept="image/*,video/*"
         onChange={handleChange}
-        className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 
+        className="w-full text-sm text-black file:mr-4 file:py-2 file:px-4 
                    file:rounded-lg file:border-0 
                    file:bg-blue-500 file:text-white 
                    hover:file:bg-blue-600 cursor-pointer"
@@ -35,7 +35,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="description"
         placeholder="Description"
         onChange={handleChange}
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -44,7 +44,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="price"
         placeholder="Price (₹)"
         onChange={handleChange}
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -53,7 +53,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="location"
         placeholder="Location"
         onChange={handleChange}
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -62,7 +62,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="owner"
         placeholder="Owner Name"
         onChange={handleChange}
-        className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <button

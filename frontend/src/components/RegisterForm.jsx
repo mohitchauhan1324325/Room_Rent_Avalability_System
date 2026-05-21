@@ -15,7 +15,7 @@ const RegisterForm = ({ handleChange, handleRegister }) => {
           name="name"
           placeholder="Name"
           onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full p-2 mb-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
         />
 
         <input
@@ -23,7 +23,7 @@ const RegisterForm = ({ handleChange, handleRegister }) => {
           name="email"
           placeholder="Email"
           onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full p-2 mb-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
         />
 
         <input
@@ -31,7 +31,7 @@ const RegisterForm = ({ handleChange, handleRegister }) => {
           name="password"
           placeholder="Password"
           onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full p-2 mb-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
         />
 
         <input
@@ -39,13 +39,13 @@ const RegisterForm = ({ handleChange, handleRegister }) => {
           name="phone"
           placeholder="Phone Number"
           onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full p-2 mb-3 rounded border border-gray-300 focus:outline-none text-black focus:ring-2 focus:ring-green-500"
         />
 
         <select
           name="role"
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full p-2 mb-4 rounded border border-gray-300 focus:outline-none text-black focus:ring-2 focus:ring-green-500"
         >
           <option value="user">User</option>
           <option value="owner">Owner</option>
@@ -53,7 +53,7 @@ const RegisterForm = ({ handleChange, handleRegister }) => {
 
         <button
           onClick={handleRegister}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition duration-200 font-medium"
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition text-black duration-200 font-medium"
         >
           Register
         </button>

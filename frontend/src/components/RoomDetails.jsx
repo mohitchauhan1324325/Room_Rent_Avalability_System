@@ -24,8 +24,10 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
   const { addToFavorite } = useFavoriteRooms();
 
   return (
-    <div className="min-h-[80vh] flex justify-center items-center gap-8">
-      <div className="bg-white/80 backdrop-blur-md max-w-3xl w-full overflow-hidden">
+
+    <div className="min-h-[80vh] flex flex-col lg:flex-row justify-center items-start gap-6 p-4">
+
+      <div className="bg-white/80 backdrop-blur-md max-w-3xl w-full overflow-hidden rounded-xl">
 
         <div>
           {/* Image */}
@@ -41,7 +43,7 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
                 <img
                   src={img}
                   alt=""
-                  className="w-full h-[400px] px-16 object-cover"
+                  className="w-full h-[220px] sm:h-[300px] md:h-[400px] object-cover"
                 />
               </SwiperSlide>
             ))}
@@ -156,8 +158,8 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
         )}
       </div>
 
-      <div className="flex flex-col gap-4">
-        <div className="bg-white/80 backdrop-blur-md w-[400px] h-[200px] p-4 max-w-3xl overflow-hidden">
+      <div className="w-full lg:w-[400px] flex flex-col gap-4">
+        <div className="bg-white/80 backdrop-blur-md w-full lg:w-[400px] h-[200px] p-4 overflow-hidden rounded-xl">
           <div className="flex justify-between items-center h-10">
             <h1 className="text-3xl font-bold text-black">
               ₹{room.price}
@@ -206,7 +208,7 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md w-[400px] h-[200px] p-4 max-w-3xl overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-md w-full lg:w-[400px] h-[200px] p-4 overflow-hidden rounded-xl">
           <div className="flex gap-2">
             <img className="w-10 h-10 rounded-full" src="/colored-logo.png" alt="Rounded avatar" />
 
@@ -216,19 +218,32 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
           </div>
 
           <CardFooter className="pt-3">
-            <Button
-              size="lg"
-              fullWidth={true}
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate("/booking", { state: room });
-              }}
-            >
-              Reserve
-            </Button>
+
+            {room.isAvailable ? (
+              <Button
+                size="lg"
+                fullWidth={true}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/booking", { state: room });
+                }}
+              >
+                Reserve
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                fullWidth={true}
+                disabled
+              >
+                Booked
+              </Button>
+            )}
+
           </CardFooter>
         </div>
-        <div className="bg-white/80 backdrop-blur-md w-[400px] h-[250px] p-4 max-w-3xl overflow-hidden">
+
+        <div className="bg-white/80 backdrop-blur-md w-full lg:w-[400px] h-[250px] p-4 overflow-hidden rounded-xl">
           <p className="text-2xl text-black">
             Posted In
           </p>

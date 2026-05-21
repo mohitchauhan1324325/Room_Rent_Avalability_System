@@ -69,7 +69,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
           </CardHeader>
           <CardBody
             className="flex flex-col flex-1"
-            onClick={() => room.isAvailable && handleDetails(room._id)}
+            onClick={() => handleDetails(room._id)}
           >
             <div className="mb-3 flex items-center justify-between">
               <Typography variant="h5" color="blue-gray" className="font-medium">

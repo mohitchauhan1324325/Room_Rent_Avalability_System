@@ -30,7 +30,7 @@ const RoomCard = ({ rooms, handleDelete, handleEdit, handleDetails }) => {
         >
           <CardHeader floated={false} color="blue-gray"
             className="h-30"
-            onClick={() => room.isAvailable && handleDetails(room._id)}
+            onClick={() => handleDetails(room._id)}
           >
             <img
               src={room.images[0]}

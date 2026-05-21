@@ -30,11 +30,6 @@ const useFavoriteRooms = () => {
     try {
       setLoading(true);
 
-      if(!isAuthenticated()){
-        toast.error("Please login first");
-        return;
-      }
-
       await createFavoriteRoom(id);
 
       await fetchFavoriteRoom();
@@ -48,14 +43,13 @@ const useFavoriteRooms = () => {
     }
   };
 
-  useEffect(() => {
-    fetchFavoriteRoom();
-  }, []);
-
   return {
     favorite,
     addToFavorite,
+    fetchFavoriteRoom,
+    setLoading,
     loading,
+    setError,
     error,
   };
 };

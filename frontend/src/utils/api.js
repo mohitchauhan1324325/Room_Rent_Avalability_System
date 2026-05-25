@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 });
 
-
 // attach token
 api.interceptors.request.use(
   (config) => {
@@ -18,7 +17,6 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );    
-
 
 // handle expired/invalid token
 api.interceptors.response.use(

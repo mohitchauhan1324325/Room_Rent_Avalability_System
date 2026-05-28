@@ -2,124 +2,165 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
+
 import { useNavigate } from "react-router-dom";
 import { getUserRole } from "../utils/auth";
 import useFavoriteRooms from "../hooks/useFavoriteRooms.js";
+
 import {
-  Card,
-  CardHeader,
-  CardBody,
   CardFooter,
   Typography,
   Button,
-  Tooltip,
   IconButton,
-  button,
 } from "@material-tailwind/react";
 
-const RoomDetails = ({ room, handleDelete, handleEdit }) => {
+const RoomDetails = ({
+  room,
+  handleDelete,
+  handleEdit,
+}) => {
 
   const navigate = useNavigate();
+
   const role = getUserRole();
+
   const { addToFavorite } = useFavoriteRooms();
 
   return (
 
     <div className="min-h-[80vh] flex flex-col lg:flex-row justify-center items-start gap-6 p-4">
 
-      <div className="bg-white/80 backdrop-blur-md max-w-3xl w-full overflow-hidden rounded-xl">
+      {/* LEFT */}
+      <div
+        className="
+          bg-white/80 dark:bg-gray-900/80
+          backdrop-blur-md
+          border border-gray-200 dark:border-gray-700
+          shadow-xl
+          max-w-3xl w-full
+          overflow-hidden rounded-2xl
+        "
+      >
 
-        <div>
-          {/* Image */}
+        {/* IMAGE SWIPER */}
+        <Swiper
+          modules={[Navigation]}
+          navigation={true}
+          spaceBetween={10}
+          slidesPerView={1}
+          className="bg-black overflow-hidden"
+        >
+
+          {room.images.map((img, index) => (
+
+            <SwiperSlide key={index}>
+
+              <img
+                src={img}
+                alt=""
+                className="w-full h-[220px] sm:h-[300px] md:h-[400px] object-cover"
+              />
+
+            </SwiperSlide>
+          ))}
+
+        </Swiper>
+
+        {/* VIDEO SWIPER */}
+        {room.videos?.length > 0 && (
+
           <Swiper
             modules={[Navigation]}
             navigation={true}
             spaceBetween={10}
             slidesPerView={1}
-            className="bg-black/80 overflow-hidden"
+            className="mt-4 px-4"
           >
-            {room.images.map((img, index) => (
+
+            {room.videos.map((video, index) => (
+
               <SwiperSlide key={index}>
-                <img
-                  src={img}
-                  alt=""
-                  className="w-full h-[220px] sm:h-[300px] md:h-[400px] object-cover"
-                />
+
+                <video
+                  controls
+                  className="w-full h-[250px] object-cover rounded-xl"
+                >
+                  <source src={video} type="video/mp4" />
+                </video>
+
               </SwiperSlide>
             ))}
+
           </Swiper>
-        </div>
+        )}
 
-        <div>
-          {/* videos */}
-          {room.videos?.length > 0 && (
-            <Swiper
-              modules={[Navigation]}
-              navigation={true}
-              spaceBetween={10}
-              slidesPerView={1}
-              className="mt-4 bg-white/ px-4"
-            >
-
-              {room.videos.map((video, index) => (
-                <SwiperSlide key={index}>
-                  <video
-                    controls
-                    className="w-40 h-40 object-cover rounded-xl"
-                  >
-                    <source src={video} type="video/mp4" />
-                  </video>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
-        </div>
-
-        {/* Content */}
+        {/* CONTENT */}
         <div className="p-6">
 
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">
+          {/* TITLE */}
+          <div className="flex justify-between items-center gap-4">
+
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
               {room.title}
             </h1>
 
             <span
-              className={`px-3 py-1 rounded-lg text-sm shadow ${room.isAvailable
-                ? "bg-green-500 text-white"
-                : "bg-red-500 text-white"
-                }`}
+              className={`
+                px-3 py-1 rounded-lg text-sm shadow text-white
+                ${room.isAvailable
+                  ? "bg-green-500"
+                  : "bg-red-500"}
+              `}
             >
               {room.isAvailable ? "Available" : "Booked"}
             </span>
+
           </div>
 
-          <p className="text-gray-600 mt-3 leading-relaxed">
+          {/* DESCRIPTION */}
+          <p className="text-gray-600 dark:text-gray-300 mt-3 leading-relaxed">
             {room.description}
           </p>
 
-          <div className="mt-5 space-y-2 text-gray-700">
+          {/* DETAILS */}
+          <div className="mt-5 space-y-2 text-gray-700 dark:text-gray-300">
+
             <p>
-              <strong className="text-gray-800">Price:</strong> ₹ {room.price}
+              <strong className="text-gray-800 dark:text-white">
+                Price:
+              </strong>{" "}
+              ₹ {room.price}
             </p>
+
             <p>
-              <strong className="text-gray-800">Location:</strong> {room.location}
+              <strong className="text-gray-800 dark:text-white">
+                Location:
+              </strong>{" "}
+              {room.location}
             </p>
+
             <p>
-              <strong className="text-gray-800">Owner:</strong> {room.owner}
+              <strong className="text-gray-800 dark:text-white">
+                Owner:
+              </strong>{" "}
+              {room.owner}
             </p>
+
           </div>
 
+          {/* RATING */}
           <Typography
-            color="blue-gray"
-            className="flex items-center gap-1.5 font-normal"
-            type="button"
-            onClick={() => viewRating(room._id)}
+            className="
+              flex items-center gap-1.5 font-normal mt-4
+              text-gray-700 dark:text-gray-300
+            "
           >
+
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="-mt-0.5 h-5 w-5 text-yellow-700"
+              className="-mt-0.5 h-5 w-5 text-yellow-500"
             >
               <path
                 fillRule="evenodd"
@@ -127,20 +168,28 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
                 clipRule="evenodd"
               />
             </svg>
+
             5.0
+
           </Typography>
 
         </div>
 
         {/* ADMIN / OWNER */}
         {(role === "admin" || role === "owner") && (
-          <>
+
+          <div className="flex gap-4 p-6 pt-0">
+
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleEdit(room._id);
               }}
-              className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded-lg transition"
+              className="
+                bg-yellow-400 hover:bg-yellow-500
+                text-black
+                px-4 py-2 rounded-lg transition
+              "
             >
               Edit
             </button>
@@ -150,27 +199,50 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
                 e.stopPropagation();
                 handleDelete(room._id);
               }}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition"
+              className="
+                bg-red-500 hover:bg-red-600
+                text-white
+                px-4 py-2 rounded-lg transition
+              "
             >
               Delete
             </button>
-          </>
+
+          </div>
         )}
+
       </div>
 
+      {/* RIGHT SIDEBAR */}
       <div className="w-full lg:w-[400px] flex flex-col gap-4">
-        <div className="bg-white/80 backdrop-blur-md w-full lg:w-[400px] h-[200px] p-4 overflow-hidden rounded-xl">
-          <div className="flex justify-between items-center h-10">
-            <h1 className="text-3xl font-bold text-black">
+
+        {/* PRICE CARD */}
+        <div
+          className="
+            relative
+            bg-white/80 dark:bg-gray-900/80
+            backdrop-blur-md
+            border border-gray-200 dark:border-gray-700
+            shadow-lg
+            w-full h-[200px]
+            p-4 rounded-2xl
+          "
+        >
+
+          <div className="flex justify-between items-center">
+
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
               ₹{room.price}
             </h1>
 
             <IconButton
               type="button"
               size="sm"
-              color="red"
               variant="text"
-              className="!absolute top-4 right-4 rounded-full z-50"
+              className="
+                rounded-full
+                bg-black/20 dark:bg-black/40
+              "
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -179,58 +251,90 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
                 addToFavorite(room._id);
               }}
             >
+
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill={"currentColor"}
-                className="h-6 w-6"
+                className="h-6 w-6 text-red-500"
               >
                 <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
               </svg>
+
             </IconButton>
+
           </div>
 
-          <div className="text-2xl text-black h-[80px]">
+          <div className="text-2xl text-gray-800 dark:text-white mt-4">
             {room.title}
           </div>
 
-          <div className="flex gap-20">
-            <p className="text-sm text-gray-800 w-60">
+          <div className="flex justify-between items-center mt-6 gap-4">
+
+            <p className="text-sm text-gray-700 dark:text-gray-300">
               {room.location}
             </p>
 
-            <Typography color="gray" className="text-sm ">
+            <Typography className="text-sm text-gray-600 dark:text-gray-400">
               {new Date(room.createdAt).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "long"
               })}
             </Typography>
+
           </div>
+
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md w-full lg:w-[400px] h-[200px] p-4 overflow-hidden rounded-xl">
-          <div className="flex gap-2">
-            <img className="w-10 h-10 rounded-full" src="/colored-logo.png" alt="Rounded avatar" />
+        {/* OWNER CARD */}
+        <div
+          className="
+            bg-white/80 dark:bg-gray-900/80
+            backdrop-blur-md
+            border border-gray-200 dark:border-gray-700
+            shadow-lg
+            w-full
+            p-4 rounded-2xl
+          "
+        >
 
-            <p className="text-2xl text-black h-20">
-              Posted by <strong className="text-blue-500">{room.owner}</strong>
+          <div className="flex gap-3 items-center">
+
+            <img
+              className="w-12 h-12 rounded-full"
+              src="/colored-logo.png"
+              alt="avatar"
+            />
+
+            <p className="text-lg text-gray-800 dark:text-white">
+              Posted by{" "}
+              <strong className="text-blue-500">
+                {room.owner}
+              </strong>
             </p>
+
           </div>
 
-          <CardFooter className="pt-3">
+          <CardFooter className="pt-6 px-0 pb-0">
 
             {room.isAvailable ? (
+
               <Button
                 size="lg"
                 fullWidth={true}
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate("/booking", { state: room });
+
+                  navigate("/booking", {
+                    state: room,
+                  });
                 }}
               >
                 Reserve
               </Button>
+
             ) : (
+
               <Button
                 size="lg"
                 fullWidth={true}
@@ -238,19 +342,35 @@ const RoomDetails = ({ room, handleDelete, handleEdit }) => {
               >
                 Booked
               </Button>
+
             )}
 
           </CardFooter>
+
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md w-full lg:w-[400px] h-[250px] p-4 overflow-hidden rounded-xl">
-          <p className="text-2xl text-black">
+        {/* LOCATION CARD */}
+        <div
+          className="
+            bg-white/80 dark:bg-gray-900/80
+            backdrop-blur-md
+            border border-gray-200 dark:border-gray-700
+            shadow-lg
+            w-full
+            p-4 rounded-2xl
+          "
+        >
+
+          <p className="text-2xl font-semibold text-gray-800 dark:text-white">
             Posted In
           </p>
-          <p className="text-gray-800">
+
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
             {room.location}
           </p>
+
         </div>
+
       </div>
 
     </div>

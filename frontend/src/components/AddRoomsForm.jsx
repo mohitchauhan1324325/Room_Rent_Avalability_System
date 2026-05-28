@@ -2,10 +2,10 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
   return (
     <form
       onSubmit={handleAddRooms}
-      className="max-w-md mx-auto bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg space-y-4"
+      className="max-w-md mx-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-md p-6 rounded-xl shadow-lg space-y-4 border border-gray-200 dark:border-gray-700"
     >
 
-      <h2 className="text-2xl font-bold text-gray-800 text-center">
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         Add New Room
       </h2>
 
@@ -14,7 +14,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="title"
         placeholder="Room Title"
         onChange={handleChange}
-        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -24,7 +24,8 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         multiple={true}
         accept="image/*,video/*"
         onChange={handleChange}
-        className="w-full text-sm text-black file:mr-4 file:py-2 file:px-4 
+        className="w-full text-sm text-black dark:text-white 
+                   file:mr-4 file:py-2 file:px-4 
                    file:rounded-lg file:border-0 
                    file:bg-blue-500 file:text-white 
                    hover:file:bg-blue-600 cursor-pointer"
@@ -35,7 +36,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="description"
         placeholder="Description"
         onChange={handleChange}
-        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -44,7 +45,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="price"
         placeholder="Price (₹)"
         onChange={handleChange}
-        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -53,7 +54,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="location"
         placeholder="Location"
         onChange={handleChange}
-        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
 
@@ -62,7 +63,7 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
         name="owner"
         placeholder="Owner Name"
         onChange={handleChange}
-        className="w-full p-2 rounded border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded border text-black dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <button

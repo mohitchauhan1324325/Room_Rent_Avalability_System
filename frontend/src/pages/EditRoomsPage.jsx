@@ -40,8 +40,8 @@ const EditRoomsPage = () => {
     setRoom({
       ...room,
       [name]: type === "file"
-      ? Array.from(files)
-      : value
+        ? Array.from(files)
+        : value
     });
   };
 
@@ -57,7 +57,7 @@ const EditRoomsPage = () => {
       data.append("price", room.price);
       data.append("location", room.location);
       data.append("description", room.description);
-      
+
       room.images.forEach((image) => {
         data.append("images", image);
       })
@@ -76,15 +76,34 @@ const EditRoomsPage = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-6">
+    <div
+      className="
+        min-h-[80vh]
+        flex flex-col
+        items-center justify-center
+        px-4 py-6
+      "
+    >
 
+      {/* BACK BUTTON */}
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 bg-white/30 backdrop-blur-md px-4 py-2 rounded-lg text-black hover:bg-white/50 transition"
+        className="
+          mb-4
+          bg-white/80 dark:bg-gray-900/80
+          backdrop-blur-md
+          border border-gray-200 dark:border-gray-700
+          text-gray-800 dark:text-white
+          px-4 py-2 rounded-lg
+          shadow-lg
+          hover:bg-white dark:hover:bg-gray-800
+          transition duration-200
+        "
       >
         ← Back
       </button>
 
+      {/* FORM */}
       <EditForm
         room={room}
         handleChange={handleChange}

@@ -16,11 +16,14 @@ import UserBookingPage from './pages/UserBookingPage.jsx'
 import AdminPanelPage from './pages/AdminPanelPage.jsx'
 import OwnerRoomsPage from './pages/OwnerRoomsPage.jsx'
 import FavoriteRoomPage from './pages/FavoriteRoomPage.jsx'
+import { useContext } from 'react'
+import { AppContext } from './context/AppContext.jsx'
 
 const App = () => {
-
+  const { darkMode } = useContext(AppContext);
   return (
-    <>
+    <div className={darkMode ? "dark" : ""}>
+
       <BrowserRouter>
         <Layout>
           <Routes>
@@ -43,14 +46,14 @@ const App = () => {
             />
 
             <Route
-            path="/favorite"
-            element={
-              <ProtectedRoute allowedRoles={["user"]}>
-                <FavoriteRoomPage />
-              </ProtectedRoute>
-            }
+              path="/favorite"
+              element={
+                <ProtectedRoute allowedRoles={["user"]}>
+                  <FavoriteRoomPage />
+                </ProtectedRoute>
+              }
             />
-            
+
             <Route
               path="/AddRooms"
               element={
@@ -104,7 +107,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            
+
           </Routes>
         </Layout>
 
@@ -114,7 +117,8 @@ const App = () => {
           theme="colored"
         />
       </BrowserRouter>
-    </>
+
+    </div>
   )
 }
 

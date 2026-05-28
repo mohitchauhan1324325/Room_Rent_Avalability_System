@@ -5,20 +5,27 @@ const SideBar = () => {
 
     <div
       className="
-        absolute right-0 top-0 h-full
-        w-[260px]
+        fixed left-0 top-0
+        h-screen w-[260px]
+
+        z-[100]
+
         text-gray-800 dark:text-white
+
         backdrop-blur-md
         bg-white/80 dark:bg-gray-900/80
-        border-l border-gray-200 dark:border-gray-700
+
+        border-r border-gray-200 dark:border-gray-700
+
         shadow-2xl
+
         p-5
       "
     >
 
       {/* TITLE */}
       <h2 className="text-2xl font-bold mb-6 text-center">
-        Room Rent
+        StayNest
       </h2>
 
       {/* MENU */}

@@ -201,12 +201,20 @@ const RoomCard = ({
 
           {/* FOOTER */}
           {room.isAvailable && role === "user" && (
-
-            <CardFooter className="pt-3">
-
+            <CardFooter
+              className="
+      pt-3
+      bg-white dark:bg-gray-900
+      border-t border-gray-200 dark:border-gray-700
+    "
+            >
               <Button
                 size="lg"
-                fullWidth={true}
+                fullWidth
+                className="
+                      !bg-black !text-white
+                      dark:!bg-white dark:!text-black
+                    "
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate("/booking", {
@@ -216,7 +224,6 @@ const RoomCard = ({
               >
                 Reserve
               </Button>
-
             </CardFooter>
           )}
 

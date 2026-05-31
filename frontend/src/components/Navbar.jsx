@@ -10,8 +10,8 @@ const Navbar = () => {
   const loggedIn = isAuthenticated();
   const role = getUserRole();
   const { darkMode, setDarkMode } = useContext(AppContext);
-  const [isOpen, setIsOpen] =useState(false);
-  
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleLogout = () => {
     logout();
     navigate("/login");

@@ -1,42 +1,41 @@
 import mongoose from "mongoose";
 
-const favoriteSchema = new mongoose.Schema({
-
+const favoriteSchema = new mongoose.Schema(
+  {
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
 
     room: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Room"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room",
+      required: true
     }
-
-},{timestamps:true});
-
-
-// get user's favorites
-favoriteSchema.index({ user:1 });
-
-
-// check room favorite
-favoriteSchema.index({ room:1 });
-
-
-// prevent duplicate favorites
-favoriteSchema.index(
-   { user:1, room:1 },
-   { unique:true }
+  },
+  {
+    timestamps: true
+  }
 );
 
+// Prevent duplicate favorites
+favoriteSchema.index(
+  {
+    user: 1,
+    room: 1
+  },
+  {
+    unique: true
+  }
+);
 
-// newest favorites
+// Get user's favorites
 favoriteSchema.index({
-   createdAt:-1
+  user: 1
 });
 
-export const Favorite =
-mongoose.model(
-   "Favorite",
-   favoriteSchema
+export const Favorite = mongoose.model(
+  "Favorite",
+  favoriteSchema
 );

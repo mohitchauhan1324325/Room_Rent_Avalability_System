@@ -132,12 +132,12 @@ const RoomCard = ({
             {/* DESCRIPTION */}
             <Typography
               className="
-                mt-2 text-sm
-                line-clamp-2
-                text-gray-600 dark:text-gray-300
-              "
+              mt-2 text-sm
+              line-clamp-2
+              text-gray-600 dark:text-gray-300
+             "
             >
-              {room.description}
+              {room.description || "No description available"}
             </Typography>
 
             {/* FEATURES */}

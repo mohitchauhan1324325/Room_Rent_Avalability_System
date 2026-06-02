@@ -31,7 +31,15 @@ const RoomCard = ({
         <Card
           key={room._id}
           className="
-          w-full max-w-none
+          w-[280px]
+          sm:w-[340px]
+          md:w-full 
+          max-w-sm
+          mx-auto
+          h-[250px]
+         sm:h-[350px]
+         md:h-[400px]
+         lg:h-[450px]
           flex flex-col
           shadow-lg
         bg-white/90 dark:bg-gray-900/90
@@ -51,7 +59,10 @@ const RoomCard = ({
             <img
               src={room.images[0]}
               alt={room.title}
-              className="h-48 w-full object-cover"
+              className="h-32
+              sm:h-40
+              md:h-48
+              w-full object-cover"
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
@@ -131,7 +142,7 @@ const RoomCard = ({
 
           {/* FOOTER */}
           {room.isAvailable && role === "user" && (
-            <CardFooter className="pt-0 flex justify-center">
+            <CardFooter className="hidden sm:flex justify-center pt-0">
               <Button
                 className="
               w-[200px]
@@ -151,7 +162,7 @@ const RoomCard = ({
           )}
 
           {!room.isAvailable && (
-            <CardFooter className="pt-0 flex justify-center">
+            <CardFooter className="hidden sm:flex justify-center pt-0">
               <Button
                 disabled
                 className="w-[200px]"

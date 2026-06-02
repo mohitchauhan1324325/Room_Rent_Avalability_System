@@ -26,50 +26,47 @@ const RoomCard = ({
   const role = getUserRole();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
+    <div className="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {rooms.map((room) => (
-
         <Card
           key={room._id}
           className="
-            w-full h-[580px] flex flex-col shadow-lg
-            bg-white/90 dark:bg-gray-900/90
-            backdrop-blur-md
-            border border-gray-200 dark:border-gray-700
-            text-gray-800 dark:text-white
-            hover:shadow-2xl
-            transition duration-300
-          "
+          w-full max-w-none
+          flex flex-col
+          shadow-lg
+        bg-white/90 dark:bg-gray-900/90
+        backdrop-blur-md
+        border border-gray-200 dark:border-gray-700
+        text-gray-800 dark:text-white
+        hover:shadow-2xl
+        transition duration-300
+      "
         >
-
           {/* IMAGE */}
           <CardHeader
             floated={false}
-            className="relative h-[220px] cursor-pointer"
+            className="relative cursor-pointer m-0 rounded-b-none"
             onClick={() => handleDetails(room._id)}
           >
-
             <img
               src={room.images[0]}
               alt={room.title}
-              className="w-full h-full object-cover"
+              className="h-48 w-full object-cover"
             />
 
-            {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-            {/* Favorite */}
             {role === "user" && (
               <IconButton
                 type="button"
                 size="sm"
                 variant="text"
                 className="
-                  !absolute top-4 right-4 rounded-full z-50
-                  bg-black/30 backdrop-blur-sm
-                  hover:bg-black/50
-                "
+              !absolute top-2 right-2
+              rounded-full z-50
+              bg-black/30 backdrop-blur-sm
+              hover:bg-black/50
+            "
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -78,7 +75,6 @@ const RoomCard = ({
                   addToFavorite(room._id);
                 }}
               >
-
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -87,10 +83,8 @@ const RoomCard = ({
                 >
                   <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                 </svg>
-
               </IconButton>
             )}
-
           </CardHeader>
 
           {/* BODY */}
@@ -98,10 +92,7 @@ const RoomCard = ({
             className="flex flex-col flex-1 cursor-pointer"
             onClick={() => handleDetails(room._id)}
           >
-
-            {/* PRICE + RATING */}
             <div className="mb-3 flex items-center justify-between">
-
               <Typography
                 variant="h5"
                 className="font-semibold text-gray-800 dark:text-white"
@@ -115,106 +106,38 @@ const RoomCard = ({
                   5.0
                 </span>
               </div>
-
             </div>
 
-            {/* TITLE */}
             <Typography
               className="
-                font-semibold text-lg
-                line-clamp-1
-                text-gray-800 dark:text-white
-              "
+            font-semibold text-lg
+            line-clamp-1
+            text-gray-800 dark:text-white
+          "
             >
               {room.title}
             </Typography>
 
-            {/* DESCRIPTION */}
             <Typography
               className="
-              mt-2 text-sm
-              line-clamp-2
-              text-gray-600 dark:text-gray-300
-             "
+            mt-2 text-sm
+            line-clamp-2
+            text-gray-600 dark:text-gray-300
+          "
             >
               {room.description || "No description available"}
             </Typography>
-
-            {/* FEATURES */}
-            <div className="mt-6 flex flex-wrap gap-3">
-
-              <Tooltip content="Free Wifi">
-                <span
-                  className="
-                    rounded-full p-3
-                    bg-gray-100 dark:bg-gray-800
-                    border border-gray-200 dark:border-gray-700
-                    text-gray-700 dark:text-gray-300
-                  "
-                >
-                  📶
-                </span>
-              </Tooltip>
-
-              <Tooltip content="TV">
-                <span
-                  className="
-                    rounded-full p-3
-                    bg-gray-100 dark:bg-gray-800
-                    border border-gray-200 dark:border-gray-700
-                    text-gray-700 dark:text-gray-300
-                  "
-                >
-                  📺
-                </span>
-              </Tooltip>
-
-              <Tooltip content="Bedroom">
-                <span
-                  className="
-                    rounded-full p-3
-                    bg-gray-100 dark:bg-gray-800
-                    border border-gray-200 dark:border-gray-700
-                    text-gray-700 dark:text-gray-300
-                  "
-                >
-                  🛏️
-                </span>
-              </Tooltip>
-
-              <Tooltip content="Safety">
-                <span
-                  className="
-                    rounded-full p-3
-                    bg-gray-100 dark:bg-gray-800
-                    border border-gray-200 dark:border-gray-700
-                    text-gray-700 dark:text-gray-300
-                  "
-                >
-                  🔥
-                </span>
-              </Tooltip>
-
-            </div>
-
           </CardBody>
 
           {/* FOOTER */}
           {room.isAvailable && role === "user" && (
-            <CardFooter
-              className="
-      pt-3
-      bg-white dark:bg-gray-900
-      border-t border-gray-200 dark:border-gray-700
-    "
-            >
+            <CardFooter className="pt-0 flex justify-center">
               <Button
-                size="lg"
-                fullWidth
                 className="
-                      !bg-black !text-white
-                      dark:!bg-white dark:!text-black
-                    "
+              w-[200px]
+              !bg-black !text-white
+              dark:!bg-white dark:!text-black
+            "
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate("/booking", {
@@ -228,23 +151,17 @@ const RoomCard = ({
           )}
 
           {!room.isAvailable && (
-
-            <CardFooter className="pt-3">
-
+            <CardFooter className="pt-0 flex justify-center">
               <Button
-                size="lg"
-                disabled={true}
-                fullWidth={true}
+                disabled
+                className="w-[200px]"
               >
                 Booked
               </Button>
-
             </CardFooter>
           )}
-
         </Card>
       ))}
-
     </div>
   );
 };

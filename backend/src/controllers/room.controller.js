@@ -55,7 +55,7 @@ export const getRooms = async (req, res) => {
 
         const rooms = await Room.find()
             .select(
-                "title price images location isAvailable createdAt"
+                "title price description images location isAvailable createdAt"
             )
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)

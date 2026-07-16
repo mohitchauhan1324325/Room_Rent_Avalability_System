@@ -7,6 +7,7 @@ import {
     addRoom,
     deleteRoomById,
     getRoomById,
+    getMyRooms,
     getRooms,
     deleteAllRooms,
     updateRoom,
@@ -38,6 +39,13 @@ router.get(
     authorizeRoles("user"),
     getMyFavoriteRooms
 )
+
+router.get(
+    "/myRooms",
+    protect,
+    authorizeRoles("owner", "admin"),
+    getMyRooms
+);
 
 // get all rooms data
 router.get(

@@ -1,75 +1,94 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const RegisterForm = ({ handleChange, handleRegister }) => {
   return (
     <div className="w-full max-w-sm mx-auto">
-
-      <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">
-          Register
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50"
+      >
+        <h2 className="text-3xl font-extrabold mb-6 text-center text-gray-900 dark:text-white">
+          Create Account
         </h2>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+            />
+          </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+            />
+          </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+            />
+          </div>
 
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone Number"
-          onChange={handleChange}
-          className="w-full p-2 mb-3 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+            <input
+              type="text"
+              name="phone"
+              placeholder="Enter your phone number"
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+            />
+          </div>
 
-        <select
-          name="role"
-          onChange={handleChange}
-          className="w-full p-2 mb-4 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          <option value="user">User</option>
-          <option value="owner">Owner</option>
-        </select>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Type</label>
+            <select
+              name="role"
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow appearance-none"
+            >
+              <option value="user">User</option>
+              <option value="owner">Owner</option>
+            </select>
+          </div>
 
-        <button
-          onClick={handleRegister}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition duration-200 font-medium"
-        >
-          Register
-        </button>
+          <button
+            onClick={handleRegister}
+            className="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 mt-2 rounded-xl font-bold transition duration-200 shadow-lg shadow-brand-500/30 transform hover:-translate-y-0.5 active:translate-y-0"
+          >
+            Register
+          </button>
+        </div>
 
-        <p className="text-center mt-3 text-sm text-gray-600 dark:text-gray-300">
+        <p className="text-center mt-6 text-sm text-gray-600 dark:text-gray-300">
           Already registered?{" "}
           <Link
             to="/login"
-            className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+            className="text-brand-600 dark:text-brand-400 font-bold hover:underline"
           >
-            Login
+            Sign In
           </Link>
         </p>
-
-      </div>
-
+      </motion.div>
     </div>
   );
 };

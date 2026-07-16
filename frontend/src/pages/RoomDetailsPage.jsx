@@ -46,56 +46,20 @@ const RoomDetailsPage = () => {
 
   if (error) {
     return (
-      <div
-        className="
-          min-h-[60vh]
-          flex items-center justify-center
-          px-4
-        "
-      >
-
-        <div
-          className="
-            bg-white/80 dark:bg-gray-900/80
-            backdrop-blur-md
-            border border-gray-200 dark:border-gray-700
-            p-6 rounded-2xl
-            shadow-xl
-            text-red-500
-            font-semibold
-          "
-        >
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-5">
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-xl text-red-600 font-semibold border border-red-100 dark:border-red-900/30">
           {error}
         </div>
-
       </div>
     );
   }
 
   if (!room) {
     return (
-      <div
-        className="
-          min-h-[60vh]
-          flex items-center justify-center
-          px-4
-        "
-      >
-
-        <div
-          className="
-            bg-white/80 dark:bg-gray-900/80
-            backdrop-blur-md
-            border border-gray-200 dark:border-gray-700
-            p-6 rounded-2xl
-            shadow-xl
-            text-gray-700 dark:text-gray-300
-            text-lg
-          "
-        >
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-5">
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-xl text-gray-700 dark:text-gray-300 font-semibold border border-gray-200 dark:border-gray-700">
           Room not found
         </div>
-
       </div>
     );
   }

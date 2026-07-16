@@ -4,7 +4,6 @@ import BookingPage from './pages/BookingPage.jsx'
 import EditRoomsPage from './pages/EditRoomsPage.jsx'
 import AddRoomsPage from './pages/AddRoomsPage.jsx'
 import RoomDetailsPage from './pages/RoomDetailsPage.jsx'
-import ManageBookingsPage from './pages/ManageBookingsPage.jsx'
 import Layout from './components/Layout.jsx'
 import HomePage from './pages/HomePage.jsx'
 import { ToastContainer } from "react-toastify";
@@ -77,15 +76,6 @@ const App = () => {
               element={
                 <ProtectedRoute allowedRoles={["user"]}>
                   <UserBookingPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/ManageBookings"
-              element={
-                <ProtectedRoute allowedRoles={["admin", "owner"]}>
-                  <ManageBookingsPage />
                 </ProtectedRoute>
               }
             />

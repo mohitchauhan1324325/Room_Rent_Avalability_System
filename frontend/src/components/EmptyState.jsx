@@ -2,7 +2,7 @@ const EmptyState = () => {
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4 py-6">
 
-      <div className="max-w-md w-full text-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg rounded-2xl p-8 hover:shadow-xl transition duration-300 border border-gray-200 dark:border-gray-700">
+      <div className="max-w-md w-full text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-sm rounded-3xl p-8 hover:shadow-lg transition duration-300 border border-gray-200/70 dark:border-gray-700/80">
         
         {/* Icon */}
         <div className="flex justify-center">

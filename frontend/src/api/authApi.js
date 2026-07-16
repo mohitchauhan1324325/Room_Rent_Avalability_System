@@ -19,6 +19,7 @@ export const loginUser = async (data) => {
     if (token && user){
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      window.dispatchEvent(new Event("auth:changed"));
     }
 
     return res.data;

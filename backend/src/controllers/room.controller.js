@@ -27,6 +27,7 @@ export const addRoom = async (req, res) => {
 
         const room = new Room({
             ...req.body,
+            owner: req.user.id,
             images,
             videos
         });
@@ -64,6 +65,25 @@ export const getRooms = async (req, res) => {
 
         res.status(200).json(rooms);
 
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+export const getMyRooms = async (req, res) => {
+    try {
+        const ownerId = req.user.id;
+
+        const rooms = await Room.find({ owner: ownerId })
+            .select(
+                "title price description images location isAvailable createdAt"
+            )
+            .sort({ createdAt: -1 })
+            .lean();
+
+        res.status(200).json(rooms);
     } catch (error) {
         res.status(500).json({
             message: error.message

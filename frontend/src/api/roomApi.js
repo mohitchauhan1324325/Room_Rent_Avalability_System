@@ -10,6 +10,15 @@ export const getRooms = async () => {
     }
 };
 
+export const getMyRooms = async () => {
+    try {
+        const room = await api.get("/api/myRooms");
+        return room.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getRoomById = async (id) => {
     try {
         const room = await api.get(`/api/rooms/${id}`);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   getRooms,
+  getMyRooms,
   deleteRoom,
   deleteAllRooms,
   createFavoriteRoom,
@@ -12,8 +13,9 @@ import { toast } from "react-toastify";
 import { isAuthenticated } from "../utils/auth.js";
 import Swal from "sweetalert2";
 
-const useRooms = () => {
+const useRooms = (options = {}) => {
   const navigate = useNavigate();
+  const { ownerOnly = false } = options;
 
   const [rooms, setRooms] = useState([]);
   const [filter, setFilter] = useState("all");
@@ -24,9 +26,9 @@ const useRooms = () => {
     try {
       setLoading(true);
 
-      const data = await getRooms();
+      const data = ownerOnly ? await getMyRooms() : await getRooms();
 
-      setRooms(data);
+      setRooms(Array.isArray(data) ? data : []);
 
     } catch (err) {
       setError("Failed to fetch rooms: " + err.message);
@@ -125,7 +127,7 @@ const useRooms = () => {
 
   useEffect(() => {
     fetchRooms();
-  }, []);
+  }, [ownerOnly]);
 
   return {
     rooms,

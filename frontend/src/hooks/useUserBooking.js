@@ -13,7 +13,8 @@ const useUserBooking = () => {
           try {
             setLoading(true);
             const res = await getMyBooking();
-            setUserBooking(res);
+            const bookings = Array.isArray(res) ? res : res?.bookings || [];
+            setUserBooking(bookings);
           } catch (error) {
             setError("Failed to load booking");
             console.log(error);

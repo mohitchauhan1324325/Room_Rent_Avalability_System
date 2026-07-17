@@ -95,15 +95,24 @@ export const getRoomById = async (req, res) => {
     try {
         const room = await Room
             .findById(req.params.id)
+            .populate({
+                path: "owner",
+                select: "name email phone"
+            })
             .lean();
+
         if (!room) {
-            return res.status(400).json({ message: "Room not found" });
+            return res.status(404).json({
+                message: "Room not found"
+            });
         }
 
-        res.json(room);
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(200).json(room);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
@@ -280,7 +289,7 @@ export const updateRoom = async (req, res) => {
             await Room.findByIdAndUpdate(
                 id,
                 updateData,
-                { new: true }
+                { returnDocument: "after" }
             );
 
         res.json(updatedRoom);

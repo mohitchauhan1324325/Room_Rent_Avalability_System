@@ -16,7 +16,8 @@ import AdminPanelPage from './pages/AdminPanelPage.jsx'
 import OwnerRoomsPage from './pages/OwnerRoomsPage.jsx'
 import FavoriteRoomPage from './pages/FavoriteRoomPage.jsx'
 import { useContext } from 'react'
-import { AppContext } from './context/AppContext.jsx'
+import { AppContext } from './context/AppContext.jsx';
+import OwnerBookingsPage from './pages/OwnerBookingPage.jsx'
 
 const App = () => {
   const { darkMode } = useContext(AppContext);
@@ -76,6 +77,15 @@ const App = () => {
               element={
                 <ProtectedRoute allowedRoles={["user"]}>
                   <UserBookingPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/owner/bookings"
+              element={
+                <ProtectedRoute allowedRoles={["owner", "admin"]}>
+                  <OwnerBookingsPage />
                 </ProtectedRoute>
               }
             />

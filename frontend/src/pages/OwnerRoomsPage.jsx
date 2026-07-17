@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import useRooms from "../hooks/useRooms";
+import useBookings from "../hooks/useBookings";
 import {
   Plus,
   BedDouble,
@@ -12,7 +13,7 @@ import {
 const OwnerDashboard = () => {
   const navigate = useNavigate();
   const { rooms, loading } = useRooms({ ownerOnly: true });
-
+  const { bookings, loading: bookingLoading } = useBookings();
   const totalRooms = rooms.length;
   const availableRooms = rooms.filter(r => r.isAvailable).length;
   const unavailableRooms = totalRooms - availableRooms;
@@ -54,13 +55,22 @@ const OwnerDashboard = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => navigate("/AddRooms")}
-            className="flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-indigo-600 transition hover:scale-105"
-          >
-            <Plus size={20} />
-            Add Room
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/AddRooms")}
+              className="flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-indigo-600 transition hover:scale-105"
+            >
+              <Plus size={20} />
+              Add Room
+            </button>
+
+            <button
+              onClick={() => navigate("/owner/bookings")}
+              className="rounded-xl border border-white px-6 py-3 font-semibold text-white hover:bg-white hover:text-indigo-600 transition"
+            >
+              View Bookings
+            </button>
+          </div>
         </div>
       </div>
 
@@ -138,12 +148,79 @@ const OwnerDashboard = () => {
                   </span>
                   <span
                     className={`rounded-full px-3 py-1 text-sm font-semibold ${room.isAvailable
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
                       }`}
                   >
                     {room.isAvailable ? "Available" : "Unavailable"}
                   </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-8 rounded-2xl bg-white/90 dark:bg-gray-800/90 border border-gray-200/70 dark:border-gray-700/80 p-6 shadow-sm">
+
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Recent Bookings</h2>
+
+          <button
+            onClick={() => navigate("/owner/bookings")}
+            className="flex items-center gap-2 text-indigo-600 hover:underline"
+          >
+            View All <ArrowRight size={18} />
+          </button>
+        </div>
+
+        {bookingLoading ? (
+          <p>Loading bookings...</p>
+        ) : bookings.length === 0 ? (
+          <p className="text-gray-500">No bookings found.</p>
+        ) : (
+          <div className="space-y-4">
+            {bookings.slice(0, 5).map((booking) => (
+              <div
+                key={booking._id}
+                className="rounded-xl border border-gray-200 dark:border-gray-700 p-4"
+              >
+                <div className="flex justify-between">
+                  <div>
+                    <h3 className="font-semibold">
+                      {booking.roomId?.title}
+                    </h3>
+
+                    <p className="text-sm text-gray-500">
+                      {booking.roomId?.location}
+                    </p>
+
+                    <p className="mt-2">
+                      <strong>Name:</strong> {booking.user?.name}
+                    </p>
+
+                    <p>
+                      <strong>Email:</strong> {booking.user?.email}
+                    </p>
+
+                    <p>
+                      <strong>Phone:</strong> {booking.user?.phone}
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <p>{new Date(booking.moveInDate).toLocaleDateString()}</p>
+
+                    <span className="inline-block mt-2 rounded-full bg-green-100 px-3 py-1 text-green-700 text-sm">
+                      {booking.paymentStatus}
+                    </span>
+
+                    <br />
+
+                    <span className="inline-block mt-2 rounded-full bg-blue-100 px-3 py-1 text-blue-700 text-sm">
+                      {booking.status}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}

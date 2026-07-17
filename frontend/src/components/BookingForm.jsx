@@ -11,7 +11,7 @@ const BookingForm = ({
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="space-y-8">
-        
+
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Your details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -51,9 +51,12 @@ const BookingForm = ({
         </div>
 
         <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Cancellation policy</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            Cancellation Policy
+          </h2>
+
           <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
-            Free cancellation for 48 hours. Review the Host's full cancellation policy which applies even if you cancel for illness or disruptions caused by COVID-19.
+            You can cancel your booking free of charge within 48 hours of confirmation. After that period, cancellation charges may apply depending on the host's cancellation policy. Please review the policy carefully before making a reservation.
           </p>
 
           <button
@@ -64,8 +67,8 @@ const BookingForm = ({
             {loading
               ? "Processing..."
               : room.isAvailable
-              ? "Confirm & Pay"
-              : "Room Not Available"}
+                ? "Confirm & Pay"
+                : "Room Not Available"}
           </button>
         </div>
       </form>

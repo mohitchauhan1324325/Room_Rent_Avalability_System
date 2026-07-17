@@ -86,7 +86,7 @@ const RoomCard = ({
             <div className="mt-auto pt-2 flex items-center justify-between">
               <div>
                 <span className="font-bold text-[17px] text-gray-900 dark:text-white">₹{room.price}</span>
-                <span className="text-[15px] text-gray-500 dark:text-gray-400 font-normal"> / night</span>
+                <span className="text-[15px] text-gray-500 dark:text-gray-400 font-normal"> / month</span>
               </div>
 
               {/* ACTION BUTTON (Visible on hover for Desktop) */}

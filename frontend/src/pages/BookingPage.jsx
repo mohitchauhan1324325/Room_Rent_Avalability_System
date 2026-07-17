@@ -208,7 +208,7 @@ const BookingPage = () => {
               <div className="py-6 border-b border-gray-200 dark:border-gray-700 space-y-4">
                 <h3 className="font-bold text-gray-900 dark:text-white text-xl">Price details</h3>
                 <div className="flex justify-between text-gray-600 dark:text-gray-300">
-                  <span>₹{room.price} x 1 night</span>
+                  <span>₹{room.price} x 1 month</span>
                   <span>₹{room.price}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-300">

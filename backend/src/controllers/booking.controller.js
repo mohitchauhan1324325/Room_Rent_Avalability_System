@@ -43,7 +43,7 @@ export const confirmBooking = async (req, res) => {
           isAvailable: false
         },
         {
-          new: true
+          returnDocument: "after"
         }
       );
 
@@ -95,7 +95,7 @@ export const getMyBooking = async (req, res) => {
         )
         .populate(
           "user",
-          "name phone"
+          "name email phone"
         )
         .sort({
           createdAt: -1
@@ -114,47 +114,36 @@ export const getMyBooking = async (req, res) => {
 
 };
 
-
 export const getUsersBooking = async (req, res) => {
-
   try {
-
-    const page =
-      Number(req.query.page) || 1;
-
+    const page = Number(req.query.page) || 1;
     const limit = 10;
 
-    const bookings =
-      await Booking.find()
-        .populate(
-          "user",
-          "name phone"
-        )
-        .populate(
-          "roomId",
-          "title location"
-        )
-        .sort({
-          createdAt: -1
-        })
-        .skip(
-          (page - 1) * limit
-        )
-        .limit(limit)
-        .lean();
+    // Owner ke rooms nikalo
+    const rooms = await Room.find({ owner: req.user.id })
+      .select("_id")
+      .lean();
+
+    const roomIds = rooms.map(room => room._id);
+
+    const bookings = await Booking.find({
+      roomId: { $in: roomIds }
+    })
+      .populate("user", "name email phone")
+      .populate("roomId", "title location price images")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
 
     res.status(200).json(bookings);
 
   } catch (error) {
-
     res.status(500).json({
       message: error.message
     });
-
   }
-
 };
-
 
 export const cancelBookingByUser =
   async (req, res) => {

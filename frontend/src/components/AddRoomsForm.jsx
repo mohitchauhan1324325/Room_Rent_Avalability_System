@@ -50,9 +50,10 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
       />
 
       <input
-        type="text"
-        name="location"
-        placeholder="Location"
+        type="number"
+        name="capacity"
+        placeholder="Capacity (Persons)"
+        min="1"
         onChange={handleChange}
         className="w-full p-3 rounded-2xl border text-gray-900 dark:text-gray-100 bg-white/90 dark:bg-gray-900/70 border-gray-200 dark:border-gray-700 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
         required
@@ -60,10 +61,11 @@ const AddRoomsForm = ({ handleChange, handleAddRooms }) => {
 
       <input
         type="text"
-        name="owner"
-        placeholder="Owner Name"
+        name="location"
+        placeholder="Location"
         onChange={handleChange}
         className="w-full p-3 rounded-2xl border text-gray-900 dark:text-gray-100 bg-white/90 dark:bg-gray-900/70 border-gray-200 dark:border-gray-700 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+        required
       />
 
       <button

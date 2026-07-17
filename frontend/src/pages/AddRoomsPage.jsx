@@ -9,8 +9,10 @@ const AddRoomsPage = () => {
   const [loading, setLoading] = useState(false);
   const initialState = {
     title: "",
+    description: "",
     price: "",
     location: "",
+    capacity: "",
     images: []
   };
 
@@ -22,8 +24,8 @@ const AddRoomsPage = () => {
     setFormData({
       ...formData,
       [name]: type === "file"
-      ? Array.from(files)
-      : value
+        ? Array.from(files)
+        : value
     });
   };
 
@@ -39,12 +41,12 @@ const AddRoomsPage = () => {
       data.append("price", formData.price);
       data.append("location", formData.location);
       data.append("description", formData.description);
-      data.append("owner", formData.owner);
+      data.append("capacity", formData.capacity);
 
       formData.images.forEach((image) => {
         data.append("images", image);
       });
-      
+
       await createRoom(data);
 
       toast.success("Room Saved!");
@@ -57,12 +59,12 @@ const AddRoomsPage = () => {
     }
   };
 
-  if(loading) return <Loader /> ;
+  if (loading) return <Loader />;
 
   return (
     <AddRoomsForm
-    handleChange={handleChange}
-    handleAddRooms={handleAddRooms}
+      handleChange={handleChange}
+      handleAddRooms={handleAddRooms}
     />
   )
 }

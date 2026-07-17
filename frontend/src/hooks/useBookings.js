@@ -39,10 +39,17 @@ const useBookings = () => {
     if (!result.isConfirmed) return;
 
     try {
-      setLoading(true);
       await deleteBooking(id);
-      setBookings(prev => prev.filter(b => b._id !== id));
-      toast.success("Booking deleted successfully!");
+
+      setBookings((prev) =>
+        prev.map((booking) =>
+          booking._id === id
+            ? { ...booking, status: "cancelled" }
+            : booking
+        )
+      );
+
+      toast.success("Booking cancelled successfully!");
     } catch (err) {
       const message =
         err.response?.data?.message || "Failed to delete booking";

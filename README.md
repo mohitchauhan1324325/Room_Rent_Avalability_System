@@ -47,8 +47,6 @@ This project combines a React + Vite frontend with an Express + Node.js backend 
 
 ## 📁 Project Structure
 
-## Project Structure
-
 ```text
 room-rent-app/
 ├── backend/
@@ -160,6 +158,10 @@ The backend exposes REST APIs under the `/api` route group, covering:
 - bookings
 - payments
 - admin operations
+
+## 👨‍💻 Developer
+
+- Developer: Mohit Chauhan
 
 ## 🤝 Contributing
 

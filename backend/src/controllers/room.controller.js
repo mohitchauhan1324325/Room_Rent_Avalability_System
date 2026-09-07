@@ -1,306 +1,109 @@
-import Room from "../models/rooms.models.js";
-import { Booking } from "../models/booking.models.js";
-import { User } from "../models/user.models.js";
+import { query } from "../db/dbConnect.js";
 import cloudinary from "../config/cloudinary.js";
-import { Favorite } from "../models/favorite.model.js";
+
+const listingColumns = `id AS "_id", title, price::float AS price, description, images, location,
+  is_available AS "isAvailable", created_at AS "createdAt"`;
+const mediaFromFiles = (files = []) => ({
+    images: files.filter((file) => file.mimetype.startsWith("image")).map((file) => file.path),
+    videos: files.filter((file) => file.mimetype.startsWith("video")).map((file) => file.path),
+});
+const isOwnerOrAdmin = (room, user) => user.role === "admin" || room.owner_id === user.id;
 
 export const addRoom = async (req, res) => {
-
     try {
-
-        let images = [];
-        let videos = [];
-
-        req.files.forEach((file) => {
-
-            if (file.mimetype.startsWith("image")) {
-
-                images.push(file.path);
-
-            } else if (file.mimetype.startsWith("video")) {
-
-                videos.push(file.path);
-
-            }
-
-        });
-
-        const room = new Room({
-            ...req.body,
-            owner: req.user.id,
-            images,
-            videos
-        });
-
-        const savedRoom = await room.save();
-
-        res.status(201).json(savedRoom);
-
-    } catch (error) {
-
-        console.log("ADD ERROR:", error);
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
+        const { images, videos } = mediaFromFiles(req.files);
+        const { title, description, price, location, capacity } = req.body;
+        const result = await query(
+            `INSERT INTO rooms (title, images, videos, description, price, location, capacity, owner_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+       RETURNING ${listingColumns}`,
+            [title, images, videos, description, price, location, capacity, req.user.id],
+        );
+        return res.status(201).json(result.rows[0]);
+    } catch (error) { return res.status(400).json({ message: error.message }); }
 };
 
 export const getRooms = async (req, res) => {
     try {
-
-        const page = Number(req.query.page) || 1;
-        const limit = 10;
-
-        const rooms = await Room.find()
-            .select(
-                "title price description images location isAvailable createdAt"
-            )
-            .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .lean();
-
-        res.status(200).json(rooms);
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
+        const page = Math.max(Number(req.query.page) || 1, 1);
+        const result = await query(`SELECT ${listingColumns} FROM rooms ORDER BY created_at DESC LIMIT 10 OFFSET $1`, [(page - 1) * 10]);
+        return res.json(result.rows);
+    } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
 export const getMyRooms = async (req, res) => {
     try {
-        const ownerId = req.user.id;
-
-        const rooms = await Room.find({ owner: ownerId })
-            .select(
-                "title price description images location isAvailable createdAt"
-            )
-            .sort({ createdAt: -1 })
-            .lean();
-
-        res.status(200).json(rooms);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
+        const result = await query(`SELECT ${listingColumns} FROM rooms WHERE owner_id = $1 ORDER BY created_at DESC`, [req.user.id]);
+        return res.json(result.rows);
+    } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
 export const getRoomById = async (req, res) => {
     try {
-        const room = await Room
-            .findById(req.params.id)
-            .populate({
-                path: "owner",
-                select: "name email phone"
-            })
-            .lean();
-
-        if (!room) {
-            return res.status(404).json({
-                message: "Room not found"
-            });
-        }
-
-        res.status(200).json(room);
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
+        const result = await query(
+            `SELECT r.id AS "_id", r.title, r.images, r.videos, r.description, r.price::float AS price, r.location,
+        r.capacity, r.is_available AS "isAvailable", r.created_at AS "createdAt",
+        json_build_object('_id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS owner
+       FROM rooms r JOIN users u ON u.id = r.owner_id WHERE r.id = $1`, [req.params.id]);
+        if (!result.rows[0]) return res.status(404).json({ message: "Room not found" });
+        return res.json(result.rows[0]);
+    } catch { return res.status(400).json({ message: "Invalid room id" }); }
 };
 
-export const deleteAllRooms = async (req, res) => {
-    try {
-        await Booking.deleteMany();
-        await Room.deleteMany({});
-
-        res.json({ message: "All rooms are deleted successfully" });
-    }
-    catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+export const deleteAllRooms = async (_req, res) => {
+    try { await query("DELETE FROM rooms"); return res.json({ message: "All rooms are deleted successfully" }); }
+    catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
 export const addFavoriteRooms = async (req, res) => {
     try {
-
-        const favorite =
-            await Favorite.create({
-                user: req.user.id,
-                room: req.params.id
-            });
-
-        res.status(201).json({
-            message: "Added",
-            favorite
-        });
-
-    } catch (error) {
-
-        if (error.code === 11000) {
-            return res.status(400).json({
-                message: "Already favorite"
-            });
-        }
-
-        res.status(500).json({
-            message: error.message
-        });
-    }
-}
+        const result = await query(
+            `INSERT INTO favorites (user_id, room_id) VALUES ($1, $2)
+       ON CONFLICT (user_id, room_id) DO NOTHING RETURNING id AS "_id", user_id AS user, room_id AS room`, [req.user.id, req.params.id]);
+        if (!result.rows[0]) return res.status(400).json({ message: "Already favorite" });
+        return res.status(201).json({ message: "Added", favorite: result.rows[0] });
+    } catch { return res.status(400).json({ message: "Invalid room id" }); }
+};
 
 export const getMyFavoriteRooms = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const result = await query(
+            `SELECT f.id AS "_id", f.user_id AS user,
+        json_build_object('_id', r.id, 'title', r.title, 'price', r.price::float, 'images', r.images, 'location', r.location) AS room
+       FROM favorites f JOIN rooms r ON r.id = f.room_id WHERE f.user_id = $1 ORDER BY f.created_at DESC`, [req.user.id]);
+        return res.json(result.rows);
+    } catch (error) { return res.status(500).json({ message: error.message }); }
+};
 
-        const room = await Favorite.find({
-            user: userId
-        })
-            .populate(
-                "room",
-                "title price images location"
-            )
-            .lean();
-
-        res.status(200).json(room);
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
+const removeCloudinaryMedia = async (room) => {
+    for (const image of room.images || []) if (image.includes("cloudinary")) await cloudinary.uploader.destroy(`rooms/${image.split("/").pop().split(".")[0]}`);
+    for (const video of room.videos || []) if (video.includes("cloudinary")) await cloudinary.uploader.destroy(`rooms/${video.split("/").pop().split(".")[0]}`, { resource_type: "video" });
 };
 
 export const deleteRoomById = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        const room = await Room
-            .findById(id)
-            .lean();
-
-        if (!room) {
-            return res.status(404).json({ message: "Room not found" });
-        }
-
-
-        for (const image of room.images) {
-
-            if (image.includes("cloudinary")) {
-
-                const publicId = image
-                    .split("/")
-                    .slice(-1)[0]
-                    .split(".")[0];
-
-                await cloudinary.uploader.destroy(`rooms/${publicId}`);
-
-            }
-
-        }
-        for (const video of room.videos) {
-
-            if (video.includes("cloudinary")) {
-
-                const publicId = video
-                    .split("/")
-                    .slice(-1)[0]
-                    .split(".")[0];
-
-                await cloudinary.uploader.destroy(
-                    `rooms/${publicId}`,
-                    { resource_type: "video" }
-                );
-
-            }
-
-        }
-
-        await Booking.deleteMany({
-            roomId: id
-        });
-        await Room.findByIdAndDelete(id);
-
-        res.json({ message: "Room deleted" });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+        const found = await query("SELECT id, owner_id, images, videos FROM rooms WHERE id = $1", [req.params.id]);
+        const room = found.rows[0];
+        if (!room) return res.status(404).json({ message: "Room not found" });
+        if (!isOwnerOrAdmin(room, req.user)) return res.status(403).json({ message: "Unauthorized" });
+        await query("DELETE FROM rooms WHERE id = $1", [room.id]);
+        await removeCloudinaryMedia(room);
+        return res.json({ message: "Room deleted" });
+    } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
 export const updateRoom = async (req, res) => {
-
     try {
-
-        const { id } = req.params;
-
-        const room = await Room
-            .findById(id)
-            .lean();
-
-        if (!room) {
-            return res.status(404).json({
-                message: "Room not found"
-            });
-        }
-
-        let images = room.images;
-        let videos = room.videos;
-
-
-        if (req.files && req.files.length > 0) {
-
-            images = [];
-            videos = [];
-
-            req.files?.forEach((file) => {
-
-                if (file.mimetype.startsWith("image")) {
-
-                    images.push(file.path);
-
-                } else if (file.mimetype.startsWith("video")) {
-
-                    videos.push(file.path);
-
-                }
-
-            });
-
-        }
-
-        const updateData = {
-            title: req.body.title,
-            description: req.body.description,
-            price: req.body.price,
-            location: req.body.location,
-            images,
-            videos
-        };
-
-        const updatedRoom =
-            await Room.findByIdAndUpdate(
-                id,
-                updateData,
-                { returnDocument: "after" }
-            );
-
-        res.json(updatedRoom);
-
-    } catch (error) {
-        console.log(error);
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
+        const found = await query("SELECT * FROM rooms WHERE id = $1", [req.params.id]);
+        const room = found.rows[0];
+        if (!room) return res.status(404).json({ message: "Room not found" });
+        if (!isOwnerOrAdmin(room, req.user)) return res.status(403).json({ message: "Unauthorized" });
+        const media = req.files?.length ? mediaFromFiles(req.files) : { images: room.images, videos: room.videos };
+        const { title = room.title, description = room.description, price = room.price, location = room.location, capacity = room.capacity } = req.body;
+        const result = await query(
+            `UPDATE rooms SET title=$1, description=$2, price=$3, location=$4, capacity=$5, images=$6, videos=$7, updated_at=now()
+       WHERE id=$8 RETURNING ${listingColumns}`,
+            [title, description, price, location, capacity, media.images, media.videos, room.id]);
+        return res.json(result.rows[0]);
+    } catch (error) { return res.status(400).json({ message: error.message }); }
 };

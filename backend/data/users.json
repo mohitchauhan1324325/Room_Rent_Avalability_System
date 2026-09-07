@@ -1,0 +1,51 @@
+[{
+  "_id": {
+    "$oid": "6a58a1bc296d76781eef92f0"
+  },
+  "name": "Bob",
+  "email": "mohit@123",
+  "password": "$2b$10$Bj/eKgC30v4s3Y8E94/z5OGYrbighu65pdRAc4yme4kXzzlkJdkma",
+  "phone": "1234567890",
+  "role": "user",
+  "createdAt": {
+    "$date": "2026-07-16T09:17:48.939Z"
+  },
+  "updatedAt": {
+    "$date": "2026-07-16T09:17:48.939Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a58a3da296d76781eef9313"
+  },
+  "name": "Fash",
+  "email": "chauhan@123",
+  "password": "$2b$10$htgD5cwcmZTNGE3Vg2MSN.6KmbTD9Yvl93.BcwKU9U8q4reGFa2Xe",
+  "phone": "2345252",
+  "role": "owner",
+  "createdAt": {
+    "$date": "2026-07-16T09:26:50.408Z"
+  },
+  "updatedAt": {
+    "$date": "2026-07-16T09:26:50.408Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a58bca0e3bf6075ca80e5c4"
+  },
+  "name": "Mohit Chauhan",
+  "email": "chauhanmo147@gmail.com",
+  "password": "$2b$10$OPbarMVLiHiAl75mi4XwGek9cDLqHBBgCg5rxn3/V55Dv/rW1.WF2",
+  "phone": "9876543210",
+  "role": "admin",
+  "createdAt": {
+    "$date": "2026-07-16T11:12:32.507Z"
+  },
+  "updatedAt": {
+    "$date": "2026-07-16T11:12:32.507Z"
+  },
+  "__v": 0
+}]

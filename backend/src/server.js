@@ -26,14 +26,21 @@ app.use(cors({
 
 app.use(express.json());
 
-dbConnect();
-
 app.use("/api", paymentRoutes);
 app.use("/api", bookingRoutes);
 app.use("/api", authRoutes);
 app.use("/api", roomRoutes);
 app.use("/api", adminRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const start = async () => {
+  await dbConnect();
+  const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  const shutdown = () => server.close(() => process.exit(0));
+  process.once("SIGTERM", shutdown);
+  process.once("SIGINT", shutdown);
+};
+
+start().catch((error) => {
+  console.error("Unable to start server:", error);
+  process.exit(1);
 });

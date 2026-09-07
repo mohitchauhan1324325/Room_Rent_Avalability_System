@@ -1,285 +1,75 @@
-import { Booking } from "../models/booking.models.js";
-import Room from "../models/rooms.models.js";
+import { pool, query } from "../db/dbConnect.js";
+
+const bookingSelect = `b.id AS "_id", b.move_in_date AS "moveInDate", b.payment_id AS "paymentId",
+  b.order_id AS "orderId", b.payment_status AS "paymentStatus", b.status, b.created_at AS "createdAt",
+  json_build_object('_id', r.id, 'title', r.title, 'price', r.price::float, 'images', r.images, 'location', r.location) AS "roomId",
+  json_build_object('_id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user`;
 
 export const confirmBooking = async (req, res) => {
+  const client = await pool.connect();
   try {
-
-    const {
-      roomId,
-      moveInDate,
-      paymentId,
-      orderId,
-    } = req.body;
-
-    const userId = req.user.id;
-
-    if (!paymentId || !orderId) {
-      return res.status(400).json({
-        message: "Invalid payment"
-      });
+    const { roomId, moveInDate, paymentId, orderId } = req.body;
+    if (!roomId || !moveInDate || !paymentId || !orderId) return res.status(400).json({ message: "Invalid payment or booking data" });
+    await client.query("BEGIN");
+    const room = await client.query(
+      `UPDATE rooms SET is_available = false, updated_at = now()
+       WHERE id = $1 AND is_available = true RETURNING id`, [roomId]);
+    if (!room.rows[0]) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ message: "Room already booked or not found" });
     }
-
-    const existingBooking =
-      await Booking.findOne({
-        user: userId,
-        status: "confirmed"
-      }).lean();
-
-    if (existingBooking) {
-      return res.status(400).json({
-        message: "You already have an active booking"
-      });
-    }
-
-
-    // atomic booking protection
-    const roomData =
-      await Room.findOneAndUpdate(
-        {
-          _id: roomId,
-          isAvailable: true
-        },
-        {
-          isAvailable: false
-        },
-        {
-          returnDocument: "after"
-        }
-      );
-
-    if (!roomData) {
-      return res.status(400).json({
-        message: "Room already booked or not found"
-      });
-    }
-
-    const booking =
-      await Booking.create({
-        roomId,
-        user: userId,
-        moveInDate,
-        paymentId,
-        orderId,
-        paymentStatus: "paid",
-        status: "confirmed"
-      });
-
-    res.status(201).json({
-      success: true,
-      message: "Booking confirmed",
-      booking
-    });
-
+    const booking = await client.query(
+      `INSERT INTO bookings (room_id, user_id, move_in_date, payment_id, order_id, payment_status, status)
+       VALUES ($1,$2,$3,$4,$5,'paid','confirmed')
+       RETURNING id AS "_id", room_id AS "roomId", user_id AS user, move_in_date AS "moveInDate",
+       payment_id AS "paymentId", order_id AS "orderId", payment_status AS "paymentStatus", status, created_at AS "createdAt"`,
+      [roomId, req.user.id, moveInDate, paymentId, orderId]);
+    await client.query("COMMIT");
+    return res.status(201).json({ success: true, message: "Booking confirmed", booking: booking.rows[0] });
   } catch (error) {
-
-    res.status(500).json({
-      message: error.message
-    });
-
-  }
+    await client.query("ROLLBACK");
+    if (error.code === "23505") return res.status(409).json({ message: "Booking already exists" });
+    return res.status(400).json({ message: "Unable to confirm booking" });
+  } finally { client.release(); }
 };
 
-
 export const getMyBooking = async (req, res) => {
-
   try {
-
-    const bookings =
-      await Booking.find({
-        user: req.user.id,
-        status: "confirmed"
-      })
-        .populate(
-          "roomId",
-          "title price images location"
-        )
-        .populate(
-          "user",
-          "name email phone"
-        )
-        .sort({
-          createdAt: -1
-        })
-        .lean();
-
-    res.status(200).json(bookings);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: "Failed to fetch bookings"
-    });
-
-  }
-
+    const result = await query(`SELECT ${bookingSelect} FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id
+      WHERE b.user_id=$1 AND b.status='confirmed' ORDER BY b.created_at DESC`, [req.user.id]);
+    return res.json(result.rows);
+  } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
 export const getUsersBooking = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = 10;
-
-    // Owner ke rooms nikalo
-    const rooms = await Room.find({ owner: req.user.id })
-      .select("_id")
-      .lean();
-
-    const roomIds = rooms.map(room => room._id);
-
-    const bookings = await Booking.find({
-      roomId: { $in: roomIds }
-    })
-      .populate("user", "name email phone")
-      .populate("roomId", "title location price images")
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
-
-    res.status(200).json(bookings);
-
-  } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
-  }
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const result = await query(`SELECT ${bookingSelect} FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id
+      WHERE r.owner_id=$1 ORDER BY b.created_at DESC LIMIT 10 OFFSET $2`, [req.user.id, (page - 1) * 10]);
+    return res.json(result.rows);
+  } catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
-export const cancelBookingByUser =
-  async (req, res) => {
-
-    try {
-
-      const booking =
-        await Booking.findById(
-          req.params.id
-        ).lean();
-
-      if (!booking) {
-        return res.status(404).json({
-          message:
-            "Booking not found"
-        });
-      }
-
-      if (
-        booking.user.toString()
-        !== req.user.id
-      ) {
-        return res.status(403).json({
-          message:
-            "You can only cancel your own booking"
-        });
-      }
-
-      await Room.findByIdAndUpdate(
-        booking.roomId,
-        {
-          isAvailable: true
-        }
-      );
-
-      await Booking.findByIdAndUpdate(
-        booking._id,
-        {
-          status: "cancelled"
-        }
-      );
-
-      res.status(200).json({
-        message:
-          "Booking cancelled successfully"
-      });
-
-    } catch (error) {
-
-      res.status(500).json({
-        message:
-          error.message
-      });
-
+const cancel = async (req, res, requireOwner) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const found = await client.query(
+      `SELECT b.id, b.room_id, b.user_id, b.status, r.owner_id FROM bookings b JOIN rooms r ON r.id=b.room_id WHERE b.id=$1 FOR UPDATE`,
+      [req.params.id]);
+    const booking = found.rows[0];
+    if (!booking) { await client.query("ROLLBACK"); return res.status(404).json({ message: "Booking not found" }); }
+    if ((requireOwner && req.user.role !== "admin" && booking.owner_id !== req.user.id) || (!requireOwner && booking.user_id !== req.user.id)) {
+      await client.query("ROLLBACK"); return res.status(403).json({ message: "Unauthorized" });
     }
+    if (booking.status === "cancelled") { await client.query("ROLLBACK"); return res.status(400).json({ message: "Already cancelled" }); }
+    await client.query("UPDATE bookings SET status='cancelled', updated_at=now() WHERE id=$1", [booking.id]);
+    await client.query("UPDATE rooms SET is_available=true, updated_at=now() WHERE id=$1", [booking.room_id]);
+    await client.query("COMMIT");
+    return res.json({ message: "Booking cancelled successfully" });
+  } catch (error) { await client.query("ROLLBACK"); return res.status(500).json({ message: error.message }); }
+  finally { client.release(); }
+};
 
-  };
-
-
-export const cancelBooking =
-  async (req, res) => {
-
-    try {
-
-      const booking =
-        await Booking.findById(
-          req.params.id
-        ).lean();
-
-      if (!booking) {
-        return res.status(404).json({
-          message:
-            "Booking not found"
-        });
-      }
-
-      if (
-        booking.status ===
-        "cancelled"
-      ) {
-        return res.status(400).json({
-          message:
-            "Already cancelled"
-        });
-      }
-
-      if (
-        req.user.role ===
-        "owner"
-      ) {
-
-        const room =
-          await Room.findById(
-            booking.roomId
-          )
-            .select("owner")
-            .lean();
-
-        if (
-          !room ||
-          room.owner.toString()
-          !== req.user.id
-        ) {
-          return res.status(403).json({
-            message:
-              "Unauthorized"
-          });
-        }
-
-      }
-
-      await Room.findByIdAndUpdate(
-        booking.roomId,
-        {
-          isAvailable: true
-        }
-      );
-
-      await Booking.findByIdAndUpdate(
-        booking._id,
-        {
-          status: "cancelled"
-        }
-      );
-
-      res.status(200).json({
-        message:
-          "Booking cancelled successfully"
-      });
-
-    } catch (error) {
-
-      res.status(500).json({
-        message: error.message
-      });
-
-    }
-
-  };
+export const cancelBookingByUser = (req, res) => cancel(req, res, false);
+export const cancelBooking = (req, res) => cancel(req, res, true);

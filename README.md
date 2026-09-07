@@ -40,7 +40,7 @@ This project combines a React + Vite frontend with an Express + Node.js backend 
 ### Backend
 - Node.js
 - Express.js
-- MongoDB with Mongoose
+- PostgreSQL with the `pg` driver
 - JWT authentication
 - Cloudinary for media uploads
 - Razorpay for payments
@@ -55,9 +55,9 @@ room-rent-app/
 │   │   ├── controllers/
 │   │   ├── db/
 │   │   ├── middlewares/
-│   │   ├── models/
 │   │   ├── routes/
 │   │   └── utils/
+│   │   
 │   └── package.json
 ├── frontend/
 │   ├── src/
@@ -77,7 +77,7 @@ Before running the project, make sure you have:
 
 - Node.js installed
 - npm or yarn installed
-- A MongoDB instance or MongoDB Atlas connection string
+- A PostgreSQL 15+ database
 - A Cloudinary account
 - A Razorpay account
 
@@ -87,7 +87,10 @@ Create a `.env` file inside the backend directory with the following variables:
 
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
+DATABASE_URL=postgresql://postgres:password@localhost:5432/roomapp
+# Set PGSSL=true only when your managed PostgreSQL provider requires TLS.
+PGSSL=false
+PG_POOL_MAX=20
 CLIENT_URL=http://localhost:5173
 
 CLOUD_NAME=your_cloudinary_cloud_name
@@ -114,7 +117,33 @@ cd backend
 npm install
 ```
 
-### 3. Install frontend dependencies
+### 3. Create the database schema
+
+Create an empty `roomapp` database, set `DATABASE_URL`, then run:
+
+```bash
+npm run db:migrate
+```
+
+The migration creates PostgreSQL tables for users, rooms, bookings, favorites,
+foreign keys, constraints, and the indexes used by the current API. It is safe
+to run again: applied migrations are recorded in `schema_migrations`.
+
+### Move existing MongoDB data (optional)
+
+The schema migration intentionally does not delete or alter your MongoDB data.
+To copy the current four collections, export each collection as JSON/NDJSON to
+`backend/data/` using `mongoexport` (for example, `users.json`, `rooms.json`,
+`bookings.json`, and `favorites.json`), run `npm run db:migrate`, then run:
+
+```bash
+npm run db:import-mongo -- data
+```
+
+Run this only against an empty PostgreSQL database. The importer creates UUIDs
+and preserves every relationship through an internal Mongo ObjectId-to-UUID map.
+
+### 4. Install frontend dependencies
 
 ```bash
 cd ../frontend

@@ -1,22 +1,26 @@
-import mongoose from "mongoose";
-import dns from "dns";
+import pg from "pg";
+import dotenv from "dotenv";
+dotenv.config();
 
-// Use Google DNS to resolve MongoDB Atlas SRV records
-// (fixes ECONNREFUSED on networks with restrictive DNS like college/office WiFi)
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const { Pool } = pg;
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is required (for example: postgresql://user:password@localhost:5432/roomapp)");
+}
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.PGSSL === "true" ? { rejectUnauthorized: false } : false,
+  max: Number(process.env.PG_POOL_MAX || 20),
+  idleTimeoutMillis: 30_000,
+  connectionTimeoutMillis: 5_000,
+});
+
+export const query = (text, params) => pool.query(text, params);
 
 const dbConnect = async () => {
-  try {
-    const connectionInstance = await mongoose.connect(
-      `${process.env.MONGO_URI}/roomapp`
-    );
-
-    console.log(`MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`);
-  } catch (error) {
-    console.error("Error:", error);
-    process.exit(1);
-  }
+  await query("SELECT 1");
+  console.log("PostgreSQL connected");
 };
-
 
 export default dbConnect;

@@ -3,12 +3,7 @@ import { getUserRole } from "../utils/auth";
 import useFavoriteRooms from "../hooks/useFavoriteRooms";
 import { motion } from "framer-motion";
 
-const RoomCard = ({
-  rooms,
-  handleDelete,
-  handleEdit,
-  handleDetails,
-}) => {
+const RoomCard = ({ rooms, handleDetails }) => {
   const { addToFavorite } = useFavoriteRooms();
   const navigate = useNavigate();
   const role = getUserRole();
@@ -27,12 +22,12 @@ const RoomCard = ({
           {/* IMAGE CONTAINER */}
           <div className="relative w-full aspect-square overflow-hidden rounded-2xl mb-3 border border-gray-200/70 dark:border-gray-700/80 bg-gray-100 dark:bg-gray-800/70">
             <img
-              src={room.images[0]}
+              src={room.images?.[0]}
               alt={room.title}
+              loading="lazy"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            
-            {/* GRADIENT OVERLAY FOR TEXT READABILITY (Optional) */}
+
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
             {/* FAVORITE BUTTON */}
@@ -71,9 +66,19 @@ const RoomCard = ({
               <h3 className="font-semibold text-[17px] text-gray-900 dark:text-white line-clamp-1 leading-snug">
                 {room.title}
               </h3>
+
               <div className="flex items-center gap-1 text-sm font-medium text-gray-900 dark:text-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-yellow-500">
-                  <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-4 h-4 text-yellow-500"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 5.0
               </div>
@@ -85,11 +90,17 @@ const RoomCard = ({
 
             <div className="mt-auto pt-2 flex items-center justify-between">
               <div>
-                <span className="font-bold text-[17px] text-gray-900 dark:text-white">₹{room.price}</span>
-                <span className="text-[15px] text-gray-500 dark:text-gray-400 font-normal"> / month</span>
+                <span className="font-bold text-[17px] text-gray-900 dark:text-white">
+                  ₹{room.price}
+                </span>
+
+                <span className="text-[15px] text-gray-500 dark:text-gray-400 font-normal">
+                  {" "}
+                  / month
+                </span>
               </div>
 
-              {/* ACTION BUTTON (Visible on hover for Desktop) */}
+              {/* ACTION BUTTON */}
               {room.isAvailable && role === "user" && (
                 <button
                   className="opacity-100 md:opacity-0 md:translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 bg-brand-600 hover:bg-brand-700 text-white px-4 py-1.5 rounded-lg font-medium text-sm shadow-sm"

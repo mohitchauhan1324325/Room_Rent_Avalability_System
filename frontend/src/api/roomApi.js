@@ -2,9 +2,12 @@ import api from "../utils/api";
 
 export const getRooms = async () => {
     try {
-        const room = await api.get("/api/rooms");
-        return room.data;
+        const response = await api.get("/api/rooms");
 
+        return {
+            rooms: response.data.data,
+            pagination: response.data.pagination,
+        };
     } catch (error) {
         throw error;
     }
@@ -48,7 +51,7 @@ export const createFavoriteRoom = async (id) => {
 
 export const getMyFavoriteRooms = async () => {
     try {
-        
+
         const res = await api.get("/api/favoriteRooms");
 
         return res.data;

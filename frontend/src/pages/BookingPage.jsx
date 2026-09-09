@@ -76,7 +76,7 @@ const BookingPage = () => {
 
       setLoading(true);
 
-      const order = await createOrder(room.price);
+      const order = await createOrder(room._id);
 
       if (!window.Razorpay) {
         toast.error("Payment gateway not loaded");
@@ -113,7 +113,6 @@ const BookingPage = () => {
             await bookRoom({
               roomId: room._id,
               moveInDate: date,
-              paymentId: response.razorpay_payment_id,
               orderId: response.razorpay_order_id,
             });
 

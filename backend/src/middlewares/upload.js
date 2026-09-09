@@ -11,6 +11,13 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 20 * 1024 * 1024, files: 10 },
+  fileFilter: (_req, file, callback) => {
+    const allowed = new Set(["image/jpeg", "image/png", "video/mp4", "video/quicktime"]);
+    callback(allowed.has(file.mimetype) ? null : new Error("Only JPG, PNG, MP4, and MOV uploads are allowed"), allowed.has(file.mimetype));
+  },
+});
 
 export default upload;

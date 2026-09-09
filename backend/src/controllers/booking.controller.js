@@ -8,9 +8,16 @@ const bookingSelect = `b.id AS "_id", b.move_in_date AS "moveInDate", b.payment_
 export const confirmBooking = async (req, res) => {
   const client = await pool.connect();
   try {
-    const { roomId, moveInDate, paymentId, orderId } = req.body;
-    if (!roomId || !moveInDate || !paymentId || !orderId) return res.status(400).json({ message: "Invalid payment or booking data" });
+    const { roomId, moveInDate, orderId } = req.body;
     await client.query("BEGIN");
+    const payment = await client.query(
+      `SELECT id, payment_id FROM payment_orders
+       WHERE razorpay_order_id=$1 AND room_id=$2 AND user_id=$3 AND status='verified' FOR UPDATE`,
+      [orderId, roomId, req.user.id]);
+    if (!payment.rows[0]) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ message: "A verified payment for this room is required" });
+    }
     const room = await client.query(
       `UPDATE rooms SET is_available = false, updated_at = now()
        WHERE id = $1 AND is_available = true RETURNING id`, [roomId]);
@@ -23,7 +30,8 @@ export const confirmBooking = async (req, res) => {
        VALUES ($1,$2,$3,$4,$5,'paid','confirmed')
        RETURNING id AS "_id", room_id AS "roomId", user_id AS user, move_in_date AS "moveInDate",
        payment_id AS "paymentId", order_id AS "orderId", payment_status AS "paymentStatus", status, created_at AS "createdAt"`,
-      [roomId, req.user.id, moveInDate, paymentId, orderId]);
+      [roomId, req.user.id, moveInDate, payment.rows[0].payment_id, orderId]);
+    await client.query("UPDATE payment_orders SET status='consumed', consumed_at=now() WHERE id=$1", [payment.rows[0].id]);
     await client.query("COMMIT");
     return res.status(201).json({ success: true, message: "Booking confirmed", booking: booking.rows[0] });
   } catch (error) {

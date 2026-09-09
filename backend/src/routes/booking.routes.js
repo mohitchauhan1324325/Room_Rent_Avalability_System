@@ -2,6 +2,8 @@ import express from "express";
 import { cancelBooking, cancelBookingByUser, confirmBooking, getUsersBooking, getMyBooking } from "../controllers/booking.controller.js";
 import protect from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import { validate } from "../middlewares/validate.js";
+import { confirmBookingSchema } from "../validation/schemas.js";
 
 const router = express.Router();
 
@@ -9,6 +11,7 @@ router.post(
     "/confirm",
     protect,
     authorizeRoles("user", "admin"),
+    validate(confirmBookingSchema),
     confirmBooking
 );
 

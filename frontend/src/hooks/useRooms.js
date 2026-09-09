@@ -21,14 +21,30 @@ const useRooms = (options = {}) => {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    nextCursor: null,
+    hasMore: false,
+    limit: 10,
+  });
 
   const fetchRooms = async () => {
     try {
       setLoading(true);
 
-      const data = ownerOnly ? await getMyRooms() : await getRooms();
+      if (ownerOnly) {
+        const data = await getMyRooms();
+        setRooms(Array.isArray(data) ? data : []);
+        setPagination({
+          nextCursor: null,
+          hasMore: false,
+          limit: data?.length || 0,
+        });
+      } else {
+        const data = await getRooms();
 
-      setRooms(Array.isArray(data) ? data : []);
+        setRooms(Array.isArray(data.rooms) ? data.rooms : []);
+        setPagination(data.pagination);
+      }
 
     } catch (err) {
       setError("Failed to fetch rooms: " + err.message);
@@ -139,6 +155,7 @@ const useRooms = (options = {}) => {
     handleDetails,
     loading,
     error,
+    pagination,
   };
 };
 

@@ -1,85 +1,49 @@
+import crypto from "node:crypto";
 import { razorpay } from "../config/razorpay.js";
-import crypto from "crypto";
+import { pool, query } from "../db/dbConnect.js";
 
 export const createOrder = async (req, res) => {
-    try {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const roomResult = await client.query(
+      `UPDATE rooms SET is_available=false, updated_at=now()
+       WHERE id=$1 AND is_available=true RETURNING id, price`, [req.body.roomId]);
+    const room = roomResult.rows[0];
+    if (!room) { await client.query("ROLLBACK"); return res.status(409).json({ message: "Room is unavailable" }); }
 
-        const amount = Number(req.body.amount);
-
-        if (!amount || amount <= 0) {
-            return res.status(400).json({
-                message: "Invalid amount"
-            });
-        }
-
-        const order =
-            await razorpay.orders.create({
-                amount: amount * 100,
-                currency: "INR",
-                receipt: `receipt_${Date.now()}`
-            });
-
-        res.json(order);
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
+    const amountPaise = Math.round(Number(room.price) * 100);
+    const receipt = `bk_${crypto.randomBytes(16).toString("hex")}`;
+    const order = await razorpay.orders.create({ amount: amountPaise, currency: "INR", receipt });
+    await client.query(
+      `INSERT INTO payment_orders (razorpay_order_id, receipt, room_id, user_id, amount_paise, currency)
+       VALUES ($1,$2,$3,$4,$5,$6)`,
+      [order.id, receipt, room.id, req.user.id, amountPaise, order.currency],
+    );
+    await client.query("COMMIT");
+    return res.json(order);
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ message: "Unable to create payment order" });
+  } finally { client.release(); }
 };
 
 export const verifyPayment = async (req, res) => {
-    try {
-
-        const {
-            razorpay_order_id,
-            razorpay_payment_id,
-            razorpay_signature
-        } = req.body;
-
-        if (
-            !razorpay_order_id ||
-            !razorpay_payment_id ||
-            !razorpay_signature
-        ) {
-            return res.status(400).json({
-                message: "Missing payment data"
-            });
-        }
-
-        const generatedSignature =
-            crypto
-                .createHmac(
-                    "sha256",
-                    process.env.RAZORPAY_KEY_SECRET
-                )
-                .update(
-                    `${razorpay_order_id}|${razorpay_payment_id}`
-                )
-                .digest("hex");
-
-        if (
-            generatedSignature !==
-            razorpay_signature
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "Payment failed"
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Payment verified"
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
+  try {
+    const { razorpay_order_id: orderId, razorpay_payment_id: paymentId, razorpay_signature: signature } = req.body;
+    const expected = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET).update(`${orderId}|${paymentId}`).digest("hex");
+    if (!crypto.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(signature, "hex"))) {
+      return res.status(400).json({ success: false, message: "Payment verification failed" });
     }
+    const result = await query(
+      `UPDATE payment_orders SET status='verified', payment_id=$1, verified_at=now()
+       WHERE razorpay_order_id=$2 AND user_id=$3 AND status='created' AND expires_at > now()
+       RETURNING razorpay_order_id`,
+      [paymentId, orderId, req.user.id],
+    );
+    if (!result.rows[0]) return res.status(409).json({ success: false, message: "Payment order is invalid, already used, or belongs to another user" });
+    return res.json({ success: true, message: "Payment verified", orderId });
+  } catch {
+    return res.status(500).json({ message: "Unable to verify payment" });
+  }
 };

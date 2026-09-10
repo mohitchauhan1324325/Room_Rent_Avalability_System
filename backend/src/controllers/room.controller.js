@@ -1,6 +1,10 @@
 import cloudinary from "../config/cloudinary.js";
 import asyncHandler from "../utils/asyncHandler.js";
-
+import {
+    getCache,
+    setCache,
+    deleteCacheByPattern,
+} from "../config/redis.js";
 import {
     createRoom,
     findRooms,
@@ -71,6 +75,8 @@ export const addRoom = asyncHandler(async (req, res) => {
         ownerId: req.user.id,
     });
 
+    await deleteCacheByPattern("rooms:list:*");
+
     return res.status(201).json(room);
 });
 
@@ -86,12 +92,14 @@ export const getRooms = asyncHandler(async (req, res) => {
         50
     );
 
+    const cursorParam = req.query.cursor || null;
+
     let cursor = null;
 
-    if (req.query.cursor) {
+    if (cursorParam) {
         try {
             cursor = JSON.parse(
-                Buffer.from(req.query.cursor, "base64url").toString("utf8")
+                Buffer.from(cursorParam, "base64url").toString("utf8")
             );
         } catch {
             return res.status(400).json({
@@ -100,6 +108,18 @@ export const getRooms = asyncHandler(async (req, res) => {
             });
         }
     }
+
+    const cacheKey = `rooms:list:${limit}:${cursorParam || "first"}`;
+
+    const cached = await getCache(cacheKey);
+
+    if (cached) {
+
+        console.log("REDIS CACHE HIT:", cacheKey);
+        return res.json(JSON.parse(cached));
+    }
+
+    console.log("REDIS CACHE MISS:", cacheKey);
 
     const rooms = await findRooms({
         limit,
@@ -118,14 +138,22 @@ export const getRooms = asyncHandler(async (req, res) => {
             ).toString("base64url")
             : null;
 
-    return res.json({
+    const response = {
         data: rooms,
         pagination: {
             limit,
             nextCursor,
             hasMore: Boolean(nextCursor),
         },
-    });
+    };
+
+    await setCache(
+        cacheKey,
+        JSON.stringify(response),
+        30
+    );
+
+    return res.json(response);
 });
 
 export const getMyRooms = asyncHandler(async (req, res) => {
@@ -194,7 +222,7 @@ export const deleteRoomById = asyncHandler(async (req, res) => {
     }
 
     await deleteRoom(room.id);
-
+    await deleteCacheByPattern("rooms:list:*");
     await removeCloudinaryMedia(room);
 
     return res.json({
@@ -242,6 +270,8 @@ export const updateRoom = asyncHandler(async (req, res) => {
         images: media.images,
         videos: media.videos,
     });
+
+    await deleteCacheByPattern("rooms:list:*");
 
     return res.json(updatedRoom);
 });

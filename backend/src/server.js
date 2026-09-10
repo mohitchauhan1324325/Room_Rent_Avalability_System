@@ -16,6 +16,8 @@ import adminRoutes from "./routes/admin.routes.js";
 import { releaseExpiredPaymentReservations } from "./services/paymentReservation.service.js";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
 import healthRoutes from "./routes/health.routes.js";
+import { connectRedis } from "./config/redis.js";
+import redisClient from "./config/redis.js";
 
 const app = express();
 const allowedOrigins = [
@@ -44,13 +46,28 @@ app.use(errorHandler);
 
 const start = async () => {
   await dbConnect();
+  await connectRedis();
+
   await releaseExpiredPaymentReservations();
-  const reservationCleanup = setInterval(releaseExpiredPaymentReservations, 60_000);
-  const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+  const reservationCleanup = setInterval(
+    releaseExpiredPaymentReservations,
+    60_000
+  );
+
+  const server = app.listen(PORT, () =>
+    console.log(`Server running on port ${PORT}`)
+  );
+
   const shutdown = () => {
     clearInterval(reservationCleanup);
-    server.close(() => process.exit(0));
+
+    server.close(async () => {
+      await redisClient.quit();
+      process.exit(0);
+    });
   };
+
   process.once("SIGTERM", shutdown);
   process.once("SIGINT", shutdown);
 };

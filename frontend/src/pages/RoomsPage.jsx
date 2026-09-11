@@ -16,11 +16,14 @@ const RoomsPage = () => {
 
   const {
     filteredRooms,
-    setFilter,
-    handleDeleteAllRooms,
-    handleDetails,
     loading,
+    loadingMore,
     error,
+    pagination,
+    loadMoreRooms,
+    handleDetails,
+    handleDeleteAllRooms,
+    setFilter,
   } = useRooms();
 
   if (loading) return <Loader />;
@@ -40,7 +43,7 @@ const RoomsPage = () => {
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-6 mb-10">
         <div className="flex flex-col md:flex-row items-end justify-between gap-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -54,7 +57,7 @@ const RoomsPage = () => {
             </p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -96,14 +99,14 @@ const RoomsPage = () => {
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Filter and Stats Bar */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-col sm:flex-row items-center justify-between bg-white/90 dark:bg-gray-800/90 p-2 sm:p-3 rounded-3xl shadow-sm border border-gray-200/70 dark:border-gray-700/80 mb-8"
         >
           <RoomsFilter setFilter={setFilter} />
-          
+
           <div className="flex items-center gap-2 px-4 py-2 bg-gray-100/90 dark:bg-gray-900/80 rounded-2xl mr-2 border border-gray-200/60 dark:border-gray-700/60">
             <Home size={18} className="text-brand-500" />
             <span className="font-semibold text-gray-900 dark:text-white">
@@ -120,6 +123,20 @@ const RoomsPage = () => {
             rooms={filteredRooms}
             handleDetails={handleDetails}
           />
+        )}
+
+        {pagination.hasMore && (
+          <div className="flex justify-center mt-10">
+            <button
+              onClick={loadMoreRooms}
+              disabled={loadingMore}
+              className="px-6 py-3 rounded-lg bg-brand-600 text-white font-medium disabled:opacity-50"
+            >
+              {loadingMore
+                ? "Loading..."
+                : "Load More"}
+            </button>
+          </div>
         )}
       </div>
     </div>

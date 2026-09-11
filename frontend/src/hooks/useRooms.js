@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
+
 import {
-  getRooms,
-  getMyRooms,
-  deleteRoom,
-  deleteAllRooms,
-  createFavoriteRoom,
-  getMyFavoriteRooms
+    getRooms,
+    getMyRooms,
+    deleteRoom,
+    deleteAllRooms,
 } from "../api/roomApi.js";
 
 import { useNavigate } from "react-router-dom";
@@ -14,149 +13,282 @@ import { isAuthenticated } from "../utils/auth.js";
 import Swal from "sweetalert2";
 
 const useRooms = (options = {}) => {
-  const navigate = useNavigate();
-  const { ownerOnly = false } = options;
+    const navigate = useNavigate();
 
-  const [rooms, setRooms] = useState([]);
-  const [filter, setFilter] = useState("all");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    nextCursor: null,
-    hasMore: false,
-    limit: 10,
-  });
+    const { ownerOnly = false } = options;
 
-  const fetchRooms = async () => {
-    try {
-      setLoading(true);
+    const [rooms, setRooms] = useState([]);
+    const [filter, setFilter] = useState("all");
 
-      if (ownerOnly) {
-        const data = await getMyRooms();
-        setRooms(Array.isArray(data) ? data : []);
-        setPagination({
-          nextCursor: null,
-          hasMore: false,
-          limit: data?.length || 0,
+    const [loading, setLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+
+    const [error, setError] = useState(null);
+
+    const [pagination, setPagination] = useState({
+        nextCursor: null,
+        hasMore: false,
+        limit: 10,
+    });
+
+    // --------------------------------
+    // Initial rooms fetch
+    // --------------------------------
+
+    const fetchRooms = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            if (ownerOnly) {
+                const data = await getMyRooms();
+
+                setRooms(Array.isArray(data) ? data : []);
+
+                setPagination({
+                    nextCursor: null,
+                    hasMore: false,
+                    limit: data?.length || 0,
+                });
+
+                return;
+            }
+
+            const response = await getRooms(null, 10);
+
+            /*
+                Backend response:
+
+                {
+                    data: [...],
+                    pagination: {
+                        limit,
+                        nextCursor,
+                        hasMore
+                    }
+                }
+            */
+
+            setRooms(
+                Array.isArray(response.data)
+                    ? response.data
+                    : []
+            );
+
+            setPagination(
+                response.pagination || {
+                    nextCursor: null,
+                    hasMore: false,
+                    limit: 10,
+                }
+            );
+
+        } catch (err) {
+            console.error("FETCH ROOMS ERROR:", err);
+
+            setError(
+                "Failed to fetch rooms: " +
+                (err.response?.data?.message || err.message)
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // --------------------------------
+    // Load next page
+    // --------------------------------
+
+    const loadMoreRooms = async () => {
+        if (
+            loadingMore ||
+            !pagination.hasMore ||
+            !pagination.nextCursor ||
+            ownerOnly
+        ) {
+            return;
+        }
+
+        try {
+            setLoadingMore(true);
+            setError(null);
+
+            const response = await getRooms(
+                pagination.nextCursor,
+                pagination.limit
+            );
+
+            const newRooms = Array.isArray(response.data)
+                ? response.data
+                : [];
+
+            // Add new rooms to existing rooms
+            setRooms((prevRooms) => [
+                ...prevRooms,
+                ...newRooms,
+            ]);
+
+            // Update cursor
+            setPagination(
+                response.pagination || {
+                    nextCursor: null,
+                    hasMore: false,
+                    limit: pagination.limit,
+                }
+            );
+
+        } catch (err) {
+            console.error("LOAD MORE ROOMS ERROR:", err);
+
+            setError(
+                "Failed to load more rooms: " +
+                (err.response?.data?.message || err.message)
+            );
+        } finally {
+            setLoadingMore(false);
+        }
+    };
+
+    // --------------------------------
+    // Edit
+    // --------------------------------
+
+    const handleEdit = (id) => {
+        navigate(`/EditRooms/${id}`);
+    };
+
+    // --------------------------------
+    // Details
+    // --------------------------------
+
+    const handleDetails = (id) => {
+        navigate(`/RoomDetails/${id}`);
+    };
+
+    // --------------------------------
+    // Delete ALL rooms
+    // --------------------------------
+
+    const handleDeleteAllRooms = async () => {
+        if (!isAuthenticated()) {
+            navigate("/register");
+            return;
+        }
+
+        const result = await Swal.fire({
+            title: "Delete ALL rooms?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete all!",
         });
-      } else {
-        const data = await getRooms();
 
-        setRooms(Array.isArray(data.rooms) ? data.rooms : []);
-        setPagination(data.pagination);
-      }
+        if (!result.isConfirmed) return;
 
-    } catch (err) {
-      setError("Failed to fetch rooms: " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+        try {
+            setLoading(true);
 
-  const handleEdit = (id) => {
-    navigate(`/EditRooms/${id}`);
-  };
+            await deleteAllRooms();
 
-  const handleDetails = (id) => {
-    navigate(`/RoomDetails/${id}`);
-  };
+            setRooms([]);
 
-  const handleDeleteAllRooms = async () => {
+            setPagination({
+                nextCursor: null,
+                hasMore: false,
+                limit: 10,
+            });
 
-    if (!isAuthenticated()) {
-      navigate("/register");
-      return;
-    }
+            toast.success(
+                "All rooms deleted successfully!"
+            );
 
-    const result = await Swal.fire({
-      title: "Delete ALL rooms?",
-      text: "This action cannot be undone!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete all!",
-    });
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    if (!result.isConfirmed) return;
+    // --------------------------------
+    // Delete room
+    // --------------------------------
 
-    try {
-      setLoading(true);
+    const handleDelete = async (id) => {
+        if (!isAuthenticated()) {
+            navigate("/register");
+            return;
+        }
 
-      await deleteAllRooms();
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "This room will be deleted permanently!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Delete",
+        });
 
-      setRooms([]);
+        if (!result.isConfirmed) return;
 
-      toast.success("All rooms deleted successfully!");
+        try {
+            setLoading(true);
 
-    } catch (error) {
+            await deleteRoom(id);
 
-      setError(error.message);
+            setRooms((prev) =>
+                prev.filter(
+                    (room) => room._id !== id
+                )
+            );
 
-    } finally {
-      setLoading(false);
-    }
-  };
+            toast.success("Room deleted");
 
-  const handleDelete = async (id) => {
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    if (!isAuthenticated()) {
-      navigate("/register");
-      return;
-    }
+    // --------------------------------
+    // Filter
+    // --------------------------------
 
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This room will be deleted permanently!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-    });
+    const filteredRooms =
+        filter === "available"
+            ? rooms.filter(
+                (room) => room.isAvailable
+            )
+            : rooms;
 
-    if (!result.isConfirmed) return;
+    // --------------------------------
+    // Initial API call
+    // --------------------------------
 
-    try {
+    useEffect(() => {
+        fetchRooms();
+    }, [ownerOnly]);
 
-      setLoading(true);
+    return {
+        rooms,
+        filteredRooms,
 
-      await deleteRoom(id);
+        setFilter,
 
-      setRooms(prev =>
-        prev.filter(room => room._id !== id)
-      );
+        handleDeleteAllRooms,
+        handleDelete,
 
-      toast.success("Room deleted");
+        handleEdit,
+        handleDetails,
 
-    } catch (err) {
+        loading,
+        loadingMore,
 
-      setError(err.message);
+        error,
 
-    } finally {
+        pagination,
 
-      setLoading(false);
-
-    }
-  };
-
-  const filteredRooms =
-    filter === "available"
-      ? rooms.filter(room => room.isAvailable)
-      : rooms;
-
-  useEffect(() => {
-    fetchRooms();
-  }, [ownerOnly]);
-
-  return {
-    rooms,
-    filteredRooms,
-    setFilter,
-    handleDeleteAllRooms,
-    handleDelete,
-    handleEdit,
-    handleDetails,
-    loading,
-    error,
-    pagination,
-  };
+        loadMoreRooms,
+    };
 };
 
 export default useRooms;

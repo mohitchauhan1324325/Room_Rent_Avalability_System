@@ -1,4 +1,5 @@
 import { createClient } from "redis";
+import crypto from "node:crypto";
 
 const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
@@ -37,7 +38,21 @@ export const setCache = async (key, value, ttlSeconds = 30) => {
 };
 
 export const deleteCache = async (key) => {
-  await redisClient.del(key);
+    if (!redisClient.isReady) return;
+
+    await redisClient.del(key);
+};
+
+export const deleteRoomListCache = async () => {
+    if (!redisClient.isReady) return;
+
+    const keys = await redisClient.keys("rooms:list:*");
+
+    if (keys.length > 0) {
+        await redisClient.del(keys);
+    }
+
+    console.log(`ROOM CACHE INVALIDATED: ${keys.length} keys`);
 };
 
 export const deleteCacheByPattern = async (pattern) => {
@@ -55,6 +70,42 @@ export const deleteCacheByPattern = async (pattern) => {
       await redisClient.del(result.keys);
     }
   } while (cursor !== 0);
+};
+
+// Acquire a unique lock
+export const acquireLock = async (key, ttlSeconds = 5) => {
+  const token = crypto.randomUUID();
+
+  const result = await redisClient.set(key, token, {
+    NX: true,
+    EX: ttlSeconds,
+  });
+
+  if (result !== "OK") {
+    return null;
+  }
+
+  return token;
+};
+
+// Release ONLY our own lock
+export const releaseLock = async (key, token) => {
+  if (!token) {
+    return;
+  }
+
+  const script = `
+    if redis.call("GET", KEYS[1]) == ARGV[1] then
+      return redis.call("DEL", KEYS[1])
+    else
+      return 0
+    end
+  `;
+
+  await redisClient.eval(script, {
+    keys: [key],
+    arguments: [token],
+  });
 };
 
 export default redisClient;

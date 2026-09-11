@@ -1,13 +1,20 @@
 import api from "../utils/api";
 
-export const getRooms = async () => {
+export const getRooms = async (cursor = null, limit = 10) => {
     try {
-        const response = await api.get("/api/rooms");
-
-        return {
-            rooms: response.data.data,
-            pagination: response.data.pagination,
+        const params = {
+            limit,
         };
+
+        if (cursor) {
+            params.cursor = cursor;
+        }
+
+        const response = await api.get("/api/rooms", {
+            params,
+        });
+
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -15,8 +22,8 @@ export const getRooms = async () => {
 
 export const getMyRooms = async () => {
     try {
-        const room = await api.get("/api/myRooms");
-        return room.data;
+        const response = await api.get("/api/myRooms");
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -24,8 +31,8 @@ export const getMyRooms = async () => {
 
 export const getRoomById = async (id) => {
     try {
-        const room = await api.get(`/api/rooms/${id}`);
-        return room.data;
+        const response = await api.get(`/api/rooms/${id}`);
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -33,8 +40,8 @@ export const getRoomById = async (id) => {
 
 export const createRoom = async (data) => {
     try {
-        await api.post("/api/rooms", data);
-
+        const response = await api.post("/api/rooms", data);
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -42,29 +49,26 @@ export const createRoom = async (data) => {
 
 export const createFavoriteRoom = async (id) => {
     try {
-        await api.post(`/api/favoriteRoom/${id}`);
-
+        const response = await api.post(`/api/favoriteRoom/${id}`);
+        return response.data;
     } catch (error) {
         throw error;
     }
-}
+};
 
 export const getMyFavoriteRooms = async () => {
     try {
-
-        const res = await api.get("/api/favoriteRooms");
-
-        return res.data;
-
+        const response = await api.get("/api/favoriteRooms");
+        return response.data;
     } catch (error) {
         throw error;
     }
-}
+};
 
 export const deleteRoom = async (id) => {
     try {
-        await api.delete(`/api/rooms/${id}`);
-
+        const response = await api.delete(`/api/rooms/${id}`);
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -72,8 +76,8 @@ export const deleteRoom = async (id) => {
 
 export const deleteAllRooms = async () => {
     try {
-        await api.delete("/api/rooms");
-
+        const response = await api.delete("/api/rooms");
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -81,8 +85,8 @@ export const deleteAllRooms = async () => {
 
 export const updateRoom = async (id, data) => {
     try {
-        await api.put(`/api/rooms/${id}`, data);
-
+        const response = await api.put(`/api/rooms/${id}`, data);
+        return response.data;
     } catch (error) {
         throw error;
     }

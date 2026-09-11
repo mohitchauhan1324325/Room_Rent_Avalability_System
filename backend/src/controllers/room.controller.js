@@ -1,10 +1,15 @@
 import cloudinary from "../config/cloudinary.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import { query } from "../db/dbConnect.js";
+
 import {
     getCache,
     setCache,
+    acquireLock,
+    releaseLock,
     deleteCacheByPattern,
 } from "../config/redis.js";
+
 import {
     createRoom,
     findRooms,
@@ -80,13 +85,7 @@ export const addRoom = asyncHandler(async (req, res) => {
     return res.status(201).json(room);
 });
 
-export const getRooms = asyncHandler(async (req, res) => {
-
-    res.set(
-        "Cache-Control",
-        "public, max-age=5, stale-while-revalidate=30"
-    );
-
+export const getRooms = async (req, res) => {
     const limit = Math.min(
         Math.max(Number(req.query.limit) || 10, 1),
         50
@@ -94,67 +93,184 @@ export const getRooms = asyncHandler(async (req, res) => {
 
     const cursorParam = req.query.cursor || null;
 
-    let cursor = null;
-
-    if (cursorParam) {
-        try {
-            cursor = JSON.parse(
-                Buffer.from(cursorParam, "base64url").toString("utf8")
-            );
-        } catch {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid pagination cursor",
-            });
-        }
-    }
-
     const cacheKey = `rooms:list:${limit}:${cursorParam || "first"}`;
+    const lockKey = `lock:${cacheKey}`;
 
-    const cached = await getCache(cacheKey);
+    let lockToken = null;
 
-    if (cached) {
+    try {
+        // --------------------------------
+        // 1. Check Redis cache
+        // --------------------------------
+        const cached = await getCache(cacheKey);
 
-        console.log("REDIS CACHE HIT:", cacheKey);
-        return res.json(JSON.parse(cached));
-    }
+        if (cached) {
+            console.log("REDIS CACHE HIT:", cacheKey);
 
-    console.log("REDIS CACHE MISS:", cacheKey);
+            return res.json(JSON.parse(cached));
+        }
 
-    const rooms = await findRooms({
-        limit,
-        cursor,
-    });
+        console.log("REDIS CACHE MISS:", cacheKey);
 
-    const lastRoom = rooms[rooms.length - 1];
+        // --------------------------------
+        // 2. Acquire distributed lock
+        // --------------------------------
+        lockToken = await acquireLock(lockKey, 5);
 
-    const nextCursor =
-        rooms.length === limit && lastRoom
-            ? Buffer.from(
+        // --------------------------------
+        // 3. Another request is fetching
+        // --------------------------------
+        if (!lockToken) {
+            await new Promise((resolve) => {
+                setTimeout(resolve, 100);
+            });
+
+            const retryCache = await getCache(cacheKey);
+
+            if (retryCache) {
+                console.log(
+                    "REDIS CACHE HIT AFTER WAIT:",
+                    cacheKey
+                );
+
+                return res.json(JSON.parse(retryCache));
+            }
+
+            // Lock failed AND cache is still empty.
+            // Continue with DB query rather than blocking forever.
+            console.log(
+                "REDIS LOCK BUSY, FETCHING FROM DB:",
+                cacheKey
+            );
+        }
+
+        // --------------------------------
+        // 4. Parse cursor
+        // --------------------------------
+        let cursor = null;
+
+        if (cursorParam) {
+            try {
+                cursor = JSON.parse(
+                    Buffer.from(cursorParam, "base64url").toString("utf8")
+                );
+            } catch {
+                return res.status(400).json({
+                    message: "Invalid cursor",
+                });
+            }
+        }
+
+        // --------------------------------
+        // 5. PostgreSQL query
+        // --------------------------------
+        let queryText;
+        let queryParams;
+
+        if (cursor) {
+            queryText = `
+                SELECT
+                    id AS "_id",
+                    title,
+                    price::float AS price,
+                    description,
+                    images,
+                    videos,
+                    location,
+                    is_available AS "isAvailable",
+                    created_at AS "createdAt"
+                FROM rooms
+                WHERE (created_at, id) < ($1, $2)
+                ORDER BY created_at DESC, id DESC
+                LIMIT $3
+            `;
+
+            queryParams = [
+                cursor.createdAt,
+                cursor.id,
+                limit,
+            ];
+        } else {
+            queryText = `
+                SELECT
+                    id AS "_id",
+                    title,
+                    price::float AS price,
+                    description,
+                    images,
+                    videos,
+                    location,
+                    is_available AS "isAvailable",
+                    created_at AS "createdAt"
+                FROM rooms
+                ORDER BY created_at DESC, id DESC
+                LIMIT $1
+            `;
+
+            queryParams = [limit];
+        }
+
+        const result = await query(queryText, queryParams);
+
+        const rooms = result.rows;
+
+        // --------------------------------
+        // 6. Generate next cursor
+        // --------------------------------
+        let nextCursor = null;
+
+        if (rooms.length === limit) {
+            const lastRoom = rooms[rooms.length - 1];
+
+            nextCursor = Buffer.from(
                 JSON.stringify({
                     createdAt: lastRoom.createdAt,
                     id: lastRoom._id,
                 })
-            ).toString("base64url")
-            : null;
+            ).toString("base64url");
+        }
 
-    const response = {
-        data: rooms,
-        pagination: {
-            limit,
-            nextCursor,
-            hasMore: Boolean(nextCursor),
-        },
-    };
+        // --------------------------------
+        // 7. Create response
+        // --------------------------------
+        const response = {
+            data: rooms,
+            pagination: {
+                limit,
+                nextCursor,
+                hasMore: Boolean(nextCursor),
+            },
+        };
 
-    await setCache(
-        cacheKey,
-        JSON.stringify(response),
-        30
-    );
+        // --------------------------------
+        // 8. Save response in Redis
+        // --------------------------------
+        await setCache(
+            cacheKey,
+            JSON.stringify(response),
+            30
+        );
 
-    return res.json(response);
-});
+        console.log("REDIS CACHE SET:", cacheKey);
+
+        return res.json(response);
+
+    } catch (error) {
+        console.error("GET ROOMS ERROR:", error);
+
+        return res.status(500).json({
+            message: "Failed to fetch rooms",
+        });
+
+    } finally {
+        // --------------------------------
+        // 9. Release ONLY our own lock
+        // --------------------------------
+        if (lockToken) {
+            await releaseLock(lockKey, lockToken);
+        }
+    }
+};
 
 export const getMyRooms = asyncHandler(async (req, res) => {
     const rooms = await findRoomsByOwner(req.user.id);
@@ -176,6 +292,8 @@ export const getRoomById = asyncHandler(async (req, res) => {
 
 export const deleteAllRooms = asyncHandler(async (_req, res) => {
     await deleteAllRoomsFromRepository();
+
+    await deleteCacheByPattern("rooms:list:*");
 
     return res.json({
         message: "All rooms are deleted successfully",

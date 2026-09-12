@@ -1,13 +1,15 @@
 import api from "../utils/api";
 
 export const registerUser = async (data) => {
-    try {
-        const res = await api.post("/api/register", data);
-        return res.data;
+  try {
+    const res = await api.post("/api/register", data);
 
-    } catch (error) {
-        throw error.response?.data || { message: "Register failed" };
-    }
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || {
+      message: "Register failed",
+    };
+  }
 };
 
 export const loginUser = async (data) => {
@@ -15,16 +17,18 @@ export const loginUser = async (data) => {
     const res = await api.post("/api/login", data);
 
     const { token, user } = res.data;
-  
-    if (token && user){
+
+    if (token && user) {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+
       window.dispatchEvent(new Event("auth:changed"));
     }
 
     return res.data;
-
   } catch (error) {
-    throw error.response?.data || { message: "Login failed" };
+    throw error.response?.data || {
+      message: "Login failed",
+    };
   }
 };

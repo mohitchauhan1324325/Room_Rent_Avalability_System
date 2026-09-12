@@ -18,12 +18,12 @@ const RoomsPage = () => {
     filteredRooms,
     loading,
     loadingMore,
-    error,
     pagination,
     loadMoreRooms,
     handleDetails,
-    handleDeleteAllRooms,
+    error,
     setFilter,
+    handleDeleteAllRooms,
   } = useRooms();
 
   if (loading) return <Loader />;

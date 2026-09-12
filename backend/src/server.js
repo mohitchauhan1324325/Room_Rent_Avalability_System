@@ -39,6 +39,13 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 600, standardHeaders: "draf
 app.use("/api", healthRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", bookingRoutes);
+
+app.get("/api/test", (req, res) => {
+  res.json({
+    message: "API route working",
+  });
+});
+
 app.use("/api", authRoutes);
 app.use("/api", roomRoutes);
 app.use("/api", adminRoutes);

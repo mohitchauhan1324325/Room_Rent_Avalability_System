@@ -46,6 +46,7 @@ export const createOrder = async (req, res) => {
 
   } finally {
     client.release();
+  }
   };
 
   export const verifyPayment = async (req, res) => {

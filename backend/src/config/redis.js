@@ -38,25 +38,25 @@ export const setCache = async (key, value, ttlSeconds = 30) => {
 };
 
 export const deleteCache = async (key) => {
-    if (!redisClient.isReady) return;
+  if (!redisClient.isReady) return;
 
-    await redisClient.del(key);
+  await redisClient.del(key);
 };
 
 export const deleteRoomListCache = async () => {
-    if (!redisClient.isReady) return;
+  if (!redisClient.isReady) return;
 
-    const keys = await redisClient.keys("rooms:list:*");
+  const keys = await redisClient.keys("rooms:list:*");
 
-    if (keys.length > 0) {
-        await redisClient.del(keys);
-    }
+  if (keys.length > 0) {
+    await redisClient.del(keys);
+  }
 
-    console.log(`ROOM CACHE INVALIDATED: ${keys.length} keys`);
+  console.log(`ROOM CACHE INVALIDATED: ${keys.length} keys`);
 };
 
 export const deleteCacheByPattern = async (pattern) => {
-  let cursor = 0;
+  let cursor = "0";
 
   do {
     const result = await redisClient.scan(cursor, {
@@ -69,7 +69,8 @@ export const deleteCacheByPattern = async (pattern) => {
     if (result.keys.length > 0) {
       await redisClient.del(result.keys);
     }
-  } while (cursor !== 0);
+
+  } while (cursor !== "0");
 };
 
 // Acquire a unique lock

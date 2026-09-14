@@ -80,7 +80,11 @@ export const addRoom = asyncHandler(async (req, res) => {
         ownerId: req.user.id,
     });
 
-    await deleteCacheByPattern("rooms:list:*");
+    try {
+        await deleteCacheByPattern("rooms:list:*");
+    } catch (error) {
+        console.error("ROOM CACHE INVALIDATION ERROR:", error);
+    }
 
     return res.status(201).json(room);
 });

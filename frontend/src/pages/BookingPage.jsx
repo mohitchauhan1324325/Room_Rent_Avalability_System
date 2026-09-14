@@ -90,15 +90,20 @@ const BookingPage = () => {
         order_id: order.id,
         name: "StayNest",
         description: `Booking for ${room.title}`,
+
         theme: {
           color: "#4f46e5",
         },
+
         prefill: {
           name: user?.name,
           contact: phone,
         },
+
         handler: async function (response) {
           try {
+            console.log("RAZORPAY SUCCESS:", response);
+
             const verifyRes = await verifyPayment({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -120,12 +125,16 @@ const BookingPage = () => {
             navigate("/rooms");
 
           } catch (error) {
-            console.log("ERROR:", error);
-            toast.error(error.response?.data?.message || "Booking failed ❌");
+            console.log("PAYMENT/BOOKING ERROR:", error);
+            toast.error(
+              error.response?.data?.message || "Booking failed ❌"
+            );
           } finally {
             setLoading(false);
           }
         },
+
+        // 👇 ADD THIS
         modal: {
           ondismiss: function () {
             setLoading(false);
@@ -135,6 +144,24 @@ const BookingPage = () => {
       };
 
       const rzp = new window.Razorpay(options);
+
+      // 👇 ADD THIS BEFORE rzp.open()
+      rzp.on("payment.failed", function (response) {
+        console.error("RAZORPAY PAYMENT FAILED:", response.error);
+
+        console.error("Code:", response.error.code);
+        console.error("Description:", response.error.description);
+        console.error("Source:", response.error.source);
+        console.error("Step:", response.error.step);
+        console.error("Reason:", response.error.reason);
+
+        setLoading(false);
+
+        toast.error(
+          response.error.description || "Payment failed"
+        );
+      });
+
       rzp.open();
 
     } catch (error) {
@@ -149,7 +176,7 @@ const BookingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 pt-28 sm:pt-32 lg:pt-36">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col lg:flex-row gap-10"
@@ -157,7 +184,7 @@ const BookingPage = () => {
           {/* Left Side: Booking Form */}
           <div className="flex-1">
             <div className="mb-8">
-              <button 
+              <button
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors mb-4"
               >
@@ -185,9 +212,9 @@ const BookingPage = () => {
           <div className="w-full lg:w-[450px]">
             <div className="sticky top-24 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl rounded-3xl p-6">
               <div className="flex gap-4 pb-6 border-b border-gray-200 dark:border-gray-700">
-                <img 
-                  src={room.images?.[0] || "/placeholder.jpg"} 
-                  alt="Room" 
+                <img
+                  src={room.images?.[0] || "/placeholder.jpg"}
+                  alt="Room"
                   className="w-28 h-28 object-cover rounded-2xl"
                 />
                 <div className="flex flex-col justify-between">

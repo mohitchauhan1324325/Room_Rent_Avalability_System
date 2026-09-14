@@ -9,36 +9,74 @@ export const confirmBooking = async (req, res) => {
   const client = await pool.connect();
   try {
     const { roomId, moveInDate, orderId } = req.body;
+
     await client.query("BEGIN");
+
     const payment = await client.query(
       `SELECT id, payment_id FROM payment_orders
        WHERE razorpay_order_id=$1 AND room_id=$2 AND user_id=$3 AND status='verified' FOR UPDATE`,
       [orderId, roomId, req.user.id]);
+
     if (!payment.rows[0]) {
       await client.query("ROLLBACK");
       return res.status(400).json({ message: "A verified payment for this room is required" });
     }
+
     const room = await client.query(
-      `UPDATE rooms SET is_available = false, updated_at = now()
-       WHERE id = $1 AND is_available = true RETURNING id`, [roomId]);
+      `SELECT id
+   FROM rooms
+   WHERE id = $1
+   FOR UPDATE`,
+      [roomId]
+    );
+
     if (!room.rows[0]) {
       await client.query("ROLLBACK");
-      return res.status(400).json({ message: "Room already booked or not found" });
+      return res.status(404).json({
+        message: "Room not found"
+      });
     }
+
     const booking = await client.query(
-      `INSERT INTO bookings (room_id, user_id, move_in_date, payment_id, order_id, payment_status, status)
-       VALUES ($1,$2,$3,$4,$5,'paid','confirmed')
-       RETURNING id AS "_id", room_id AS "roomId", user_id AS user, move_in_date AS "moveInDate",
-       payment_id AS "paymentId", order_id AS "orderId", payment_status AS "paymentStatus", status, created_at AS "createdAt"`,
-      [roomId, req.user.id, moveInDate, payment.rows[0].payment_id, orderId]);
-    await client.query("UPDATE payment_orders SET status='consumed', consumed_at=now() WHERE id=$1", [payment.rows[0].id]);
+      `INSERT INTO bookings
+   (room_id, user_id, move_in_date, payment_id, order_id, payment_status, status)
+   VALUES ($1,$2,$3,$4,$5,'paid','confirmed')
+   RETURNING id AS "_id", room_id AS "roomId", user_id AS user,
+   move_in_date AS "moveInDate",
+   payment_id AS "paymentId", order_id AS "orderId",
+   payment_status AS "paymentStatus", status,
+   created_at AS "createdAt"`,
+      [
+        roomId,
+        req.user.id,
+        moveInDate,
+        payment.rows[0].payment_id,
+        orderId
+      ]
+    );
+
+    await client.query(
+      `UPDATE payment_orders
+   SET status='consumed', consumed_at=now()
+   WHERE id=$1`,
+      [payment.rows[0].id]
+    );
+
     await client.query("COMMIT");
+
     return res.status(201).json({ success: true, message: "Booking confirmed", booking: booking.rows[0] });
+
   } catch (error) {
+
     await client.query("ROLLBACK");
+
     if (error.code === "23505") return res.status(409).json({ message: "Booking already exists" });
+
     return res.status(400).json({ message: "Unable to confirm booking" });
-  } finally { client.release(); }
+
+  } finally {
+    client.release();
+  }
 };
 
 export const getMyBooking = async (req, res) => {
